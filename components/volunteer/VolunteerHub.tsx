@@ -41,7 +41,7 @@ const DEFAULT_SIGNUP = {
 }
 
 export function VolunteerHub({ counties, initialListings, canCreateListing }: VolunteerHubProps) {
-  const [activeTab, setActiveTab] = useState<'browse' | 'create-listing' | 'submit-resource'>('browse')
+  const [activeTab, setActiveTab] = useState<'browse' | 'create-listing'>('browse')
   const [countyFilter, setCountyFilter] = useState('')
   const [zipFilter, setZipFilter] = useState('')
   const [listings, setListings] = useState(initialListings)
@@ -125,41 +125,12 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
     setSignupForm(DEFAULT_SIGNUP)
   }
 
-  const submitResource = async (formData: FormData) => {
-    setSubmitting(true)
-    setMessage(null)
-    const payload = {
-      programName: formData.get('programName'),
-      providerName: formData.get('providerName'),
-      category: formData.get('category'),
-      description: formData.get('description'),
-      countyFips: formData.get('countyFips'),
-      address: formData.get('address'),
-      city: formData.get('city'),
-      state: formData.get('state'),
-      zipCode: formData.get('zipCode'),
-      contactName: formData.get('contactName'),
-      contactEmail: formData.get('contactEmail'),
-      contactPhone: formData.get('contactPhone'),
-      websiteUrl: formData.get('websiteUrl'),
-    }
-    const res = await fetch('/api/resource-submissions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    const json = await res.json()
-    setSubmitting(false)
-    setMessage(res.ok ? 'Resource submitted for review.' : typeof json.error === 'string' ? json.error : 'Unable to submit resource')
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-2">
         {[
           { id: 'browse', label: 'Volunteer Opportunities' },
           ...(canCreateListing ? [{ id: 'create-listing', label: 'Create Listing' }] : []),
-          { id: 'submit-resource', label: 'Submit Resource' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -331,40 +302,6 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
             className="md:col-span-2 rounded-lg bg-growth px-4 py-2.5 text-sm text-parchment font-semibold disabled:opacity-60"
           >
             {submitting ? 'Creating...' : 'Create Listing'}
-          </button>
-        </form>
-      )}
-
-      {activeTab === 'submit-resource' && (
-        <form
-          action={submitResource}
-          className="rounded-xl border border-wheat/10 bg-soil/45 p-5 grid md:grid-cols-2 gap-3"
-        >
-          <input name="programName" placeholder="Program or resource name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="providerName" placeholder="Provider organization" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-          <input name="category" placeholder="Category (grants, labor, transport...)" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-          <textarea name="description" placeholder="How this supports farms/programs" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat min-h-24" required />
-          <select name="countyFips" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
-            <option value="">Select county</option>
-            {counties.map((county) => (
-              <option key={county.fips_code} value={county.fips_code}>
-                {county.name}
-              </option>
-            ))}
-          </select>
-          <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="zipCode" placeholder="NC ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactName" placeholder="Contact name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactEmail" placeholder="Contact email" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactPhone" placeholder="Contact phone" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-          <input name="websiteUrl" placeholder="Website URL" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-          <button
-            disabled={submitting}
-            className="md:col-span-2 rounded-lg bg-growth px-4 py-2.5 text-sm text-parchment font-semibold disabled:opacity-60"
-          >
-            {submitting ? 'Submitting...' : 'Submit Resource'}
           </button>
         </form>
       )}

@@ -73,6 +73,12 @@ export function Navigation() {
             Check Eligibility
           </Link>
           <Link
+            href="/resources#submit-resource"
+            className="px-4 py-2.5 bg-growth text-parchment hover:bg-growth/90 font-body text-[12px] font-semibold rounded-full transition-colors"
+          >
+            Submit Resource
+          </Link>
+          <Link
             href="/login"
             className="px-4 py-2.5 border border-wheat/20 text-wheat/80 hover:text-wheat font-body text-[12px] font-semibold rounded-full transition-colors"
           >
@@ -126,6 +132,13 @@ export function Navigation() {
               className="mt-2 text-center px-4 py-2.5 bg-wheat text-ash font-body text-sm font-semibold rounded-lg"
             >
               Check Eligibility
+            </Link>
+            <Link
+              href="/resources#submit-resource"
+              onClick={() => setMobileOpen(false)}
+              className="text-center px-4 py-2.5 bg-growth text-parchment font-body text-sm font-semibold rounded-lg"
+            >
+              Submit Resource
             </Link>
             <Link
               href="/login"

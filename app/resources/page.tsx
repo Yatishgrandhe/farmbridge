@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
+import { ResourceSubmissionForm } from '@/components/resources/ResourceSubmissionForm'
 
 export default async function ResourcesPage() {
   const supabase = await createServerClient()
-  const [{ count: liveResourceCount }, { data: resources }] = await Promise.all([
+  const [{ count: liveResourceCount }, { data: resources }, { data: counties }] = await Promise.all([
     supabase.from('resources').select('*', { count: 'exact', head: true }),
     supabase.from('resources').select('name,type,notes,hours,website_url').limit(24),
+    supabase.from('counties').select('fips_code,name').order('name'),
   ])
   const resourcesByType = (resources ?? []).reduce<Record<string, string[]>>((acc, resource) => {
     const key = resource.type ?? 'other'
@@ -94,6 +96,10 @@ export default async function ResourcesPage() {
               </Link>
             </div>
           </section>
+        </div>
+
+        <div className="mt-12 animate-fade-in-soft [animation-delay:420ms]">
+          <ResourceSubmissionForm counties={counties ?? []} />
         </div>
       </div>
     </main>
