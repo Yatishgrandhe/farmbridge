@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import styles from './CountyReliefMapSection.module.css'
 
 type CountyRisk = {
   name: string
@@ -42,7 +43,7 @@ const CountyReliefMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[420px] rounded-2xl bg-soil/60 border border-wheat/10 animate-pulse flex items-center justify-center text-wheat/50 text-sm">
+      <div className={styles.loadingState}>
         Loading map...
       </div>
     ),

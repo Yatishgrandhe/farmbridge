@@ -1,11 +1,7 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Mono } from 'next/font/google'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
 import { LayoutChrome } from '@/components/ui/LayoutChrome'
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
-const spaceMono = Space_Mono({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {
   title: 'FarmBridge | US Agriculture Crisis Response',
@@ -50,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceMono.variable} h-full antialiased`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-ash text-wheat font-body selection:bg-growth selection:text-parchment" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -64,12 +60,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[2200] focus:px-4 focus:py-2 focus:bg-growth focus:text-parchment focus:rounded-md"
-        >
-          Skip to main content
-        </a>
         <LayoutChrome>{children}</LayoutChrome>
         <script
           type="application/ld+json"

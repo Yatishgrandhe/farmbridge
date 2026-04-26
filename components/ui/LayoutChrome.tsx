@@ -50,7 +50,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navigation />
-      <div id="main-content" className="flex-1" tabIndex={-1}>
+      <div id="main-content" tabIndex={-1}>
         {children}
       </div>
       <SiteFooter />

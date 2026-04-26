@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { MessageCircle, Plus, X } from 'lucide-react'
+import styles from './FarmBridgeChatWidget.module.css'
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string; timestamp: string }
 type ChatThread = { id: string; title: string; createdAt: string; messages: ChatMessage[] }
@@ -94,10 +95,10 @@ export function FarmBridgeChatWidget() {
   }
 
   return (
-    <>
+    <div className={styles.container}>
       <button
         onClick={() => setOpen((value) => !value)}
-        className="fixed bottom-5 right-5 z-[80] rounded-full bg-growth text-parchment p-3 shadow-card border border-growth/50"
+        className={styles.toggleButton}
         aria-label="Toggle FarmBridge assistant chat"
         aria-expanded={open}
       >
@@ -105,61 +106,59 @@ export function FarmBridgeChatWidget() {
       </button>
 
       {open && (
-        <aside className="fixed bottom-20 right-5 z-[79] w-[360px] max-w-[92vw] h-[560px] bg-soil/95 border border-wheat/15 rounded-2xl shadow-card flex flex-col overflow-hidden">
-          <header className="px-4 py-3 border-b border-wheat/10 flex items-center justify-between">
+        <aside className={styles.chatWindow}>
+          <header className={styles.header}>
             <div>
-              <p className="text-wheat font-semibold">FarmBridge Assistant</p>
-              <p className="text-wheat/55 text-xs">Chats are saved locally on this device.</p>
+              <p className={styles.headerTitle}>FarmBridge Assistant</p>
+              <p className={styles.headerSubtitle}>Chats are saved locally.</p>
             </div>
-            <button onClick={newChat} className="rounded-md border border-wheat/20 p-1.5 text-wheat/70">
+            <button onClick={newChat} className={styles.newChatButton}>
               <Plus size={14} />
             </button>
           </header>
 
-          <div className="grid grid-cols-[120px_1fr] flex-1 min-h-0">
-            <div className="border-r border-wheat/10 overflow-y-auto">
+          <div className={styles.mainGrid}>
+            <div className={styles.sidebar}>
               {threads.map((thread) => (
                 <button
                   key={thread.id}
                   onClick={() => setActiveThreadId(thread.id)}
-                  className={`w-full text-left px-2 py-2 text-xs border-b border-wheat/5 ${
-                    activeThread?.id === thread.id ? 'bg-growth/20 text-wheat' : 'text-wheat/65'
+                  className={`${styles.threadButton} ${
+                    activeThread?.id === thread.id ? styles.threadButtonActive : styles.threadButtonInactive
                   }`}
                 >
                   {thread.title || 'Chat'}
                 </button>
               ))}
             </div>
-            <div className="flex flex-col min-h-0">
-              <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+            <div className={styles.chatArea}>
+              <div className={styles.messagesList}>
                 {(activeThread?.messages ?? []).map((message, index) => (
                   <div
                     key={`${message.timestamp}-${index}`}
-                    className={`rounded-xl px-3 py-2 text-sm ${
-                      message.role === 'user'
-                        ? 'bg-growth/30 text-wheat ml-8'
-                        : 'bg-ash/70 border border-wheat/10 text-wheat/90 mr-5'
+                    className={`${styles.messageBubble} ${
+                      message.role === 'user' ? styles.userMessage : styles.assistantMessage
                     }`}
                   >
                     <p>{message.content}</p>
-                    <p className="text-[10px] text-wheat/45 mt-1">
+                    <p className={styles.timestamp}>
                       {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                 ))}
-                {loading && <p className="text-xs text-wheat/50">Thinking...</p>}
+                {loading && <p className={styles.loadingText}>Thinking...</p>}
               </div>
-              <div className="p-3 border-t border-wheat/10">
+              <div className={styles.inputArea}>
                 <textarea
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
-                  placeholder="Ask about resources, programs, deadlines..."
-                  className="w-full h-20 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  placeholder="Ask about resources..."
+                  className={styles.textarea}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={loading}
-                  className="mt-2 w-full rounded-lg bg-growth px-3 py-2 text-sm text-parchment font-semibold disabled:opacity-60"
+                  className={styles.sendButton}
                 >
                   Send
                 </button>
@@ -168,6 +167,6 @@ export function FarmBridgeChatWidget() {
           </div>
         </aside>
       )}
-    </>
+    </div>
   )
 }

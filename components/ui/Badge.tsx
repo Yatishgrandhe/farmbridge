@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import styles from './Badge.module.css'
 
 type BadgeProps = {
   children: ReactNode
@@ -7,7 +8,7 @@ type BadgeProps = {
 
 export function Badge({ children, className = '' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-mono uppercase tracking-widest ${className}`}>
+    <span className={`${styles.badge} ${className}`}>
       {children}
     </span>
   )

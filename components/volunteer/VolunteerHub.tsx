@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { US_STATE_CODES } from '@/lib/data/usStates'
+import styles from './VolunteerHub.module.css'
 
 type CountyOption = { fips_code: string; name: string }
 
@@ -127,8 +128,8 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
+    <div className={styles.hub}>
+      <div className={styles.tabs}>
         {[
           { id: 'browse', label: 'Volunteer Opportunities' },
           ...(canCreateListing ? [{ id: 'create-listing', label: 'Create Listing' }] : []),
@@ -136,8 +137,8 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`px-4 py-2 rounded-lg text-sm ${
-              activeTab === tab.id ? 'bg-growth text-parchment' : 'border border-wheat/20 text-wheat/70'
+            className={`${styles.tab} ${
+              activeTab === tab.id ? styles.tabActive : styles.tabInactive
             }`}
           >
             {tab.label}
@@ -145,15 +146,15 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
         ))}
       </div>
 
-      {message && <p className="text-sm text-ember">{message}</p>}
+      {message && <p className={styles.message}>{message}</p>}
 
       {activeTab === 'browse' && (
-        <div className="space-y-4">
-          <div className="flex flex-wrap gap-3">
+        <div className={styles.browseSection}>
+          <div className={styles.filters}>
             <select
               value={countyFilter}
               onChange={(e) => setCountyFilter(e.target.value)}
-              className="rounded-lg bg-soil/60 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+              className={styles.select}
             >
               <option value="">All counties</option>
               {counties.map((county) => (
@@ -166,30 +167,30 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
               value={zipFilter}
               onChange={(e) => setZipFilter(e.target.value.replace(/\D/g, '').slice(0, 5))}
               placeholder="Filter ZIP"
-              className="rounded-lg bg-soil/60 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+              className={styles.input}
             />
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-4">
+          <div className={styles.listingGrid}>
             {visibleListings.map((listing) => (
-              <article key={listing.id} className="rounded-xl border border-wheat/10 bg-soil/45 p-4 space-y-2">
-                <div className="flex justify-between gap-3">
-                  <h3 className="text-wheat font-semibold">{listing.title}</h3>
-                  <span className="text-[11px] uppercase font-mono text-wheat/55">{listing.listing_type}</span>
+              <article key={listing.id} className={styles.listingCard}>
+                <div className={styles.listingHeader}>
+                  <h3 className={styles.listingTitle}>{listing.title}</h3>
+                  <span className={styles.listingTag}>{listing.listing_type}</span>
                 </div>
-                <p className="text-sm text-wheat/75">{listing.description}</p>
-                <p className="text-xs text-wheat/55">
+                <p className={styles.listingDesc}>{listing.description}</p>
+                <p className={styles.listingMeta}>
                   {listing.address}, {listing.city}, {listing.state} {listing.zip_code}
                 </p>
-                <p className="text-xs text-wheat/55">
+                <p className={styles.listingMeta}>
                   {listing.volunteer_date} • {listing.start_time} - {listing.end_time} • Need {listing.required_volunteers}
                 </p>
-                <p className="text-xs text-wheat/55">
+                <p className={styles.listingMeta}>
                   Contact: {listing.contact_name} ({listing.contact_email})
                 </p>
                 <button
                   onClick={() => setSelectedListingId(listing.id)}
-                  className="mt-1 rounded-md bg-growth px-3 py-1.5 text-xs text-parchment font-semibold"
+                  className={styles.volunteerButton}
                 >
                   Volunteer for this
                 </button>
@@ -198,44 +199,44 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
           </div>
 
           {selectedListing && (
-            <div className="rounded-xl border border-growth/35 bg-growth/10 p-4 space-y-3">
-              <h4 className="text-wheat font-semibold">Sign up for: {selectedListing.title}</h4>
-              <div className="grid md:grid-cols-2 gap-3">
+            <div className={styles.signupForm}>
+              <h4 className={styles.signupTitle}>Sign up for: {selectedListing.title}</h4>
+              <div className={styles.signupGrid}>
                 <input
                   value={signupForm.volunteerName}
                   onChange={(e) => setSignupForm((v) => ({ ...v, volunteerName: e.target.value }))}
                   placeholder="Full name"
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   value={signupForm.volunteerEmail}
                   onChange={(e) => setSignupForm((v) => ({ ...v, volunteerEmail: e.target.value }))}
                   placeholder="Email"
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   value={signupForm.volunteerPhone}
                   onChange={(e) => setSignupForm((v) => ({ ...v, volunteerPhone: e.target.value }))}
                   placeholder="Phone"
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   type="date"
                   value={signupForm.volunteerDate}
                   onChange={(e) => setSignupForm((v) => ({ ...v, volunteerDate: e.target.value }))}
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   type="time"
                   value={signupForm.startTime}
                   onChange={(e) => setSignupForm((v) => ({ ...v, startTime: e.target.value }))}
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   type="time"
                   value={signupForm.endTime}
                   onChange={(e) => setSignupForm((v) => ({ ...v, endTime: e.target.value }))}
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={styles.input}
                 />
                 <input
                   type="number"
@@ -245,20 +246,20 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
                   value={signupForm.declaredHours}
                   onChange={(e) => setSignupForm((v) => ({ ...v, declaredHours: e.target.value }))}
                   placeholder="Declared hours"
-                  className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat"
+                  className={`${styles.input} md:col-span-2`}
                 />
               </div>
-              <div className="flex gap-2">
+              <div className={styles.signupActions}>
                 <button
                   onClick={submitSignup}
                   disabled={submitting}
-                  className="rounded-md bg-growth px-4 py-2 text-xs text-parchment font-semibold"
+                  className={styles.signupSubmit}
                 >
                   {submitting ? 'Submitting...' : 'Submit Signup'}
                 </button>
                 <button
                   onClick={() => setSelectedListingId(null)}
-                  className="rounded-md border border-wheat/20 px-4 py-2 text-xs text-wheat/75"
+                  className={styles.signupCancel}
                 >
                   Cancel
                 </button>
@@ -271,34 +272,34 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
       {activeTab === 'create-listing' && canCreateListing && (
         <form
           action={submitListing}
-          className="rounded-xl border border-wheat/10 bg-soil/45 p-5 grid md:grid-cols-2 gap-3"
+          className={styles.createForm}
         >
-          <select name="listingType" defaultValue="farm" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat">
+          <select name="listingType" defaultValue="farm" className={styles.select}>
             <option value="farm">Farm manpower need</option>
             <option value="program">Program manpower need</option>
           </select>
-          <input name="title" placeholder="Listing title" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <textarea name="description" placeholder="Describe the volunteer need" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat min-h-24" required />
-          <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <select name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
+          <input name="title" placeholder="Listing title" className={styles.input} required />
+          <textarea name="description" placeholder="Describe the volunteer need" className={`${styles.input} ${styles.textarea} ${styles.fullWidth}`} required />
+          <input name="address" placeholder="Address" className={styles.input} required />
+          <input name="city" placeholder="City" className={styles.input} required />
+          <select name="state" defaultValue="NC" className={styles.select} required>
             {US_STATE_CODES.map((state) => (
               <option key={state} value={state}>
                 {state}
               </option>
             ))}
           </select>
-          <input name="zipCode" placeholder="ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactName" placeholder="Contact name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactEmail" placeholder="Contact email" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="contactPhone" placeholder="Contact phone" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-          <input type="date" name="volunteerDate" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input type="time" name="startTime" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input type="time" name="endTime" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input type="number" name="requiredVolunteers" min={1} defaultValue={5} className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+          <input name="zipCode" placeholder="ZIP code" className={styles.input} required />
+          <input name="contactName" placeholder="Contact name" className={styles.input} required />
+          <input name="contactEmail" placeholder="Contact email" className={styles.input} required />
+          <input name="contactPhone" placeholder="Contact phone" className={styles.input} />
+          <input type="date" name="volunteerDate" className={styles.input} required />
+          <input type="time" name="startTime" className={styles.input} required />
+          <input type="time" name="endTime" className={styles.input} required />
+          <input type="number" name="requiredVolunteers" min={1} defaultValue={5} className={styles.input} required />
           <button
             disabled={submitting}
-            className="md:col-span-2 rounded-lg bg-growth px-4 py-2.5 text-sm text-parchment font-semibold disabled:opacity-60"
+            className={`${styles.createButton} ${styles.fullWidth}`}
           >
             {submitting ? 'Creating...' : 'Create Listing'}
           </button>

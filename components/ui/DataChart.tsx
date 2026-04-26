@@ -1,7 +1,7 @@
 'use client'
 
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, AreaChart, Area } from 'recharts'
-import { motion } from 'framer-motion'
+import styles from './DataChart.module.css'
 
 export type ChartType = 'bar' | 'line' | 'area'
 
@@ -28,10 +28,10 @@ export function DataChart({
   const renderChart = () => {
     if (!data || data.length === 0) {
       return (
-        <div className="h-full border border-dashed border-wheat/20 rounded-[1.2rem_0.85rem_1.2rem_0.85rem] bg-soil/25 grid place-items-center px-4">
-          <div className="text-center">
-            <p className="text-wheat/70 font-semibold">No dataset available yet</p>
-            <p className="text-wheat/50 font-mono text-xs mt-1 uppercase tracking-wider">
+        <div className={styles.emptyState}>
+          <div className={styles.emptyContent}>
+            <p className={styles.emptyTitle}>No dataset available yet</p>
+            <p className={styles.emptySubtitle}>
               Data will appear here after sync
             </p>
           </div>
@@ -80,17 +80,13 @@ export function DataChart({
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="surface-panel p-6"
-    >
-      <h3 className="font-display text-wheat text-xl font-semibold mb-6">{title}</h3>
+    <div className={styles.container}>
+      <h3 className={styles.title}>{title}</h3>
       <div style={{ height, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           {renderChart()}
         </ResponsiveContainer>
       </div>
-    </motion.div>
+    </div>
   )
 }

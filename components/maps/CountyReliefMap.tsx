@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef } from 'react'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import L from 'leaflet'
+import styles from './CountyReliefMap.module.css'
 
 type CountyRisk = {
   name: string
@@ -189,10 +189,10 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
   }, [markers, visibleOverlays])
 
   return (
-    <div className="space-y-4 relative z-0">
-      <div className="flex flex-wrap items-end gap-3">
-        <div>
-          <label htmlFor="zip-filter" className="block text-xs text-wheat/60 uppercase tracking-widest font-mono mb-1">
+    <div className={styles.container}>
+      <div className={styles.filterRow}>
+        <div className={styles.filterGroup}>
+          <label htmlFor="zip-filter" className={styles.filterLabel}>
             Filter by ZIP code
           </label>
           <input
@@ -201,7 +201,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
             value={zipFilter}
             onChange={(e) => setZipFilter(e.target.value.replace(/\D/g, '').slice(0, 5))}
             placeholder="e.g. 28202"
-            className="w-44 bg-soil/70 border border-wheat/20 rounded-lg px-3 py-2 text-sm text-wheat"
+            className={styles.filterInput}
           />
           <p id="zip-filter-hint" className="sr-only">
             Enter a 5-digit ZIP code to filter counties and overlay points.
@@ -209,67 +209,62 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         </div>
         <button
           onClick={() => setZipFilter('')}
-          className="px-3 py-2 rounded-lg border border-wheat/20 text-sm text-wheat/70 hover:text-wheat"
+          className={styles.clearButton}
         >
           Clear
         </button>
-        <p className="text-xs text-wheat/55 font-mono">
+        <p className={styles.statsText}>
           Showing {markers.length + visibleOverlays.length} mapped locations
         </p>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="rounded-2xl border border-wheat/10 overflow-hidden shadow-card"
-      >
+      <div className={styles.mapWrapper}>
         {markers.length === 0 ? (
-          <div className="h-[420px] w-full relative z-0 bg-soil/40 flex items-center justify-center px-4 text-center">
-            <p className="text-wheat/70 text-sm">No counties found for this ZIP filter. Try clearing or changing the ZIP code.</p>
+          <div className={styles.mapFallback}>
+            <p className={styles.fallbackText}>No counties found for this ZIP filter. Try clearing or changing the ZIP code.</p>
           </div>
         ) : (
-          <div ref={mapRef} className="h-[420px] w-full relative z-0" />
+          <div ref={mapRef} className={styles.mapContainer} />
         )}
-      </motion.div>
+      </div>
 
       {selectedCounty && (
-        <div className="rounded-2xl border border-growth/30 bg-growth/10 p-5">
-          <h3 className="font-display text-2xl text-wheat mb-2">{selectedCounty.name} County Details</h3>
-          <div className="grid md:grid-cols-2 gap-3 text-sm">
-            <p className="text-wheat/80">FIPS: <span className="text-wheat">{selectedCounty.fipsCode}</span></p>
-            <p className="text-wheat/80">State: <span className="text-wheat">{selectedCounty.stateAbbr ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Drought Level: <span className="text-wheat">{selectedCounty.droughtLevel ?? 'Unknown'}</span></p>
-            <p className="text-wheat/80">Precipitation Deficit: <span className="text-wheat">{selectedCounty.precipitationDeficitInches?.toFixed(1) ?? 'N/A'} in</span></p>
-            <p className="text-wheat/80">Topsoil Moisture: <span className="text-wheat">{selectedCounty.topsoilMoisture ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Disaster Number: <span className="text-wheat">{selectedCounty.disasterNumber ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Declaration Date: <span className="text-wheat">{selectedCounty.disasterDeclarationDate ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Primary Disaster Area: <span className="text-wheat">{selectedCounty.isPrimaryDisasterArea ? 'Yes' : 'No'}</span></p>
-            <p className="text-wheat/80">Contiguous Area: <span className="text-wheat">{selectedCounty.isContiguousDisasterArea ? 'Yes' : 'No'}</span></p>
-            <p className="text-wheat/80 md:col-span-2">Representative ZIP codes: <span className="text-wheat">{(selectedCounty.zipCodes ?? []).join(', ') || 'N/A'}</span></p>
-            <p className="text-wheat/55 md:col-span-2 text-xs">Last updated: {selectedCounty.updatedAt ?? 'N/A'}</p>
+        <div className={styles.detailPanel}>
+          <h3 className={styles.panelTitle}>{selectedCounty.name} County Details</h3>
+          <div className={styles.panelGrid}>
+            <p className={styles.panelLabel}>FIPS: <span className={styles.panelValue}>{selectedCounty.fipsCode}</span></p>
+            <p className={styles.panelLabel}>State: <span className={styles.panelValue}>{selectedCounty.stateAbbr ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Drought Level: <span className={styles.panelValue}>{selectedCounty.droughtLevel ?? 'Unknown'}</span></p>
+            <p className={styles.panelLabel}>Precipitation Deficit: <span className={styles.panelValue}>{selectedCounty.precipitationDeficitInches?.toFixed(1) ?? 'N/A'} in</span></p>
+            <p className={styles.panelLabel}>Topsoil Moisture: <span className={styles.panelValue}>{selectedCounty.topsoilMoisture ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Disaster Number: <span className={styles.panelValue}>{selectedCounty.disasterNumber ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Declaration Date: <span className={styles.panelValue}>{selectedCounty.disasterDeclarationDate ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Primary Disaster Area: <span className={styles.panelValue}>{selectedCounty.isPrimaryDisasterArea ? 'Yes' : 'No'}</span></p>
+            <p className={styles.panelLabel}>Contiguous Area: <span className={styles.panelValue}>{selectedCounty.isContiguousDisasterArea ? 'Yes' : 'No'}</span></p>
+            <p className={`${styles.panelLabel} ${styles.spanTwo}`}>Representative ZIP codes: <span className={styles.panelValue}>{(selectedCounty.zipCodes ?? []).join(', ') || 'N/A'}</span></p>
+            <p className={`${styles.updatedAt} ${styles.spanTwo}`}>Last updated: {selectedCounty.updatedAt ?? 'N/A'}</p>
           </div>
         </div>
       )}
 
       {selectedOverlay && (
-        <div className="rounded-2xl border border-ember/35 bg-ember/10 p-5">
-          <h3 className="font-display text-2xl text-wheat mb-2">{selectedOverlay.title}</h3>
-          <div className="grid md:grid-cols-2 gap-3 text-sm">
-            <p className="text-wheat/80">
+        <div className={styles.overlayPanel}>
+          <h3 className={styles.panelTitle}>{selectedOverlay.title}</h3>
+          <div className={styles.panelGrid}>
+            <p className={styles.panelLabel}>
               Type:{' '}
-              <span className="text-wheat">
+              <span className={styles.panelValue}>
                 {selectedOverlay.locationType === 'listing' ? 'Volunteer Listing' : 'Resource Submission'}
               </span>
             </p>
-            <p className="text-wheat/80">County: <span className="text-wheat">{selectedOverlay.countyName}</span></p>
-            <p className="text-wheat/80">Address: <span className="text-wheat">{selectedOverlay.address ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">City/State: <span className="text-wheat">{selectedOverlay.city ?? 'N/A'}, {selectedOverlay.state ?? 'NC'}</span></p>
-            <p className="text-wheat/80">ZIP: <span className="text-wheat">{selectedOverlay.zipCode ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Contact: <span className="text-wheat">{selectedOverlay.contactName ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Email: <span className="text-wheat">{selectedOverlay.contactEmail ?? 'N/A'}</span></p>
-            <p className="text-wheat/80">Phone: <span className="text-wheat">{selectedOverlay.contactPhone ?? 'N/A'}</span></p>
-            <p className="text-wheat/55 md:col-span-2 text-xs">Created at: {selectedOverlay.createdAt ?? 'N/A'}</p>
+            <p className={styles.panelLabel}>County: <span className={styles.panelValue}>{selectedOverlay.countyName}</span></p>
+            <p className={styles.panelLabel}>Address: <span className={styles.panelValue}>{selectedOverlay.address ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>City/State: <span className={styles.panelValue}>{selectedOverlay.city ?? 'N/A'}, {selectedOverlay.state ?? 'NC'}</span></p>
+            <p className={styles.panelLabel}>ZIP: <span className={styles.panelValue}>{selectedOverlay.zipCode ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Contact: <span className={styles.panelValue}>{selectedOverlay.contactName ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Email: <span className={styles.panelValue}>{selectedOverlay.contactEmail ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>Phone: <span className={styles.panelValue}>{selectedOverlay.contactPhone ?? 'N/A'}</span></p>
+            <p className={`${styles.updatedAt} ${styles.spanTwo}`}>Created at: {selectedOverlay.createdAt ?? 'N/A'}</p>
           </div>
         </div>
       )}

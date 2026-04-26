@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import styles from './CrisisTicker.module.css'
 
 const TICKER_ITEMS = [
   '🚨 82 NC counties declared federal disaster areas · April 21, 2026',
@@ -17,14 +18,13 @@ export function CrisisTicker() {
   const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="bg-crisis text-parchment overflow-hidden py-2 border-b border-ember/30">
+    <div className={styles.ticker}>
       <div
         ref={ref}
-        className="flex whitespace-nowrap"
-        style={{ animation: 'scroll-ticker 40s linear infinite' }}
+        className={styles.scroll}
       >
         {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
-          <span key={i} className="font-mono text-xs px-8 tracking-wide">
+          <span key={i} className={styles.item}>
             {item}
           </span>
         ))}

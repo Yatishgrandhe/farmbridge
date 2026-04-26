@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { HeroSection } from '@/components/sections/HeroSection'
 import { createServerClient } from '@/lib/supabase/server'
 import { CountyReliefMapSection } from '@/components/maps/CountyReliefMapSection'
+import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
+import styles from './home.module.css'
 
 const QUICK_PATHS = [
   {
@@ -9,18 +10,21 @@ const QUICK_PATHS = [
     description: 'See programs with closing windows in the next 30 days and prioritize first actions.',
     href: '/alerts',
     cta: 'View urgent alerts',
+    image: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&auto=format&fit=crop&q=80',
   },
   {
     title: 'I want to check eligibility',
     description: 'Answer a few questions and receive tailored program recommendations by county and farm type.',
     href: '/eligibility',
     cta: 'Start eligibility wizard',
+    image: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=1200&auto=format&fit=crop&q=80',
   },
   {
     title: 'I need help with paperwork',
     description: 'Use templates, checklist packets, and office-hour links built for first-time applicants.',
     href: '/resources',
     cta: 'Open application toolkit',
+    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&auto=format&fit=crop&q=80',
   },
 ]
 
@@ -36,19 +40,12 @@ const DATASET_LINKS = [
     name: 'NC OneMap County Boundary Polygons',
     href: 'https://www.nconemap.gov/datasets/NCEM-GIS::north-carolina-state-and-county-boundary-polygons',
   },
-  {
-    name: 'U.S. Drought Monitor Data Downloads',
-    href: 'https://droughtmonitor.unl.edu/Data.aspx',
-  },
-  {
-    name: 'Drought.gov County Data Explorer',
-    href: 'https://www.drought.gov/county/data',
-  },
+  { name: 'U.S. Drought Monitor Data Downloads', href: 'https://droughtmonitor.unl.edu/Data.aspx' },
+  { name: 'Drought.gov County Data Explorer', href: 'https://www.drought.gov/county/data' },
 ]
 
-export default async function Home() {
+export default async function HomePage() {
   const supabase = await createServerClient()
-
   const [
     { count: activeProgramsCount },
     { count: urgentProgramsCount },
@@ -60,19 +57,9 @@ export default async function Home() {
     { data: resourceRows },
   ] = await Promise.all([
     supabase.from('programs').select('*', { count: 'exact', head: true }).eq('active', true),
-    supabase
-      .from('programs')
-      .select('*', { count: 'exact', head: true })
-      .eq('active', true)
-      .eq('is_urgent', true),
-    supabase
-      .from('counties')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_primary_disaster_area', true),
-    supabase
-      .from('counties')
-      .select('*', { count: 'exact', head: true })
-      .in('drought_level', ['severe', 'extreme']),
+    supabase.from('programs').select('*', { count: 'exact', head: true }).eq('active', true).eq('is_urgent', true),
+    supabase.from('counties').select('*', { count: 'exact', head: true }).eq('is_primary_disaster_area', true),
+    supabase.from('counties').select('*', { count: 'exact', head: true }).in('drought_level', ['severe', 'extreme']),
     supabase.from('counties').select('precipitation_deficit_inches'),
     supabase
       .from('counties')
@@ -132,166 +119,112 @@ export default async function Home() {
     .map((county) => county.precipitation_deficit_inches ?? 0)
     .filter((value) => typeof value === 'number' && Number.isFinite(value))
   const averageDeficitInches =
-    precipitationDeficits.length > 0
-      ? precipitationDeficits.reduce((total, value) => total + value, 0) / precipitationDeficits.length
-      : 0
+    precipitationDeficits.length > 0 ? precipitationDeficits.reduce((total, value) => total + value, 0) / precipitationDeficits.length : 0
 
-  const liveHeroStats = [
-    {
-      value: activeProgramsCount ?? 0,
-      suffix: '',
-      label: 'active relief\nprograms in database',
-      prefix: '',
-    },
-    {
-      value: urgentProgramsCount ?? 0,
-      suffix: '',
-      label: 'urgent programs\nneeding quick action',
-      prefix: '',
-    },
-    {
-      value: primaryDisasterCount ?? 0,
-      suffix: '',
-      label: 'primary disaster\nregions in dataset',
-      prefix: '',
-    },
-    {
-      value: averageDeficitInches,
-      suffix: ' in',
-      label: 'average county\nrainfall deficit',
-      prefix: '',
-    },
+  const stats = [
+    { label: 'Active Programs', value: activeProgramsCount ?? 0, suffix: '' },
+    { label: 'Urgent Programs', value: urgentProgramsCount ?? 0, suffix: '' },
+    { label: 'Primary Disaster Regions', value: primaryDisasterCount ?? 0, suffix: '' },
+    { label: 'Avg Rainfall Deficit', value: averageDeficitInches.toFixed(1), suffix: ' in' },
   ]
-  const hasHeroData =
-    (activeProgramsCount ?? 0) > 0 ||
-    (urgentProgramsCount ?? 0) > 0 ||
-    (primaryDisasterCount ?? 0) > 0 ||
-    averageDeficitInches > 0
 
   return (
     <main>
-      <HeroSection stats={liveHeroStats} />
-      {!hasHeroData && (
-        <section className="container mx-auto px-6 pt-6">
-          <div className="rounded-xl border border-ember/40 bg-ember/10 px-4 py-3 text-sm text-wheat/85">
-            Live county and program stats are currently unavailable. Displayed values may be temporary placeholders
-            while data refresh completes.
-          </div>
-        </section>
-      )}
-
-      <section className="container mx-auto px-6 py-20">
-        <div className="max-w-3xl mb-10 animate-fade-in-soft">
-          <span className="text-growth font-mono text-xs uppercase tracking-widest">Quick Start</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-wheat mt-3 mb-3">
-            Pick a path and move in minutes.
-          </h2>
-          <p className="text-wheat/70">
-            FarmBridge is designed for active farming schedules. Start with one outcome and we
-            guide the next actions with local context. Currently tracking{' '}
-            <span className="text-ember font-semibold">{severeDroughtCount ?? 0}</span> counties
-            with severe or extreme drought conditions.
+      <ScrollAnimator />
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <p className={`${styles.eyebrow} label`}>US Agriculture Response Platform - Home</p>
+          <h1 className={`${styles.heroTitle} display-xl`}>Resilience for the farms that feed every community.</h1>
+          <p className={`${styles.heroText} body-lg`}>
+            FarmBridge is designed for active farming schedules and county-level urgency decisions. Currently tracking{' '}
+            <strong>{severeDroughtCount ?? 0}</strong> counties with severe or extreme drought conditions.
           </p>
+          <div className={styles.heroActions}>
+            <Link href="/programs" className={styles.primaryButton}>Explore Programs</Link>
+            <Link href="/support" className={styles.secondaryButton}>Open Support Center</Link>
+          </div>
         </div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {QUICK_PATHS.map((path, index) => (
-            <Link
-              key={path.title}
-              href={path.href}
-              style={{ animationDelay: `${index * 0.12}s` }}
-              className="bg-soil/50 border border-wheat/10 rounded-2xl p-6 hover:border-growth/40 hover:-translate-y-1 transition-all animate-fade-in-soft"
-            >
-              <span className="block font-display text-2xl text-wheat font-semibold mb-2" role="heading" aria-level={3}>
-                {path.title}
-              </span>
-              <p className="text-wheat/65 text-sm leading-relaxed mb-5">{path.description}</p>
-              <span className="text-growth text-sm font-semibold">{path.cta} →</span>
+      </section>
+
+      <section className={`${styles.statsBar} animate-on-scroll`}>
+        {stats.map((item) => (
+          <article key={item.label} className={styles.statCard}>
+            <p className={styles.statValue}>{item.value}{item.suffix}</p>
+            <p className={`${styles.statLabel} label`}>{item.label}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className={`${styles.quickStart} animate-on-scroll`}>
+        <div className={styles.sectionHeader}>
+          <p className="label">Quick Start</p>
+          <h2 className="display-md">Pick a path and move in minutes.</h2>
+        </div>
+        <div className={styles.quickGrid}>
+          {QUICK_PATHS.map((path) => (
+            <Link key={path.title} href={path.href} className={styles.quickCard}>
+              <div className={styles.quickImage} style={{ backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.72)), url('${path.image}')` }} />
+              <div className={styles.quickContent}>
+                <h3>{path.title}</h3>
+                <p>{path.description}</p>
+                <span>{path.cta} -&gt;</span>
+              </div>
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="container mx-auto px-6 pb-18">
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-4">
-            <span className="text-crisis font-mono text-xs uppercase tracking-widest">County Intelligence Map</span>
-            <h2 className="font-display text-3xl text-wheat font-bold">Filter by ZIP and open county detail cards</h2>
-            <p className="text-wheat/65 text-sm">
-              Click markers to view county popups, then open full details with drought status, deficit,
-              disaster fields, and representative ZIP coverage for planning.
-            </p>
-            {countyRiskRows && countyRiskRows.length > 0 ? (
-              <CountyReliefMapSection
-                counties={(countyRiskRows ?? []).map((county) => ({
-                  name: county.name,
-                  fipsCode: county.fips_code,
-                  stateAbbr: county.state_abbr,
-                  lat: county.lat,
-                  lng: county.lng,
-                  zipCodes: county.representative_zip_codes ?? [],
-                  droughtLevel: county.drought_level,
-                  precipitationDeficitInches: county.precipitation_deficit_inches,
-                  isPrimaryDisasterArea: county.is_primary_disaster_area,
-                  isContiguousDisasterArea: county.is_contiguous_disaster_area,
-                  disasterNumber: county.disaster_number,
-                  disasterDeclarationDate: county.disaster_declaration_date,
-                  topsoilMoisture: county.topsoil_moisture,
-                  updatedAt: county.updated_at,
-                }))}
-                overlays={overlayItems}
-              />
-            ) : (
-              <div className="rounded-2xl border border-wheat/10 bg-soil/40 px-5 py-8 text-center text-wheat/70 text-sm">
-                County map data is currently unavailable. Please check back in a moment.
-              </div>
-            )}
+      <section className={`${styles.mapSection} animate-on-scroll`}>
+        <div className={styles.mapLeft}>
+          <p className="label">County Intelligence Map</p>
+          <h2 className="display-md">Filter by ZIP and open county detail cards</h2>
+          <p className="body-md">Click markers to view county popups, then open full details with drought status and response context.</p>
+          <div className={styles.datasets}>
+            {DATASET_LINKS.map((dataset) => (
+              <a key={dataset.href} href={dataset.href} target="_blank" rel="noreferrer" className={styles.datasetItem}>
+                {dataset.name}
+              </a>
+            ))}
           </div>
-          <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
-            <h3 className="font-display text-2xl text-wheat mb-3">Open datasets used</h3>
-            <p className="text-wheat/70 text-sm mb-4">
-              Trusted public sources that support county boundaries, drought signals, and response context.
-            </p>
-            <ul className="space-y-3">
-              {DATASET_LINKS.map((dataset) => (
-                <li key={dataset.href}>
-                  <a
-                    href={dataset.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm text-ember hover:text-wheat transition-colors underline underline-offset-4"
-                  >
-                    {dataset.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        </div>
+        <div className={styles.mapRight}>
+          {countyRiskRows && countyRiskRows.length > 0 ? (
+            <CountyReliefMapSection
+              counties={(countyRiskRows ?? []).map((county) => ({
+                name: county.name,
+                fipsCode: county.fips_code,
+                stateAbbr: county.state_abbr,
+                lat: county.lat,
+                lng: county.lng,
+                zipCodes: county.representative_zip_codes ?? [],
+                droughtLevel: county.drought_level,
+                precipitationDeficitInches: county.precipitation_deficit_inches,
+                isPrimaryDisasterArea: county.is_primary_disaster_area,
+                isContiguousDisasterArea: county.is_contiguous_disaster_area,
+                disasterNumber: county.disaster_number,
+                disasterDeclarationDate: county.disaster_declaration_date,
+                topsoilMoisture: county.topsoil_moisture,
+                updatedAt: county.updated_at,
+              }))}
+              overlays={overlayItems}
+            />
+          ) : (
+            <div className={styles.noData}>County map data is currently unavailable.</div>
+          )}
         </div>
       </section>
 
-      <section className="container mx-auto px-6 pb-24 animate-fade-in-soft animate-delay-240">
-        <div className="rounded-3xl border border-growth/30 bg-growth/10 p-8 md:p-10 grid md:grid-cols-2 gap-8">
-          <div>
-            <span className="text-ember font-mono text-xs uppercase tracking-widest">Submission Flow</span>
-            <h3 className="font-display text-3xl text-wheat font-bold mt-3 mb-3">
-              A simple operating rhythm for relief applications
-            </h3>
-            <p className="text-wheat/75 text-sm leading-relaxed">
-              Most rejected applications fail on missing records or late deadlines. This checklist
-              keeps teams aligned even during planting and harvest peaks.
-            </p>
-          </div>
-          <ol className="space-y-3">
-            {ACTION_STEPS.map((step, index) => (
-              <li key={step} className="flex items-start gap-3 bg-ash/50 rounded-xl p-3 border border-wheat/10">
-                <span className="mt-0.5 w-6 h-6 rounded-full bg-wheat text-ash text-xs font-bold flex items-center justify-center">
-                  {index + 1}
-                </span>
-                <span className="text-wheat/80 text-sm">{step}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+      <section className={`${styles.flowSection} animate-on-scroll`}>
+        <p className="label">Submission Flow</p>
+        <h2 className="display-md">A simple operating rhythm for relief applications</h2>
+        <ol className={styles.flowList}>
+          {ACTION_STEPS.map((step, index) => (
+            <li key={step} className={styles.flowItem}>
+              <span>{index + 1}</span>
+              <p>{step}</p>
+            </li>
+          ))}
+        </ol>
       </section>
     </main>
   )

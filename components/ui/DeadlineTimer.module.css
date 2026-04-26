@@ -1,0 +1,122 @@
+.compactContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.compactUnit {
+  border-radius: 0.5rem;
+  border: 1px solid rgba(242, 231, 213, 0.2);
+  background-color: rgba(47, 36, 28, 0.5); /* bg-soil/50 */
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.compactValue {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-wheat);
+  font-variant-numeric: tabular-nums;
+}
+
+.compactLabel {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(242, 231, 213, 0.5);
+}
+
+.fullContainer {
+  position: relative;
+  background-color: var(--color-ash);
+  border: 1px solid rgba(226, 164, 92, 0.4);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.indicator {
+  position: relative;
+  display: flex;
+  height: 0.625rem;
+  width: 0.625rem;
+}
+
+.indicatorDot {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px;
+  height: 0.625rem;
+  width: 0.625rem;
+  background-color: var(--color-crisis);
+}
+
+.headerLabel {
+  color: var(--color-crisis);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.programName {
+  color: var(--color-wheat);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.timerGrid {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.timerUnit {
+  flex: 1;
+  text-align: center;
+}
+
+.timerValueContainer {
+  background-color: rgba(47, 36, 28, 0.5);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.timerValue {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-wheat);
+  font-variant-numeric: tabular-nums;
+}
+
+.timerLabel {
+  color: rgba(242, 231, 213, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+}
+
+.footerLabel {
+  margin-top: 0.75rem;
+  color: rgba(242, 231, 213, 0.6);
+  font-size: 0.75rem;
+  text-align: center;
+}

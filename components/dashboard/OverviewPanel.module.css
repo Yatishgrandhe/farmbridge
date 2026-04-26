@@ -1,0 +1,175 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(242, 231, 213, 0.1);
+}
+
+.headerContent h1 {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-wheat);
+  margin: 0 0 0.5rem 0;
+}
+
+.headerContent p {
+  color: rgba(242, 231, 213, 0.6);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  background-color: rgba(242, 231, 213, 0.1);
+  color: var(--color-wheat);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.actionButton:hover {
+  background-color: var(--color-wheat);
+  color: var(--color-ash);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-wheat);
+  margin: 0;
+}
+
+.programGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .programGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.panel {
+  background-color: var(--color-soil);
+  border: 1px solid rgba(242, 231, 213, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-wheat);
+  margin: 0 0 1rem 0;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.listItem {
+  font-size: 0.875rem;
+  color: rgba(242, 231, 213, 0.8);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.listBullet {
+  color: var(--color-growth);
+  margin-top: 0.125rem;
+}
+
+.deadlineList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.deadlineItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deadlineName {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(242, 231, 213, 0.8);
+  margin: 0;
+}
+
+.deadlineNone {
+  font-size: 0.75rem;
+  color: rgba(242, 231, 213, 0.5);
+  font-family: var(--font-mono);
+  margin: 0;
+}
+
+.updatePanel {
+  background-color: var(--color-ash);
+  border: 1px solid rgba(242, 231, 213, 0.1);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.updateList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.updateItem {
+  font-size: 0.75rem;
+  color: rgba(242, 231, 213, 0.65);
+  border-left: 1px solid rgba(242, 231, 213, 0.2);
+  padding-left: 0.75rem;
+  margin: 0;
+}
