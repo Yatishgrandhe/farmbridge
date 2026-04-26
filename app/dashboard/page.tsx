@@ -4,31 +4,58 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ProgramCard } from '@/components/ui/ProgramCard'
 import { DeadlineTimer } from '@/components/ui/DeadlineTimer'
+import type { Database } from '@/lib/types/database.types'
+
+type Program = Database['public']['Tables']['programs']['Row']
 
 export default function DashboardPage() {
   // Mock data for the dashboard since we don't have user auth fully hooked up for specific users yet
-  const savedPrograms = [
+  const savedPrograms: Program[] = [
     {
       id: 'sdrp-2026',
-      title: 'State Drought Relief Program (SDRP)',
+      name: 'State Drought Relief Program',
+      acronym: 'SDRP',
+      summary: 'Emergency block grants for NC farmers experiencing 50%+ yield loss.',
       description: 'Emergency block grants for NC farmers experiencing 50%+ yield loss.',
       agency: 'NCDA&CS',
+      category: 'disaster_relief',
       deadline: '2026-12-10T23:59:59Z',
-      maxAmount: 150000,
-      matchPercentage: 98,
-      isUrgent: true,
+      deadline_label: 'Dec 10, 2026',
+      funding_amount: 'Up to $150,000',
+      active: true,
+      is_urgent: true,
       slug: 'sdrp-2026',
+      apply_url: null,
+      created_at: null,
+      eligibility_rules: {},
+      how_to_apply: null,
+      learn_more_url: null,
+      payment_type: null,
+      phone_number: null,
+      updated_at: null,
     },
     {
       id: 'eqip-emergency',
-      title: 'EQIP Emergency Assistance',
+      name: 'EQIP Emergency Assistance',
+      acronym: 'EQIP',
+      summary: 'Immediate funding for livestock water infrastructure and soil stabilization.',
       description: 'Immediate funding for livestock water infrastructure and soil stabilization.',
       agency: 'NRCS',
+      category: 'conservation',
       deadline: '2026-11-30T23:59:59Z',
-      maxAmount: 50000,
-      matchPercentage: 85,
-      isUrgent: false,
+      deadline_label: 'Nov 30, 2026',
+      funding_amount: 'Up to $50,000',
+      active: true,
+      is_urgent: false,
       slug: 'eqip-emergency',
+      apply_url: null,
+      created_at: null,
+      eligibility_rules: {},
+      how_to_apply: null,
+      learn_more_url: null,
+      payment_type: null,
+      phone_number: null,
+      updated_at: null,
     }
   ]
 
@@ -91,8 +118,12 @@ export default function DashboardPage() {
               <div className="space-y-6">
                 {savedPrograms.map(program => (
                   <div key={program.id} className="space-y-2">
-                    <p className="font-body text-sm text-wheat/80 font-medium">{program.title}</p>
-                    <DeadlineTimer deadline={program.deadline} compact />
+                    <p className="font-body text-sm text-wheat/80 font-medium">{program.name}</p>
+                    {program.deadline ? (
+                      <DeadlineTimer deadline={program.deadline} compact />
+                    ) : (
+                      <p className="text-xs text-wheat/50 font-mono">No deadline listed</p>
+                    )}
                   </div>
                 ))}
               </div>
