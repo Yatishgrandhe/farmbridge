@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Space_Mono } from 'next/font/google'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
-import { Navigation } from '@/components/ui/Navigation'
-import { SiteFooter } from '@/components/ui/SiteFooter'
+import { LayoutChrome } from '@/components/ui/LayoutChrome'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
 const spaceMono = Space_Mono({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-mono' })
@@ -26,11 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-ash text-wheat font-body selection:bg-growth selection:text-parchment" suppressHydrationWarning>
-        <Navigation />
-        <div className="flex-1">
-          {children}
-        </div>
-        <SiteFooter />
+        <LayoutChrome>{children}</LayoutChrome>
       </body>
     </html>
   )

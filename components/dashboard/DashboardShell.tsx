@@ -15,6 +15,7 @@ const volunteerNav = [
   { href: '/dashboard/overview', label: 'Overview' },
   { href: '/dashboard/signups', label: 'My Signups' },
   { href: '/dashboard/hours', label: 'Hour History' },
+  { href: '/dashboard/resources', label: 'Resources' },
   { href: '/dashboard/settings', label: 'Settings' },
 ]
 
@@ -40,10 +41,15 @@ export function DashboardShell({ accountType, fullName, children }: DashboardShe
     router.refresh()
   }
 
+  const quickLinks = [
+    { href: '/volunteer', label: 'Volunteer Hub' },
+    { href: '/resources#submit-resource', label: 'Submit Resource' },
+  ]
+
   return (
     <div className="min-h-screen bg-ash flex">
       <aside
-        className={`border-r border-wheat/10 bg-soil/60 transition-all ${
+        className={`border-r border-wheat/10 bg-soil/60 transition-all flex flex-col min-h-screen ${
           collapsed ? 'w-20' : 'w-72'
         }`}
       >
@@ -74,13 +80,19 @@ export function DashboardShell({ accountType, fullName, children }: DashboardShe
               {collapsed ? item.label.slice(0, 1) : item.label}
             </Link>
           ))}
-          <Link
-            href="/volunteer"
-            className={`block rounded-lg px-3 py-2 text-sm text-wheat/70 hover:text-wheat hover:bg-wheat/5 ${collapsed ? 'text-center' : ''}`}
-          >
-            {collapsed ? 'V' : 'Volunteer Hub'}
-          </Link>
         </nav>
+
+        <div className="px-3 pb-3 space-y-2 border-b border-wheat/10">
+          {quickLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`block rounded-lg px-3 py-2 text-sm text-wheat/70 hover:text-wheat hover:bg-wheat/5 ${collapsed ? 'text-center' : ''}`}
+            >
+              {collapsed ? item.label.slice(0, 1) : item.label}
+            </Link>
+          ))}
+        </div>
 
         <div className="mt-auto p-4 border-t border-wheat/10">
           {!collapsed && (

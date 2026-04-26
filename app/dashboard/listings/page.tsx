@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 
 export default async function DashboardListingsPage() {
@@ -13,13 +14,17 @@ export default async function DashboardListingsPage() {
     .eq('auth_user_id', user?.id ?? '')
     .maybeSingle()
 
+  if (!profile || profile.account_type !== 'organization') {
+    redirect('/dashboard/overview')
+  }
+
   const { data: listings } = await supabase
     .from('volunteer_listings')
     .select('*')
     .order('volunteer_date', { ascending: true })
     .limit(40)
 
-  const canCreate = Boolean(profile?.id)
+  const canCreate = Boolean(profile.id)
 
   return (
     <div className="space-y-6">

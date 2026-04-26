@@ -1,8 +1,23 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
 
 export default async function DashboardResourcesPage() {
   const supabase = await createServerClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('account_type')
+    .eq('auth_user_id', user?.id ?? '')
+    .maybeSingle()
+
+  if (!profile || profile.account_type !== 'organization') {
+    redirect('/dashboard/overview')
+  }
+
   const { data: submissions } = await supabase
     .from('resource_submissions')
     .select('*')
@@ -16,7 +31,7 @@ export default async function DashboardResourcesPage() {
           <h1 className="font-display text-3xl text-wheat font-bold">Resource Submissions</h1>
           <p className="text-wheat/60">Review newly submitted support resources and programs.</p>
         </div>
-        <Link href="/volunteer?tab=submit-resource" className="rounded-lg bg-growth px-4 py-2 text-parchment text-sm font-semibold">
+        <Link href="/resources#submit-resource" className="rounded-lg bg-growth px-4 py-2 text-parchment text-sm font-semibold">
           Submit Resource
         </Link>
       </div>
