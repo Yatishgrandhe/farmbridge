@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand colors from Logo */
-  --color-soil: #0f3128; /* card backgrounds, logo dark green */
-  --color-wheat: #e7ede8; /* primary text, light neutral */
-  --color-crisis: #e2a929; /* urgency accent mapped to logo gold */
-  --color-growth: #0f5b4f; /* logo forest green */
-  --color-sky: #8aa69c; /* muted complementary green-gray */
-  --color-ember: #f4c542; /* logo bright golden yellow */
-  --color-ash: #050c09; /* deep canvas background */
-  --color-parchment: #f6f8f4; /* button/light foreground surface */
+  /* Warm earthy editorial palette */
+  --color-soil: #2f241c;
+  --color-wheat: #f2e7d5;
+  --color-crisis: #c9783e;
+  --color-growth: #6a7b4a;
+  --color-sky: #baa98e;
+  --color-ember: #e2a45c;
+  --color-ash: #17110c;
+  --color-parchment: #fbf4e7;
 
   /* Typography */
   --font-display: "Playfair Display", Georgia, serif;
@@ -32,12 +32,18 @@
   --radius-pill: 9999px;
 
   /* Shadows */
-  --shadow-crisis: 0 0 40px oklch(0.55 0.22 30 / 0.3);
-  --shadow-card: 0 4px 24px oklch(0.18 0.02 55 / 0.12);
+  --shadow-crisis: 0 0 40px oklch(0.62 0.14 55 / 0.28);
+  --shadow-card: 0 10px 32px oklch(0.18 0.02 65 / 0.22);
+  --shadow-soft: 0 14px 28px oklch(0.15 0.02 60 / 0.14);
 
   /* Animations */
   --animate-fade-up: fade-up 0.6s ease both;
   --animate-counter: counter 2s ease-out both;
+}
+
+body {
+  background: var(--color-ash);
+  color: var(--color-wheat);
 }
 
 /* Keyframes */
@@ -107,6 +113,27 @@
 
 .animate-fade-in-soft {
   animation: fade-in-soft 0.6s ease both;
+}
+
+.editorial-card {
+  background: color-mix(in srgb, var(--color-soil) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-wheat) 16%, transparent);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.surface-panel {
+  background: color-mix(in srgb, var(--color-soil) 84%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-wheat) 14%, transparent);
+  border-radius: 1.5rem 1rem 1.5rem 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.surface-panel-strong {
+  background: color-mix(in srgb, var(--color-soil) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-ember) 25%, transparent);
+  border-radius: 1.75rem 1.125rem 1.75rem 1.125rem;
+  box-shadow: var(--shadow-card);
 }
 
 .text-nav {

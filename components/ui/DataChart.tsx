@@ -28,8 +28,13 @@ export function DataChart({
   const renderChart = () => {
     if (!data || data.length === 0) {
       return (
-        <div className="flex items-center justify-center h-full text-wheat/40 font-mono text-sm border border-dashed border-wheat/20 rounded-xl">
-          [ Awaiting Dataset ]
+        <div className="h-full border border-dashed border-wheat/20 rounded-[1.2rem_0.85rem_1.2rem_0.85rem] bg-soil/25 grid place-items-center px-4">
+          <div className="text-center">
+            <p className="text-wheat/70 font-semibold">No dataset available yet</p>
+            <p className="text-wheat/50 font-mono text-xs mt-1 uppercase tracking-wider">
+              Data will appear here after sync
+            </p>
+          </div>
         </div>
       )
     }
@@ -78,7 +83,7 @@ export function DataChart({
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-ash border border-wheat/10 rounded-2xl p-6"
+      className="surface-panel p-6"
     >
       <h3 className="font-display text-wheat text-xl font-semibold mb-6">{title}</h3>
       <div style={{ height, width: '100%' }}>

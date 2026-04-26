@@ -43,6 +43,7 @@ export default async function ImpactPage() {
   const ureaSeries = metricRows
     .filter((row) => row.metric_name === 'urea_price_per_ton')
     .map((row) => ({ label: row.date?.slice(0, 7) ?? 'N/A', value: Number(row.value) }))
+  const hasTimeseriesData = droughtCoverageSeries.length > 0 || ureaSeries.length > 0
 
   return (
     <div className="container mx-auto px-6 py-32 min-h-screen">
@@ -59,16 +60,24 @@ export default async function ImpactPage() {
         </div>
 
         <div className="space-y-12">
+          {!hasTimeseriesData && (
+            <div className="rounded-[1.4rem_0.95rem_1.4rem_0.95rem] border border-ember/30 bg-ember/10 px-6 py-6 text-center max-w-3xl mx-auto">
+              <p className="text-wheat font-semibold">Time-series datasets are not available yet.</p>
+              <p className="text-wheat/70 text-sm mt-1">
+                Once metrics sync in Supabase, this page will populate automatically.
+              </p>
+            </div>
+          )}
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="rounded-2xl bg-soil/50 border border-wheat/10 p-5">
+            <div className="surface-panel p-5">
               <p className="text-wheat/60 text-xs uppercase tracking-widest font-mono">Primary Disaster Counties</p>
               <p className="text-wheat font-display text-4xl mt-2">{primaryDisasterCount}</p>
             </div>
-            <div className="rounded-2xl bg-soil/50 border border-wheat/10 p-5">
+            <div className="surface-panel p-5">
               <p className="text-wheat/60 text-xs uppercase tracking-widest font-mono">Active Programs</p>
               <p className="text-wheat font-display text-4xl mt-2">{activeProgramCount}</p>
             </div>
-            <div className="rounded-2xl bg-soil/50 border border-wheat/10 p-5">
+            <div className="surface-panel p-5">
               <p className="text-wheat/60 text-xs uppercase tracking-widest font-mono">Urgent Programs</p>
               <p className="text-wheat font-display text-4xl mt-2">{urgentProgramCount}</p>
             </div>
@@ -115,7 +124,7 @@ export default async function ImpactPage() {
           />
         </div>
 
-        <div className="mt-20 text-center bg-growth/20 border border-growth/30 rounded-2xl p-10">
+        <div className="mt-20 text-center surface-panel-strong p-10">
           <h3 className="font-display text-2xl font-bold text-wheat mb-4">
             These metrics refresh directly from your database.
           </h3>
@@ -125,7 +134,7 @@ export default async function ImpactPage() {
           </p>
           <Link
             href="/programs"
-            className="inline-block px-8 py-4 bg-growth text-parchment font-body font-semibold rounded-full text-sm tracking-wide transition-all hover:bg-growth/80"
+            className="inline-block px-8 py-4 bg-growth text-parchment font-body font-semibold rounded-[1rem_0.75rem_1rem_0.75rem] text-sm tracking-wide transition-all hover:bg-growth/80"
           >
             Find Relief Programs
           </Link>
