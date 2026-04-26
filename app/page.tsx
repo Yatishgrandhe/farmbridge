@@ -1,8 +1,6 @@
 import { HeroSection } from '@/components/sections/HeroSection'
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
-import { WebGLFarmScene } from '@/components/3d/WebGLFarmScene'
-import { SplineShowcase } from '@/components/3d/SplineShowcase'
 import { CountyReliefMapSection } from '@/components/maps/CountyReliefMapSection'
 
 const QUICK_PATHS = [
@@ -163,29 +161,6 @@ export default async function Home() {
   return (
     <main>
       <HeroSection stats={liveHeroStats} />
-
-      <section className="container mx-auto px-6 py-18">
-        <div className="grid lg:grid-cols-2 gap-6 items-stretch">
-          <div className="space-y-4">
-            <span className="text-growth font-mono text-xs uppercase tracking-widest">Live Operations View</span>
-            <h2 className="font-display text-4xl text-wheat font-bold">Interactive risk overview for fast decisions</h2>
-            <p className="text-wheat/70">
-              Use this live visual panel to quickly understand changing pressure across counties and
-              prioritize where applications and support efforts should move first.
-            </p>
-            <WebGLFarmScene />
-          </div>
-          <div className="space-y-4">
-            <span className="text-ember font-mono text-xs uppercase tracking-widest">Scenario Spotlight</span>
-            <h3 className="font-display text-3xl text-wheat font-bold">Explore the current response picture</h3>
-            <p className="text-wheat/65 text-sm">
-              This animated spotlight helps teams communicate urgency and keep county leaders aligned
-              on response priorities in a single glance.
-            </p>
-            <SplineShowcase />
-          </div>
-        </div>
-      </section>
 
       <section className="container mx-auto px-6 pb-18">
         <div className="grid lg:grid-cols-3 gap-6">
