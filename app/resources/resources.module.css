@@ -1,0 +1,104 @@
+.resourcesPage {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 4rem;
+}
+
+.masthead {
+  border-left: 4px solid var(--color-harvest);
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.officeCard,
+.submitCard,
+.guideCard {
+  background: var(--color-field);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-lg);
+}
+
+.officeCard,
+.submitCard {
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.guidance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.guideCard {
+  padding: var(--space-lg);
+}
+
+.title {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-straw);
+  font-family: var(--font-display);
+}
+
+.copy {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-grain);
+}
+
+.link {
+  color: var(--color-harvest);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.link:hover {
+  color: var(--color-harvest-hover);
+}
+
+.cta {
+  display: inline-block;
+  margin-top: var(--space-sm);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.input,
+.textarea {
+  background: var(--color-furrow);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-sm);
+  color: var(--color-grain);
+  padding: 14px;
+  font-family: var(--font-body);
+}
+
+.textarea {
+  grid-column: 1 / -1;
+}
+
+.button {
+  width: fit-content;
+  background: var(--color-harvest);
+  color: var(--color-straw);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 12px 22px;
+  transition: background var(--transition-base), transform var(--transition-base);
+}
+
+.button:hover {
+  background: var(--color-harvest-hover);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .guidance,
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -22,12 +22,11 @@ export function SiteFooter() {
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.brandColumn}>
-            <h2 className={styles.brandTitle}><span className={styles.dot} />FARMBRIDGE</h2>
+            <h2 className={styles.brandTitle}>FarmBridge</h2>
             <p className={styles.brandDescription}>
-              A North Carolina-first relief navigation platform helping farmers identify eligible funding,
-              track hard deadlines, and access local support quickly.
+              A North Carolina-first relief navigation platform helping farmers identify eligible
+              funding, track hard deadlines, and access local support quickly.
             </p>
-            <p className={styles.brandMeta}>2026 FarmBridge - Built for NC Agricultural Resilience</p>
           </div>
 
           <div>
@@ -58,9 +57,10 @@ export function SiteFooter() {
         </div>
 
         <div className={styles.bottom}>
-          <p className={styles.disclaimer}>
-            Not affiliated with USDA, NCDA&CS, or SBA. - Crisis Response Platform - United States - 2026
+          <p className={styles.copyright}>
+            2026 FarmBridge - Built for NC Agricultural Resilience
           </p>
+          <p className={styles.disclaimer}>Not affiliated with USDA, NCDA&CS, or SBA.</p>
         </div>
       </div>
     </footer>

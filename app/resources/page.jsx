@@ -1,43 +1,39 @@
-'use client'
-
-import { useState } from 'react'
+import { createServerClient } from '@/lib/supabase/server'
 import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
+import styles from './resources.module.css'
 
-export default function ResourcesPage() {
-  const [count] = useState(0)
+export default async function ResourcesPage(){
+  const supabase=await createServerClient()
+  const {count}=await supabase.from('resource_submissions').select('*',{count:'exact',head:true})
 
   return (
-    <main className="resources-page">
+    <main className={styles.resourcesPage}>
       <ScrollAnimator />
-      <section className="masthead animate-on-scroll">
+      <section className={`${styles.masthead} animate-on-scroll`}>
         <p className="label">Resource Center</p>
         <h1 className="display-lg">Resources That Save Filing Time.</h1>
-        <p className="body-sm">Database currently tracks {count} local resource records.</p>
+        <p className="body-sm">Database currently tracks {count ?? 0} local resource records.</p>
       </section>
-      <section className="office animate-on-scroll">
-        <h2>Weekly Office Hours</h2>
-        <p>Join practical filing walkthroughs for first-time and repeat applicants.</p>
+      <section className={`${styles.officeCard} animate-on-scroll`}>
+        <h2 className={styles.title}>Weekly Office Hours</h2>
+        <p className={styles.copy}>Join guided sessions for federal and state filing prep.</p>
+        <a href="/support" className={`${styles.link} ${styles.cta}`}>Join Session</a>
       </section>
-      <section className="submit animate-on-scroll">
-        <h2>Submit a Resource</h2>
-        <form className="form">
-          <input placeholder="Program name" />
-          <input placeholder="Provider" />
-          <textarea placeholder="Description" />
-          <button type="button">Submit Resource</button>
+      <section className={`${styles.guidance} animate-on-scroll`}>
+        <article className={styles.guideCard}><h3 className={styles.title}>Run Eligibility</h3><p className={styles.copy}>Get a quick county-aware match flow.</p><a href="/eligibility" className={styles.link}>Start</a></article>
+        <article className={styles.guideCard}><h3 className={styles.title}>Contact Support</h3><p className={styles.copy}>Get help with paperwork blockers and next actions.</p><a href="/support" className={styles.link}>Open Support</a></article>
+      </section>
+      <section className={`${styles.submitCard} animate-on-scroll`}>
+        <h2 className={styles.title}>Submit a Resource</h2>
+        <form className={styles.formGrid}>
+          <input className={styles.input} placeholder="Program name" />
+          <input className={styles.input} placeholder="Provider" />
+          <input className={styles.input} placeholder="State" />
+          <input className={styles.input} placeholder="ZIP" />
+          <textarea className={styles.textarea} placeholder="Description" rows={5} />
+          <button className={styles.button} type="button">Submit Resource</button>
         </form>
       </section>
-      <style jsx>{`
-        .resources-page { min-height: 100vh; padding: 7rem 1.5rem 4rem; max-width: 1100px; margin: 0 auto; }
-        .masthead { border-left: 4px solid var(--color-harvest); padding-left: var(--space-lg); margin-bottom: var(--space-xl); }
-        .office, .submit { background: var(--color-field); border: 1px solid var(--color-fog); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg); }
-        h2 { margin: 0 0 var(--space-sm); color: var(--color-straw); font-family: var(--font-display); }
-        p { color: var(--color-grain); }
-        .form { display: grid; gap: var(--space-md); }
-        input, textarea { background: var(--color-furrow); border: 1px solid var(--color-fog); border-radius: var(--radius-sm); padding: 14px; color: var(--color-grain); }
-        button { background: var(--color-harvest); border: none; border-radius: var(--radius-pill); color: var(--color-straw); padding: 12px 20px; transition: background var(--transition-base); }
-        button:hover { background: var(--color-harvest-hover); }
-      `}</style>
     </main>
   )
 }

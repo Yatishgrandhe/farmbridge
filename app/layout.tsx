@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
-import { LayoutChrome } from '@/components/ui/LayoutChrome'
 
 export const metadata: Metadata = {
   title: 'FarmBridge | US Agriculture Crisis Response',
@@ -60,7 +59,7 @@ export default function RootLayout({
             `,
           }}
         />
-        <LayoutChrome>{children}</LayoutChrome>
+        {children}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

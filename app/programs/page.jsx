@@ -4,69 +4,54 @@ import { ProgramCard } from '@/components/ui/ProgramCard'
 import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './programs.module.css'
 
-const CATEGORY_TABS = ['All', '🚨 Disaster Relief', '🌱 Conservation', '💰 Loans', '🌽 Commodity Support', '💙 Mental Health', '🌾 Young Farmers']
+const FILTERS=[
+  {label:'All',value:'all'},
+  {label:'🚨 Disaster Relief',value:'disaster_relief'},
+  {label:'🌱 Conservation',value:'conservation'},
+  {label:'💰 Loans',value:'loans'},
+  {label:'🌽 Commodity Support',value:'commodity_support'},
+  {label:'💙 Mental Health',value:'mental_health'},
+  {label:'🌾 Young Farmers',value:'young_farmers'},
+]
 
-export default async function ProgramsPage({ searchParams }) {
-  const supabase = await createServerClient()
-  const category = typeof searchParams?.category === 'string' ? searchParams.category : 'all'
-
-  let query = supabase.from('programs').select('*').eq('active', true)
-  if (category !== 'all') {
-    query = query.eq('category', category)
-  }
-
-  const { data: programs } = await query.order('is_urgent', { ascending: false }).order('name')
-  const all = programs ?? []
-  const urgent = all.filter((p) => p.is_urgent)
-  const standard = all.filter((p) => !p.is_urgent)
+export default async function ProgramsPage({searchParams}) {
+  const category=typeof searchParams?.category==='string'?searchParams.category:'all'
+  const supabase=await createServerClient()
+  let q=supabase.from('programs').select('*').eq('active',true)
+  if(category!=='all') q=q.eq('category',category)
+  const {data:rows}=await q.order('is_urgent',{ascending:false}).order('name',{ascending:true})
+  const programs=rows??[]
+  const urgent=programs.filter((p)=>p.is_urgent)
+  const standard=programs.filter((p)=>!p.is_urgent)
 
   return (
     <main className={styles.main}>
       <ScrollAnimator />
-      <section className={`${styles.container} animate-on-scroll`}>
-        <header className={styles.header}>
-          <p className={`${styles.headerSpan} label`}>Federal & State Programs</p>
+      <section className={styles.container}>
+        <header className={`${styles.header} animate-on-scroll`}>
+          <span className={`${styles.headerSpan} label`}>Federal & State Programs</span>
           <h1 className={styles.headerTitle}>Relief Programs for NC Farmers.</h1>
           <p className={styles.headerText}>Many go unused because farmers do not know they exist.</p>
         </header>
 
-        <div className={styles.filterList}>
-          {CATEGORY_TABS.map((tab) => (
-            <Link
-              key={tab}
-              href={tab === 'All' ? '/programs' : `/programs?category=${encodeURIComponent(tab.replace(/^..\s/, '').toLowerCase())}`}
-              className={`${styles.filterItem} ${tab === 'All' || category === tab.replace(/^..\s/, '').toLowerCase() ? styles.filterItemActive : styles.filterItemInactive}`}
-            >
-              {tab}
+        <div className={`${styles.filterList} animate-on-scroll`}>
+          {FILTERS.map((tab)=>(
+            <Link key={tab.value} href={tab.value==='all'?'/programs':`/programs?category=${tab.value}`} className={`${styles.filterItem} ${category===tab.value?styles.filterItemActive:styles.filterItemInactive}`}>
+              {tab.label}
             </Link>
           ))}
         </div>
 
-        {urgent.length > 0 && (
+        {!!urgent.length && (
           <section className={`${styles.urgentSection} animate-on-scroll`}>
-            <h2 className={styles.urgentTitle}><span className={styles.urgentDotContainer}><span className={styles.urgentDotPulse} /><span className={styles.urgentDotMain} /></span>Time-Sensitive - Act Now</h2>
-            <div className={styles.urgentGrid}>
-              {urgent.map((program) => (
-                <ProgramCard key={program.id} program={program} urgent />
-              ))}
-            </div>
+            <h2 className={styles.urgentTitle}><span className={styles.urgentDotContainer}><span className={styles.urgentDotPulse} /><span className={styles.urgentDotMain} /></span>Time-Sensitive — Act Now</h2>
+            <div className={styles.urgentGrid}>{urgent.map((p)=><ProgramCard key={p.id} program={p} urgent />)}</div>
           </section>
         )}
 
         <section className="animate-on-scroll">
-          <h2 className={`${styles.urgentTitle}`} style={{ color: 'var(--color-mist)' }}>Open Programs</h2>
-          {standard.length > 0 ? (
-            <div className={styles.mainGrid}>
-              {standard.map((program) => (
-                <ProgramCard key={program.id} program={program} />
-              ))}
-            </div>
-          ) : (
-            <div className={styles.emptyState}>
-              <p className={styles.emptyTitle}>No open programs in this filter.</p>
-              <p className={styles.emptyText}>Try switching categories above.</p>
-            </div>
-          )}
+          <h2 className={styles.urgentTitle} style={{color:'var(--color-mist)'}}>Open Programs</h2>
+          {standard.length? <div className={styles.mainGrid}>{standard.map((p)=><ProgramCard key={p.id} program={p} />)}</div> : <div className={styles.emptyState}><p className={styles.emptyTitle}>No open programs found.</p><p className={styles.emptyText}>Try a different category.</p></div>}
         </section>
       </section>
     </main>

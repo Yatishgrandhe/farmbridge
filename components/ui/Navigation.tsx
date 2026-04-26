@@ -1,34 +1,59 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './Navigation.module.css'
 
 export function Navigation() {
   const pathname = usePathname()
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/programs', label: 'Programs' },
-    { href: '/alerts', label: 'Alerts' },
-    { href: '/eligibility', label: 'Eligibility' },
-    { href: '/impact', label: 'Impact Data' },
     { href: '/volunteer', label: 'Volunteer' },
     { href: '/resources', label: 'Resources' },
+    { href: '/alerts', label: 'Alerts' },
+    { href: '/impact', label: 'Impact Data' },
     { href: '/about', label: 'About' },
     { href: '/support', label: 'Support' },
+    { href: '/dashboard', label: 'Dashboard' },
   ]
 
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
-    <nav aria-label="Primary navigation" className={styles.nav}>
+    <nav
+      aria-label="Primary navigation"
+      className={`${styles.nav} ${scrolled ? styles.scrolled : styles.notScrolled}`}
+    >
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoDot} />
-          <span className={styles.logoText}>FARMBRIDGE</span>
+          <div className={styles.logoIcon}>
+            <Image
+              src="/logo-mark.png"
+              alt="FarmBridge Logo"
+              width={56}
+              height={56}
+              priority
+            />
+          </div>
+          <span className={styles.logoText}>
+            FarmBridge
+          </span>
         </Link>
 
-        <div className={styles.centerLinks}>
+        <div className={styles.desktopMenu}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -38,11 +63,24 @@ export function Navigation() {
               {link.label}
             </Link>
           ))}
-        </div>
-        <div className={styles.actions}>
-          <Link href="/login" className={styles.loginLink}>Login</Link>
-          <Link href="/signup" className={styles.signupButton}>Signup</Link>
-          <Link href="/dashboard" className={styles.dashboardButton}>Dashboard</Link>
+          <Link
+            href="/eligibility"
+            className={styles.buttonPrimary}
+          >
+            Check Eligibility
+          </Link>
+          <Link
+            href="/resources#submit-resource"
+            className={styles.buttonGrowth}
+          >
+            Submit Resource
+          </Link>
+          <Link
+            href="/login"
+            className={styles.buttonOutline}
+          >
+            Log In
+          </Link>
         </div>
 
         <button
@@ -51,25 +89,65 @@ export function Navigation() {
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation menu"
         >
-          <span className={styles.hamburgerLine} />
+          Menu
         </button>
       </div>
 
-      <button className={`${styles.mobileOverlay} ${mobileOpen ? styles.mobileOverlayOpen : ''}`} onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" />
-      <div className={`${styles.mobileSidebar} ${mobileOpen ? styles.mobileSidebarOpen : ''}`}>
-        <div className={styles.mobileMenuList}>
-          {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className={`${styles.mobileNavLink} ${pathname === link.href ? styles.mobileNavLinkActive : ''}`}>
-              {link.label}
-            </Link>
-          ))}
-        </div>
-        <div className={styles.mobileActionList}>
-          <Link href="/login" onClick={() => setMobileOpen(false)} className={styles.mobileActionButton}>Login</Link>
-          <Link href="/signup" onClick={() => setMobileOpen(false)} className={`${styles.mobileActionButton} ${styles.mobilePrimaryAction}`}>Signup</Link>
-          <Link href="/dashboard" onClick={() => setMobileOpen(false)} className={styles.mobileActionButton}>Dashboard</Link>
-        </div>
-      </div>
+      {mobileOpen && (
+        <>
+          <button
+            className={styles.mobileOverlay}
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close navigation overlay"
+          />
+          <div className={styles.mobileSidebar}>
+            <div className={styles.mobileSidebarHeader}>
+              <p className={styles.mobileSidebarTitle}>Navigation</p>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className={styles.mobileCloseButton}
+              >
+                Close
+              </button>
+            </div>
+            <div className={styles.mobileMenuList}>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`${styles.mobileNavLink} ${pathname === link.href ? styles.mobileNavLinkActive : ''}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+            <div className={styles.mobileActionList}>
+              <Link
+                href="/eligibility"
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.mobileActionButton} ${styles.mobileButtonWheat}`}
+              >
+                Check Eligibility
+              </Link>
+              <Link
+                href="/resources#submit-resource"
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.mobileActionButton} ${styles.mobileButtonGrowth}`}
+              >
+                Submit Resource
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className={`${styles.mobileActionButton} ${styles.mobileButtonOutline}`}
+              >
+                Log In
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   )
 }
