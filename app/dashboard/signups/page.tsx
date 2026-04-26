@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
+import { manageSignupAction } from '@/lib/volunteer/actions'
 
 export default async function DashboardSignupsPage() {
   const supabase = await createServerClient()
@@ -21,8 +22,14 @@ export default async function DashboardSignupsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-wheat font-bold">Volunteer Signups</h1>
-        <p className="text-wheat/60">Track who signed up, when, and for how long.</p>
+        <h1 className="font-display text-3xl text-wheat font-bold">
+          {profile?.account_type === 'organization' ? 'Signup Queue (Organization)' : 'My Signups'}
+        </h1>
+        <p className="text-wheat/60">
+          {profile?.account_type === 'organization'
+            ? 'Review volunteer signups, approve quickly, or delay/delete records as needed.'
+            : 'Track your signups. You can remove any signup from your history here.'}
+        </p>
       </div>
       <div className="grid gap-3">
         {(signups ?? []).map((signup) => (
@@ -37,6 +44,37 @@ export default async function DashboardSignupsPage() {
             <p className="text-xs text-wheat/55 mt-1">
               {signup.start_time} - {signup.end_time} • {signup.declared_hours} hrs • {signup.volunteer_email}
             </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {profile?.account_type === 'organization' ? (
+                <>
+                  <form action={manageSignupAction}>
+                    <input type="hidden" name="signupId" value={signup.id} />
+                    <button type="submit" name="action" value="approve" className="rounded-md bg-growth px-3 py-1.5 text-xs text-parchment">
+                      Approve
+                    </button>
+                  </form>
+                  <form action={manageSignupAction}>
+                    <input type="hidden" name="signupId" value={signup.id} />
+                    <button type="submit" name="action" value="delay" className="rounded-md border border-wheat/20 px-3 py-1.5 text-xs text-wheat/75">
+                      Delay (Pending)
+                    </button>
+                  </form>
+                  <form action={manageSignupAction}>
+                    <input type="hidden" name="signupId" value={signup.id} />
+                    <button type="submit" name="action" value="delete" className="rounded-md border border-crisis/40 px-3 py-1.5 text-xs text-crisis">
+                      Delete
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <form action={manageSignupAction}>
+                  <input type="hidden" name="signupId" value={signup.id} />
+                  <button type="submit" name="action" value="delete" className="rounded-md border border-crisis/40 px-3 py-1.5 text-xs text-crisis">
+                    Delete Signup
+                  </button>
+                </form>
+              )}
+            </div>
           </article>
         ))}
       </div>

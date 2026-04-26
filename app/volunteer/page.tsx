@@ -29,6 +29,12 @@ export default async function VolunteerPage() {
             Volunteers can sign up with exact time ranges and declared hours. Logged-in hour history
             is credited after organization approval.
           </p>
+          {!user && (
+            <p className="mt-3 text-sm text-ember">
+              You can browse and sign up without an account, but dashboard features (hour history, deleting signups,
+              approvals, and management tools) are only available after login.
+            </p>
+          )}
         </div>
         <VolunteerHub counties={counties ?? []} initialListings={listings ?? []} canCreateListing={canCreateListing} />
       </div>

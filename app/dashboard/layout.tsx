@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
-import { DashboardShell } from '@/components/dashboard/DashboardShell'
 
 export default async function DashboardLayout({
   children,
@@ -20,12 +19,7 @@ export default async function DashboardLayout({
     .eq('auth_user_id', user.id)
     .maybeSingle()
 
-  const accountType = (profile?.account_type ?? 'volunteer') as 'volunteer' | 'organization'
-  const fullName = profile?.full_name ?? user.email ?? 'User'
+  if (!profile) redirect('/login?redirectTo=/dashboard/overview')
 
-  return (
-    <DashboardShell accountType={accountType} fullName={fullName}>
-      {children}
-    </DashboardShell>
-  )
+  return <>{children}</>
 }
