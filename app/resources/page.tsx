@@ -8,16 +8,6 @@ export default async function ResourcesPage() {
     supabase.from('resources').select('*', { count: 'exact', head: true }),
     supabase.from('resources').select('name,type,notes,hours,website_url').limit(24),
   ])
-  const resourcesByType = (resources ?? []).reduce<Record<string, string[]>>((acc, resource) => {
-    const key = resource.type ?? 'other'
-    if (!acc[key]) acc[key] = []
-    acc[key].push(resource.name)
-    return acc
-  }, {})
-  const toolkitCards = Object.entries(resourcesByType).slice(0, 3).map(([type, names]) => ({
-    title: type.replaceAll('_', ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
-    items: names.slice(0, 3),
-  }))
   const officeHours = (resources ?? [])
     .filter((resource) => resource.hours)
     .slice(0, 3)
@@ -31,36 +21,13 @@ export default async function ResourcesPage() {
     <main className="min-h-screen bg-ash">
       <div className="container mx-auto px-6 pt-28 pb-20">
         <div className="max-w-3xl mb-12 animate-fade-in-soft">
-          <span className="text-growth font-mono text-xs uppercase tracking-widest">Application Toolkit</span>
+          <span className="text-growth font-mono text-xs uppercase tracking-widest">Resource Center</span>
           <h1 className="font-display text-5xl text-wheat font-bold mt-3 mb-4">Resources That Save Filing Time</h1>
           <p className="text-wheat/70 leading-relaxed">
-            Download practical templates, follow submission checklists, and use guided prep
-            materials designed around US drought-response applications. Database currently tracks{' '}
+            Use local support listings and office-hour guidance designed around US drought-response
+            applications. Database currently tracks{' '}
             <span className="text-ember font-semibold">{liveResourceCount ?? 0}</span> local resource records.
           </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-5 mb-16">
-          {(toolkitCards.length > 0 ? toolkitCards : [{
-            title: 'Support Toolkit',
-            items: ['County resource listings update after seed import.'],
-          }]).map((toolkit, index) => (
-            <article
-              key={toolkit.title}
-              style={{ animationDelay: `${index * 0.14}s` }}
-              className="rounded-2xl bg-soil/50 border border-wheat/10 p-6 animate-fade-in-soft hover:-translate-y-1 hover:border-growth/35 transition-all"
-            >
-              <h2 className="text-wheat font-display text-2xl mb-4">{toolkit.title}</h2>
-              <ul className="space-y-2">
-                {toolkit.items.map((item) => (
-                  <li key={item} className="text-wheat/70 text-sm">- {item}</li>
-                ))}
-              </ul>
-              <button className="mt-6 px-4 py-2 rounded-lg bg-wheat/10 text-wheat text-sm hover:bg-wheat/20 transition-colors animate-float-gentle">
-                Download Toolkit
-              </button>
-            </article>
-          ))}
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 animate-fade-in-soft animate-delay-300">
