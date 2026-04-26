@@ -3,6 +3,59 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { DeadlineTimer } from '@/components/ui/DeadlineTimer'
 
+function formatLabel(key: string) {
+  return key
+    .replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/^./, (char) => char.toUpperCase())
+}
+
+function formatPrimitive(value: unknown) {
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (value === null || value === undefined) return 'Not specified'
+  return String(value)
+}
+
+function renderRuleValue(value: unknown): React.ReactNode {
+  if (Array.isArray(value)) {
+    return (
+      <ul className="space-y-1 list-disc list-inside text-wheat/80 text-sm">
+        {value.map((item, index) => (
+          <li key={index}>
+            {typeof item === 'object' && item !== null ? (
+              <span className="text-wheat/70">Complex requirement provided</span>
+            ) : (
+              formatPrimitive(item)
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    const entries = Object.entries(value as Record<string, unknown>)
+    if (entries.length === 0) return <p className="text-wheat/50 text-sm">No details provided.</p>
+
+    return (
+      <div className="space-y-2">
+        {entries.map(([nestedKey, nestedValue]) => (
+          <div key={nestedKey} className="rounded-lg border border-wheat/10 bg-ash/40 p-3">
+            <p className="text-[11px] uppercase tracking-widest text-wheat/45 font-mono">
+              {formatLabel(nestedKey)}
+            </p>
+            <div className="mt-1 text-sm text-wheat/80">{renderRuleValue(nestedValue)}</div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  return <p className="text-sm text-wheat/85">{formatPrimitive(value)}</p>
+}
+
 export default async function ProgramDetailPage({
   params
 }: {
@@ -60,9 +113,20 @@ export default async function ProgramDetailPage({
               <h2 className="text-wheat font-display text-2xl font-semibold mb-4 border-b border-wheat/10 pb-2">
                 Eligibility Rules
               </h2>
-              <pre className="bg-soil/50 p-4 rounded-xl text-wheat/70 font-mono text-sm whitespace-pre-wrap">
-                {JSON.stringify(program.eligibility_rules, null, 2)}
-              </pre>
+              {program.eligibility_rules && typeof program.eligibility_rules === 'object' ? (
+                <div className="space-y-3">
+                  {Object.entries(program.eligibility_rules as Record<string, unknown>).map(([key, value]) => (
+                    <article key={key} className="bg-soil/50 border border-wheat/10 rounded-xl p-4">
+                      <h3 className="text-sm font-semibold text-wheat mb-2">{formatLabel(key)}</h3>
+                      {renderRuleValue(value)}
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="bg-soil/50 p-4 rounded-xl text-wheat/70 text-sm">
+                  Eligibility requirements are not available for this program yet.
+                </p>
+              )}
             </section>
           </div>
 
