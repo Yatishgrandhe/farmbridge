@@ -123,19 +123,20 @@ export default async function Home() {
       <section className="container mx-auto px-6 py-18">
         <div className="grid lg:grid-cols-2 gap-6 items-stretch">
           <div className="space-y-4">
-            <span className="text-growth font-mono text-xs uppercase tracking-widest">WebGL + Motion</span>
-            <h2 className="font-display text-4xl text-wheat font-bold">Interactive Relief Visual Layer</h2>
+            <span className="text-growth font-mono text-xs uppercase tracking-widest">Live Operations View</span>
+            <h2 className="font-display text-4xl text-wheat font-bold">Interactive risk overview for fast decisions</h2>
             <p className="text-wheat/70">
-              Real-time animated visuals blend WebGL geometry with crisis metrics to create an immersive,
-              high-signal landing experience for farmers and policymakers.
+              Use this live visual panel to quickly understand changing pressure across counties and
+              prioritize where applications and support efforts should move first.
             </p>
             <WebGLFarmScene />
           </div>
           <div className="space-y-4">
-            <span className="text-ember font-mono text-xs uppercase tracking-widest">Spline 3D</span>
-            <h3 className="font-display text-3xl text-wheat font-bold">3D branded scene block</h3>
+            <span className="text-ember font-mono text-xs uppercase tracking-widest">Scenario Spotlight</span>
+            <h3 className="font-display text-3xl text-wheat font-bold">Explore the current response picture</h3>
             <p className="text-wheat/65 text-sm">
-              Spline scene rendering is GPU-backed and complements Framer Motion transitions for richer storytelling.
+              This animated spotlight helps teams communicate urgency and keep county leaders aligned
+              on response priorities in a single glance.
             </p>
             <SplineShowcase />
           </div>
@@ -145,8 +146,12 @@ export default async function Home() {
       <section className="container mx-auto px-6 pb-18">
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
-            <span className="text-crisis font-mono text-xs uppercase tracking-widest">Leaflet Map</span>
-            <h3 className="font-display text-3xl text-wheat font-bold">County drought and disaster locations</h3>
+            <span className="text-crisis font-mono text-xs uppercase tracking-widest">County Intelligence Map</span>
+            <h3 className="font-display text-3xl text-wheat font-bold">Filter by ZIP and open county detail cards</h3>
+            <p className="text-wheat/65 text-sm">
+              Click markers to view county popups, then open full details with drought status, deficit,
+              disaster fields, and representative ZIP coverage for planning.
+            </p>
             <CountyReliefMapSection
               counties={(countyRiskRows ?? []).map((county) => ({
                 name: county.name,
@@ -165,7 +170,7 @@ export default async function Home() {
           <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
             <h4 className="font-display text-2xl text-wheat mb-3">Open datasets used</h4>
             <p className="text-wheat/70 text-sm mb-4">
-              Sources for expanding map layers and live drought/agriculture feeds.
+              Trusted public sources that support county boundaries, drought signals, and response context.
             </p>
             <ul className="space-y-3">
               {DATASET_LINKS.map((dataset) => (
