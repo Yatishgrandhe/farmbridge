@@ -10,6 +10,11 @@ const spaceMono = Space_Mono({ weight: ['400', '700'], subsets: ['latin'], varia
 export const metadata: Metadata = {
   title: 'FarmBridge | NC Agriculture Crisis Response',
   description: 'Connecting North Carolina farmers to federal relief programs, drought data, and community support.',
+  icons: {
+    icon: '/logo-mark.png',
+    shortcut: '/logo-mark.png',
+    apple: '/logo-mark.png',
+  },
 }
 
 export default function RootLayout({
