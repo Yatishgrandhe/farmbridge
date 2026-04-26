@@ -58,6 +58,8 @@ export default async function Home() {
     { count: severeDroughtCount },
     { data: countiesWithDeficit },
     { data: countyRiskRows },
+    { data: listingRows },
+    { data: resourceRows },
   ] = await Promise.all([
     supabase.from('programs').select('*', { count: 'exact', head: true }).eq('active', true),
     supabase
@@ -79,7 +81,49 @@ export default async function Home() {
       .select('name,fips_code,drought_level,precipitation_deficit_inches,is_primary_disaster_area,is_contiguous_disaster_area,disaster_number,disaster_declaration_date,topsoil_moisture,updated_at')
       .order('updated_at', { ascending: false })
       .limit(20),
+    supabase
+      .from('volunteer_listings')
+      .select('id,title,county_fips,address,city,state,zip_code,contact_name,contact_email,contact_phone,created_at,status')
+      .eq('status', 'open')
+      .limit(60),
+    supabase
+      .from('resource_submissions')
+      .select('id,program_name,county_fips,address,city,state,zip_code,contact_name,contact_email,contact_phone,created_at,status')
+      .eq('status', 'approved')
+      .limit(60),
   ])
+
+  const countyByFips = new Map((countyRiskRows ?? []).map((county) => [county.fips_code, county.name]))
+  const overlayItems = [
+    ...((listingRows ?? []).map((listing) => ({
+      id: listing.id,
+      locationType: 'listing' as const,
+      title: listing.title,
+      countyName: countyByFips.get(listing.county_fips) ?? '',
+      zipCode: listing.zip_code ?? null,
+      contactName: listing.contact_name ?? null,
+      contactEmail: listing.contact_email ?? null,
+      contactPhone: listing.contact_phone ?? null,
+      address: listing.address ?? null,
+      city: listing.city ?? null,
+      state: listing.state ?? 'NC',
+      createdAt: listing.created_at ?? null,
+    })) ?? []),
+    ...((resourceRows ?? []).map((resource) => ({
+      id: resource.id,
+      locationType: 'resource_submission' as const,
+      title: resource.program_name,
+      countyName: countyByFips.get(resource.county_fips) ?? '',
+      zipCode: resource.zip_code ?? null,
+      contactName: resource.contact_name ?? null,
+      contactEmail: resource.contact_email ?? null,
+      contactPhone: resource.contact_phone ?? null,
+      address: resource.address ?? null,
+      city: resource.city ?? null,
+      state: resource.state ?? 'NC',
+      createdAt: resource.created_at ?? null,
+    })) ?? []),
+  ].filter((item) => item.countyName)
 
   const precipitationDeficits = (countiesWithDeficit ?? [])
     .map((county) => county.precipitation_deficit_inches ?? 0)
@@ -165,6 +209,7 @@ export default async function Home() {
                 topsoilMoisture: county.topsoil_moisture,
                 updatedAt: county.updated_at,
               }))}
+              overlays={overlayItems}
             />
           </div>
           <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">

@@ -1,8 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { ProgramCard } from '@/components/ui/ProgramCard'
-import type { Database } from '@/lib/types/database.types'
-
-type Program = Database['public']['Tables']['programs']['Row']
 
 const CATEGORIES = [
   { value: 'all', label: 'All Programs' },
@@ -36,7 +33,7 @@ export default async function ProgramsPage({
     query = query.eq('is_urgent', true)
   }
 
-  const { data: programs, error } = await query
+  const { data: programs } = await query
 
   return (
     <main className="min-h-screen bg-ash">
@@ -51,7 +48,7 @@ export default async function ProgramsPage({
           </h1>
           <p className="text-wheat/60 mt-3 max-w-xl">
             {programs?.length ?? 0} active programs. Many go unused because farmers
-            don't know they exist. Find what you qualify for.
+            don&apos;t know they exist. Find what you qualify for.
           </p>
         </div>
 

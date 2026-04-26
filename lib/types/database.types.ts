@@ -56,6 +56,33 @@ export type Database = {
         }
         Relationships: []
       }
+      crisis_metrics: {
+        Row: {
+          date: string
+          id: string
+          metric_name: string
+          source: string | null
+          unit: string | null
+          value: number
+        }
+        Insert: {
+          date: string
+          id?: string
+          metric_name: string
+          source?: string | null
+          unit?: string | null
+          value: number
+        }
+        Update: {
+          date?: string
+          id?: string
+          metric_name?: string
+          source?: string | null
+          unit?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
       deadline_alerts: {
         Row: {
           confirmed: boolean | null

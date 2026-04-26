@@ -5,22 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-
-const NC_COUNTIES = [
-  'Alamance','Alexander','Alleghany','Anson','Ashe','Avery','Beaufort','Bertie',
-  'Bladen','Brunswick','Buncombe','Burke','Cabarrus','Caldwell','Camden','Carteret',
-  'Caswell','Catawba','Chatham','Cherokee','Chowan','Clay','Cleveland','Columbus',
-  'Craven','Cumberland','Currituck','Dare','Davidson','Davie','Duplin','Durham',
-  'Edgecombe','Forsyth','Franklin','Gaston','Gates','Graham','Granville','Greene',
-  'Guilford','Halifax','Harnett','Haywood','Henderson','Hertford','Hoke','Hyde',
-  'Iredell','Jackson','Johnston','Jones','Lee','Lenoir','Lincoln','Macon','Madison',
-  'Martin','McDowell','Mecklenburg','Mitchell','Montgomery','Moore','Nash','New Hanover',
-  'Northampton','Onslow','Orange','Pamlico','Pasquotank','Pender','Perquimans','Person',
-  'Pitt','Polk','Randolph','Richmond','Robeson','Rockingham','Rowan','Rutherford',
-  'Sampson','Scotland','Stanly','Stokes','Surry','Swain','Transylvania','Tyrrell',
-  'Union','Vance','Wake','Warren','Washington','Watauga','Wayne','Wilkes','Wilson',
-  'Yadkin','Yancey'
-]
+import Link from 'next/link'
 
 const CROPS = [
   { value: 'corn', label: 'Corn' },
@@ -49,6 +34,14 @@ const eligibilitySchema = z.object({
 })
 
 type EligibilityData = z.infer<typeof eligibilitySchema>
+type ProgramResult = {
+  id: string
+  slug: string
+  is_urgent: boolean | null
+  name: string
+  summary: string
+  deadline_label: string | null
+}
 
 const STEPS = [
   { id: 'location', title: 'Your Location', subtitle: 'Help us find county-specific programs' },
@@ -57,9 +50,13 @@ const STEPS = [
   { id: 'results', title: 'Your Programs', subtitle: "Here's what you qualify for" },
 ]
 
-export function EligibilityWizard() {
+interface EligibilityWizardProps {
+  countyOptions: string[]
+}
+
+export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
   const [step, setStep] = useState(0)
-  const [results, setResults] = useState<any[]>([])
+  const [results, setResults] = useState<ProgramResult[]>([])
   const [loading, setLoading] = useState(false)
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<EligibilityData>({
@@ -85,7 +82,7 @@ export function EligibilityWizard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
-      const { programs } = await res.json()
+      const { programs } = await res.json() as { programs: ProgramResult[] }
       setResults(programs)
       setStep(3)
     } catch (e) {
@@ -139,7 +136,7 @@ export function EligibilityWizard() {
                   className="w-full bg-soil/50 border border-wheat/20 text-wheat rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-crisis focus:ring-1 focus:ring-crisis"
                 >
                   <option value="">Select your county...</option>
-                  {NC_COUNTIES.map(c => <option key={c} value={c}>{c} County</option>)}
+                  {countyOptions.map(c => <option key={c} value={c}>{c} County</option>)}
                 </select>
                 {errors.county && <p className="text-crisis text-xs mt-1">{errors.county.message}</p>}
               </div>
@@ -282,8 +279,8 @@ export function EligibilityWizard() {
                 </h2>
               </div>
               <div className="space-y-3">
-                {results.map((program: any) => (
-                  <a
+                {results.map((program) => (
+                  <Link
                     key={program.id}
                     href={`/programs/${program.slug}`}
                     className="block p-4 bg-soil/30 border border-wheat/10 rounded-xl hover:border-crisis/40 transition-all group"
@@ -303,15 +300,15 @@ export function EligibilityWizard() {
                         Deadline: {program.deadline_label}
                       </div>
                     )}
-                  </a>
+                  </Link>
                 ))}
               </div>
-              <a
+              <Link
                 href="/programs"
                 className="block text-center py-3 border border-wheat/20 text-wheat/60 rounded-xl text-sm hover:border-wheat/40 transition-colors"
               >
                 Browse All Programs
-              </a>
+              </Link>
             </div>
           )}
         </motion.div>

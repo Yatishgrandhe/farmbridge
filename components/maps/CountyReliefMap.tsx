@@ -20,8 +20,24 @@ type CountyRisk = {
   updatedAt: string | null
 }
 
+type MapOverlay = {
+  id: string
+  locationType: 'listing' | 'resource_submission'
+  title: string
+  countyName: string
+  zipCode: string | null
+  contactName: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  city: string | null
+  state: string | null
+  createdAt: string | null
+}
+
 interface CountyReliefMapProps {
   counties: CountyRisk[]
+  overlays: MapOverlay[]
 }
 
 function colorForLevel(level: string | null) {
@@ -30,10 +46,11 @@ function colorForLevel(level: string | null) {
   return 'var(--color-growth)'
 }
 
-export function CountyReliefMap({ counties }: CountyReliefMapProps) {
+export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null)
   const [zipFilter, setZipFilter] = useState('')
   const [selectedCountyName, setSelectedCountyName] = useState<string | null>(null)
+  const [selectedOverlayId, setSelectedOverlayId] = useState<string | null>(null)
 
   const markers = useMemo(() => {
     const normalizedZip = zipFilter.trim()
@@ -55,6 +72,22 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
       markers.find((county) => county.name === selectedCountyName) ??
       (markers.length > 0 ? markers[0] : null),
     [markers, selectedCountyName]
+  )
+
+  const visibleOverlays = useMemo(() => {
+    const normalizedZip = zipFilter.trim()
+    return overlays
+      .map((overlay) => ({
+        ...overlay,
+        coords: COUNTY_COORDINATES[overlay.countyName],
+      }))
+      .filter((overlay) => overlay.coords)
+      .filter((overlay) => (normalizedZip ? (overlay.zipCode ?? '').startsWith(normalizedZip) : true))
+  }, [overlays, zipFilter])
+
+  const selectedOverlay = useMemo(
+    () => visibleOverlays.find((overlay) => overlay.id === selectedOverlayId) ?? null,
+    [visibleOverlays, selectedOverlayId]
   )
 
   useEffect(() => {
@@ -102,6 +135,36 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
 
       circle.on('click', () => {
         setSelectedCountyName(county.name)
+        setSelectedOverlayId(null)
+      })
+    })
+
+    visibleOverlays.forEach((overlay, index) => {
+      const marker = L.circleMarker(
+        [overlay.coords.lat + (index % 5) * 0.018, overlay.coords.lng - (index % 4) * 0.014],
+        {
+          color: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
+          fillColor: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
+          fillOpacity: 0.9,
+          weight: 2,
+          radius: 6,
+        }
+      ).addTo(map)
+
+      marker.bindPopup(
+        `<div>
+          <p><strong>${overlay.title}</strong></p>
+          <p>Type: ${overlay.locationType === 'listing' ? 'Volunteer Listing' : 'Resource Submission'}</p>
+          <p>ZIP: ${overlay.zipCode ?? 'N/A'}</p>
+          <button data-overlay-id="${overlay.id}" class="map-overlay-detail-btn" style="margin-top:8px;padding:6px 10px;border:0;border-radius:8px;background:#0f5b4f;color:#f6f8f4;cursor:pointer;font-size:12px;">
+            View Details
+          </button>
+        </div>`
+      )
+
+      marker.on('click', () => {
+        setSelectedOverlayId(overlay.id)
+        setSelectedCountyName(null)
       })
     })
 
@@ -111,6 +174,12 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
       if (!button) return
       const countyName = button.getAttribute('data-county')
       if (countyName) setSelectedCountyName(countyName)
+
+      const overlayButton = target?.closest('.map-overlay-detail-btn') as HTMLElement | null
+      if (overlayButton) {
+        const overlayId = overlayButton.getAttribute('data-overlay-id')
+        if (overlayId) setSelectedOverlayId(overlayId)
+      }
     }
     map.getContainer().addEventListener('click', clickHandler)
 
@@ -118,7 +187,7 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
       map.getContainer().removeEventListener('click', clickHandler)
       map.remove()
     }
-  }, [markers])
+  }, [markers, visibleOverlays])
 
   return (
     <div className="space-y-4">
@@ -141,7 +210,7 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
           Clear
         </button>
         <p className="text-xs text-wheat/55 font-mono">
-          Showing {markers.length} mapped locations
+          Showing {markers.length + visibleOverlays.length} mapped locations
         </p>
       </div>
 
@@ -168,6 +237,28 @@ export function CountyReliefMap({ counties }: CountyReliefMapProps) {
             <p className="text-wheat/80">Contiguous Area: <span className="text-wheat">{selectedCounty.isContiguousDisasterArea ? 'Yes' : 'No'}</span></p>
             <p className="text-wheat/80 md:col-span-2">Representative ZIP codes: <span className="text-wheat">{(selectedCounty.zipCodes ?? []).join(', ') || 'N/A'}</span></p>
             <p className="text-wheat/55 md:col-span-2 text-xs">Last updated: {selectedCounty.updatedAt ?? 'N/A'}</p>
+          </div>
+        </div>
+      )}
+
+      {selectedOverlay && (
+        <div className="rounded-2xl border border-ember/35 bg-ember/10 p-5">
+          <h4 className="font-display text-2xl text-wheat mb-2">{selectedOverlay.title}</h4>
+          <div className="grid md:grid-cols-2 gap-3 text-sm">
+            <p className="text-wheat/80">
+              Type:{' '}
+              <span className="text-wheat">
+                {selectedOverlay.locationType === 'listing' ? 'Volunteer Listing' : 'Resource Submission'}
+              </span>
+            </p>
+            <p className="text-wheat/80">County: <span className="text-wheat">{selectedOverlay.countyName}</span></p>
+            <p className="text-wheat/80">Address: <span className="text-wheat">{selectedOverlay.address ?? 'N/A'}</span></p>
+            <p className="text-wheat/80">City/State: <span className="text-wheat">{selectedOverlay.city ?? 'N/A'}, {selectedOverlay.state ?? 'NC'}</span></p>
+            <p className="text-wheat/80">ZIP: <span className="text-wheat">{selectedOverlay.zipCode ?? 'N/A'}</span></p>
+            <p className="text-wheat/80">Contact: <span className="text-wheat">{selectedOverlay.contactName ?? 'N/A'}</span></p>
+            <p className="text-wheat/80">Email: <span className="text-wheat">{selectedOverlay.contactEmail ?? 'N/A'}</span></p>
+            <p className="text-wheat/80">Phone: <span className="text-wheat">{selectedOverlay.contactPhone ?? 'N/A'}</span></p>
+            <p className="text-wheat/55 md:col-span-2 text-xs">Created at: {selectedOverlay.createdAt ?? 'N/A'}</p>
           </div>
         </div>
       )}

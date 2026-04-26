@@ -1,33 +1,30 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
 
-const TOOLKITS = [
-  {
-    title: 'Disaster Relief Packet',
-    items: ['Loss verification worksheet', 'County declaration lookup', 'Program intake script'],
-  },
-  {
-    title: 'Loan Readiness Packet',
-    items: ['Cash flow snapshot template', 'Debt schedule worksheet', 'Collateral prep checklist'],
-  },
-  {
-    title: 'Conservation Upgrade Packet',
-    items: ['Cost-share estimate form', 'Water infrastructure planner', 'Soil remediation guide'],
-  },
-]
-
-const DEFAULT_OFFICE_HOURS = [
-  { day: 'Monday', window: '7:00 PM - 8:30 PM ET', topic: 'First-time USDA applicants' },
-  { day: 'Wednesday', window: '12:00 PM - 1:00 PM ET', topic: 'SBA disaster loan Q&A' },
-  { day: 'Friday', window: '8:00 AM - 9:00 AM ET', topic: 'Deadline sprint clinic' },
-]
-
 export default async function ResourcesPage() {
   const supabase = await createServerClient()
-  const { count: liveResourceCount } = await supabase
-    .from('resources')
-    .select('*', { count: 'exact', head: true })
-  const officeHours = DEFAULT_OFFICE_HOURS
+  const [{ count: liveResourceCount }, { data: resources }] = await Promise.all([
+    supabase.from('resources').select('*', { count: 'exact', head: true }),
+    supabase.from('resources').select('name,type,notes,hours,website_url').limit(24),
+  ])
+  const resourcesByType = (resources ?? []).reduce<Record<string, string[]>>((acc, resource) => {
+    const key = resource.type ?? 'other'
+    if (!acc[key]) acc[key] = []
+    acc[key].push(resource.name)
+    return acc
+  }, {})
+  const toolkitCards = Object.entries(resourcesByType).slice(0, 3).map(([type, names]) => ({
+    title: type.replaceAll('_', ' ').replace(/\b\w/g, (m) => m.toUpperCase()),
+    items: names.slice(0, 3),
+  }))
+  const officeHours = (resources ?? [])
+    .filter((resource) => resource.hours)
+    .slice(0, 3)
+    .map((resource) => ({
+      day: resource.name,
+      window: resource.hours ?? 'Business hours',
+      topic: resource.notes ?? 'Local support',
+    }))
 
   return (
     <main className="min-h-screen bg-ash">
@@ -43,7 +40,10 @@ export default async function ResourcesPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-5 mb-16">
-          {TOOLKITS.map((toolkit, index) => (
+          {(toolkitCards.length > 0 ? toolkitCards : [{
+            title: 'Support Toolkit',
+            items: ['County resource listings update after seed import.'],
+          }]).map((toolkit, index) => (
             <article
               key={toolkit.title}
               style={{ animationDelay: `${index * 0.14}s` }}

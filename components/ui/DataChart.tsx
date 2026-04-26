@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 export type ChartType = 'bar' | 'line' | 'area'
 
 interface DataChartProps {
-  data: any[]
+  data: Array<Record<string, string | number | null>>
   xAxisKey: string
   yAxisKey: string
   type?: ChartType

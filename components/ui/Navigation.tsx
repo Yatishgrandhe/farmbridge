@@ -20,6 +20,7 @@ export function Navigation() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/programs', label: 'Programs' },
+    { href: '/volunteer', label: 'Volunteer' },
     { href: '/resources', label: 'Resources' },
     { href: '/alerts', label: 'Alerts' },
     { href: '/impact', label: 'Impact Data' },
@@ -48,7 +49,7 @@ export function Navigation() {
               priority
             />
           </div>
-          <span className="text-wheat font-display font-bold text-[1.45rem] tracking-tight leading-none whitespace-nowrap max-[420px]:hidden">
+          <span className="text-wheat font-display font-bold text-[1.58rem] tracking-tight leading-none whitespace-nowrap max-[420px]:hidden">
             FarmBridge
           </span>
         </Link>
@@ -58,7 +59,7 @@ export function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[10px] font-body tracking-wide transition-colors ${
+              className={`text-[12px] font-body tracking-wide transition-colors ${
                 pathname === link.href ? 'text-wheat font-semibold' : 'text-wheat/60 hover:text-wheat'
               }`}
             >
@@ -67,9 +68,15 @@ export function Navigation() {
           ))}
           <Link
             href="/eligibility"
-            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-[10px] font-semibold rounded-full transition-colors"
+            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-[12px] font-semibold rounded-full transition-colors"
           >
             Check Eligibility
+          </Link>
+          <Link
+            href="/login"
+            className="px-4 py-2.5 border border-wheat/20 text-wheat/80 hover:text-wheat font-body text-[12px] font-semibold rounded-full transition-colors"
+          >
+            Log In
           </Link>
         </div>
 
@@ -119,6 +126,13 @@ export function Navigation() {
               className="mt-2 text-center px-4 py-2.5 bg-wheat text-ash font-body text-sm font-semibold rounded-lg"
             >
               Check Eligibility
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className="text-center px-4 py-2.5 border border-wheat/20 text-wheat/80 font-body text-sm font-semibold rounded-lg"
+            >
+              Log In
             </Link>
             </div>
           </div>

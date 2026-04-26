@@ -12,6 +12,13 @@ const inputSchema = z.object({
   email: z.string().optional(),
 })
 
+type EligibilityRules = {
+  requires_loss?: boolean
+  counties?: 'all' | 'disaster_designated'
+  beginning_farmer_priority?: boolean
+  priority_young_beginning?: boolean
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json()
   const parsed = inputSchema.safeParse(body)
@@ -41,7 +48,7 @@ export async function POST(req: NextRequest) {
   // Score and filter
   const scored = programs
     .map(p => {
-      const rules = p.eligibility_rules as any
+      const rules = (p.eligibility_rules ?? {}) as EligibilityRules
       let score = 10 // base
 
       if (rules.requires_loss && !data.hasExperiencedLoss) return null
@@ -52,13 +59,13 @@ export async function POST(req: NextRequest) {
       }
 
       if (data.hasExperiencedLoss && rules.requires_loss) score += 20
-      if (data.isBeginningFarmer && rules.priority_young_beginning) score += 15
+      if (data.isBeginningFarmer && (rules.beginning_farmer_priority || rules.priority_young_beginning)) score += 15
       if (p.is_urgent) score += 10
 
       return { ...p, score }
     })
     .filter(Boolean)
-    .sort((a: any, b: any) => b.score - a.score)
+    .sort((a, b) => (b?.score ?? 0) - (a?.score ?? 0))
 
   // Optionally save to deadline_alerts
   if (data.email) {

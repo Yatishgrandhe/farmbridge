@@ -4,11 +4,17 @@ import { createServerClient } from '@/lib/supabase/server'
 
 export default async function ImpactPage() {
   const supabase = await createServerClient()
-  const [{ data: counties }, { data: programs }] = await Promise.all([
+  const [{ data: counties }, { data: programs }, { data: metrics }] = await Promise.all([
     supabase
       .from('counties')
       .select('drought_level, precipitation_deficit_inches, is_primary_disaster_area'),
     supabase.from('programs').select('category, is_urgent, active').eq('active', true),
+    supabase
+      .from('crisis_metrics')
+      .select('date,metric_name,value')
+      .in('metric_name', ['nc_drought_coverage_pct', 'urea_price_per_ton'])
+      .gte('date', '2025-01-01')
+      .order('date', { ascending: true }),
   ])
 
   const droughtBuckets = ['moderate', 'severe', 'extreme']
@@ -30,6 +36,13 @@ export default async function ImpactPage() {
     (counties ?? []).filter((county) => county.is_primary_disaster_area).length ?? 0
   const urgentProgramCount = (programs ?? []).filter((program) => program.is_urgent).length ?? 0
   const activeProgramCount = programs?.length ?? 0
+  const metricRows = metrics ?? []
+  const droughtCoverageSeries = metricRows
+    .filter((row) => row.metric_name === 'nc_drought_coverage_pct')
+    .map((row) => ({ label: row.date.slice(0, 7), value: Number(row.value) }))
+  const ureaSeries = metricRows
+    .filter((row) => row.metric_name === 'urea_price_per_ton')
+    .map((row) => ({ label: row.date.slice(0, 7), value: Number(row.value) }))
 
   return (
     <div className="container mx-auto px-6 py-32 min-h-screen">
@@ -79,6 +92,26 @@ export default async function ImpactPage() {
             type="line"
             color="var(--color-ember)"
             height={340}
+          />
+
+          <DataChart
+            title="NC Drought Coverage (%)"
+            data={droughtCoverageSeries}
+            xAxisKey="label"
+            yAxisKey="value"
+            type="line"
+            color="var(--color-growth)"
+            height={320}
+          />
+
+          <DataChart
+            title="Urea Price per Ton (USD)"
+            data={ureaSeries}
+            xAxisKey="label"
+            yAxisKey="value"
+            type="area"
+            color="var(--color-crisis)"
+            height={320}
           />
         </div>
 

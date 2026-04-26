@@ -15,6 +15,21 @@ type CountyRisk = {
   updatedAt: string | null
 }
 
+type MapOverlay = {
+  id: string
+  locationType: 'listing' | 'resource_submission'
+  title: string
+  countyName: string
+  zipCode: string | null
+  contactName: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  city: string | null
+  state: string | null
+  createdAt: string | null
+}
+
 const CountyReliefMap = dynamic(
   () => import('@/components/maps/CountyReliefMap').then((mod) => mod.CountyReliefMap),
   {
@@ -27,6 +42,12 @@ const CountyReliefMap = dynamic(
   }
 )
 
-export function CountyReliefMapSection({ counties }: { counties: CountyRisk[] }) {
-  return <CountyReliefMap counties={counties} />
+export function CountyReliefMapSection({
+  counties,
+  overlays,
+}: {
+  counties: CountyRisk[]
+  overlays: MapOverlay[]
+}) {
+  return <CountyReliefMap counties={counties} overlays={overlays} />
 }
