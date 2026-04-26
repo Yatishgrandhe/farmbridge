@@ -52,6 +52,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-ash text-wheat font-body selection:bg-growth selection:text-parchment" suppressHydrationWarning>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+              }
+              window.addEventListener('load', function () {
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+              });
+            `,
+          }}
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[2200] focus:px-4 focus:py-2 focus:bg-growth focus:text-parchment focus:rounded-md"
