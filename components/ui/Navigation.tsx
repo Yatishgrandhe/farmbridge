@@ -48,7 +48,7 @@ export function Navigation() {
               priority
             />
           </div>
-          <span className="text-wheat font-display font-bold text-[1.55rem] tracking-tight leading-none max-[420px]:hidden">
+          <span className="text-wheat font-display font-bold text-[1.45rem] tracking-tight leading-none whitespace-nowrap max-[420px]:hidden">
             FarmBridge
           </span>
         </Link>
@@ -58,7 +58,7 @@ export function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[11px] font-body tracking-wide transition-colors ${
+              className={`text-[10px] font-body tracking-wide transition-colors ${
                 pathname === link.href ? 'text-wheat font-semibold' : 'text-wheat/60 hover:text-wheat'
               }`}
             >
@@ -67,7 +67,7 @@ export function Navigation() {
           ))}
           <Link
             href="/eligibility"
-            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-[11px] font-semibold rounded-full transition-colors"
+            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-[10px] font-semibold rounded-full transition-colors"
           >
             Check Eligibility
           </Link>
