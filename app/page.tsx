@@ -1,65 +1,153 @@
-import Image from "next/image";
+import { HeroSection } from '@/components/sections/HeroSection'
+import Link from 'next/link'
+import { createServerClient } from '@/lib/supabase/server'
 
-export default function Home() {
+const QUICK_PATHS = [
+  {
+    title: 'I need urgent relief',
+    description: 'See programs with closing windows in the next 30 days and prioritize first actions.',
+    href: '/alerts',
+    cta: 'View urgent alerts',
+  },
+  {
+    title: 'I want to check eligibility',
+    description: 'Answer a few questions and receive tailored program recommendations by county and farm type.',
+    href: '/eligibility',
+    cta: 'Start eligibility wizard',
+  },
+  {
+    title: 'I need help with paperwork',
+    description: 'Use templates, checklist packets, and office-hour links built for first-time applicants.',
+    href: '/resources',
+    cta: 'Open application toolkit',
+  },
+]
+
+const ACTION_STEPS = [
+  'Run eligibility check and save top 3 programs.',
+  'Collect tax, acreage, and yield-loss documents.',
+  'Book county extension support if forms are stalled.',
+  'Track deadlines and submit with proof of receipt.',
+]
+
+export default async function Home() {
+  const supabase = await createServerClient()
+
+  const [
+    { count: activeProgramsCount },
+    { count: urgentProgramsCount },
+    { count: primaryDisasterCount },
+    { count: severeDroughtCount },
+    { data: countiesWithDeficit },
+  ] = await Promise.all([
+    supabase.from('programs').select('*', { count: 'exact', head: true }).eq('active', true),
+    supabase
+      .from('programs')
+      .select('*', { count: 'exact', head: true })
+      .eq('active', true)
+      .eq('is_urgent', true),
+    supabase
+      .from('counties')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_primary_disaster_area', true),
+    supabase
+      .from('counties')
+      .select('*', { count: 'exact', head: true })
+      .in('drought_level', ['severe', 'extreme']),
+    supabase.from('counties').select('precipitation_deficit_inches'),
+  ])
+
+  const precipitationDeficits = (countiesWithDeficit ?? [])
+    .map((county) => county.precipitation_deficit_inches ?? 0)
+    .filter((value) => typeof value === 'number' && Number.isFinite(value))
+  const averageDeficitInches =
+    precipitationDeficits.length > 0
+      ? precipitationDeficits.reduce((total, value) => total + value, 0) / precipitationDeficits.length
+      : 0
+
+  const liveHeroStats = [
+    {
+      value: activeProgramsCount ?? 0,
+      suffix: '',
+      label: 'active relief\nprograms in database',
+      prefix: '',
+    },
+    {
+      value: urgentProgramsCount ?? 0,
+      suffix: '',
+      label: 'urgent programs\nneeding quick action',
+      prefix: '',
+    },
+    {
+      value: primaryDisasterCount ?? 0,
+      suffix: '',
+      label: 'primary disaster\ncounties in NC',
+      prefix: '',
+    },
+    {
+      value: averageDeficitInches,
+      suffix: ' in',
+      label: 'average county\nrainfall deficit',
+      prefix: '',
+    },
+  ]
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main>
+      <HeroSection stats={liveHeroStats} />
+      <section className="container mx-auto px-6 py-20">
+        <div className="max-w-3xl mb-10 animate-fade-in-soft">
+          <span className="text-growth font-mono text-xs uppercase tracking-widest">Quick Start</span>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-wheat mt-3 mb-3">
+            Pick a path and move in minutes.
+          </h2>
+          <p className="text-wheat/70">
+            FarmBridge is designed for active farming schedules. Start with one outcome and we
+            guide the next actions with local context. Currently tracking{' '}
+            <span className="text-ember font-semibold">{severeDroughtCount ?? 0}</span> counties
+            with severe or extreme drought conditions.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="grid md:grid-cols-3 gap-5">
+          {QUICK_PATHS.map((path, index) => (
+            <Link
+              key={path.title}
+              href={path.href}
+              style={{ animationDelay: `${index * 0.12}s` }}
+              className="bg-soil/50 border border-wheat/10 rounded-2xl p-6 hover:border-growth/40 hover:-translate-y-1 transition-all animate-fade-in-soft"
+            >
+              <h3 className="font-display text-2xl text-wheat font-semibold mb-2">{path.title}</h3>
+              <p className="text-wheat/65 text-sm leading-relaxed mb-5">{path.description}</p>
+              <span className="text-growth text-sm font-semibold">{path.cta} →</span>
+            </Link>
+          ))}
         </div>
-      </main>
-    </div>
-  );
+      </section>
+
+      <section className="container mx-auto px-6 pb-24 animate-fade-in-soft [animation-delay:240ms]">
+        <div className="rounded-3xl border border-growth/30 bg-growth/10 p-8 md:p-10 grid md:grid-cols-2 gap-8">
+          <div>
+            <span className="text-ember font-mono text-xs uppercase tracking-widest">Submission Flow</span>
+            <h3 className="font-display text-3xl text-wheat font-bold mt-3 mb-3">
+              A simple operating rhythm for relief applications
+            </h3>
+            <p className="text-wheat/75 text-sm leading-relaxed">
+              Most rejected applications fail on missing records or late deadlines. This checklist
+              keeps teams aligned even during planting and harvest peaks.
+            </p>
+          </div>
+          <ol className="space-y-3">
+            {ACTION_STEPS.map((step, index) => (
+              <li key={step} className="flex items-start gap-3 bg-ash/50 rounded-xl p-3 border border-wheat/10">
+                <span className="mt-0.5 w-6 h-6 rounded-full bg-wheat text-ash text-xs font-bold flex items-center justify-center">
+                  {index + 1}
+                </span>
+                <span className="text-wheat/80 text-sm">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    </main>
+  )
 }

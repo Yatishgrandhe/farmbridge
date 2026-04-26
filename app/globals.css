@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand colors from Logo */
+  --color-soil: #0f3128; /* card backgrounds, logo dark green */
+  --color-wheat: #e7ede8; /* primary text, light neutral */
+  --color-crisis: #e2a929; /* urgency accent mapped to logo gold */
+  --color-growth: #0f5b4f; /* logo forest green */
+  --color-sky: #8aa69c; /* muted complementary green-gray */
+  --color-ember: #f4c542; /* logo bright golden yellow */
+  --color-ash: #050c09; /* deep canvas background */
+  --color-parchment: #f6f8f4; /* button/light foreground surface */
+
+  /* Typography */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-data: "Space Grotesk", sans-serif;   /* for numbers/stats only */
+
+  /* Spacing scale */
+  --spacing-section: 6rem;
+  --spacing-card: 1.75rem;
+
+  /* Shadows */
+  --shadow-crisis: 0 0 40px oklch(0.55 0.22 30 / 0.3);
+  --shadow-card: 0 4px 24px oklch(0.18 0.02 55 / 0.12);
+
+  /* Animations */
+  --animate-fade-up: fade-up 0.6s ease both;
+  --animate-counter: counter 2s ease-out both;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Keyframes */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  25%  { transform: translate(-2%, -4%); }
+  50%  { transform: translate(4%, 2%); }
+  75%  { transform: translate(-2%, 4%); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes scroll-ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes logo-breathe {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.04) rotate(1deg); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-120%); opacity: 0; }
+  30% { opacity: 0.35; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+
+@keyframes glow-shift {
+  0%, 100% { opacity: 0.3; filter: blur(60px); }
+  50% { opacity: 0.7; filter: blur(80px); }
+}
+
+@keyframes fade-in-soft {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-logo-breathe {
+  animation: logo-breathe 3.2s ease-in-out infinite;
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+
+.animate-glow-shift {
+  animation: glow-shift 4s ease-in-out infinite;
+}
+
+.animate-fade-in-soft {
+  animation: fade-in-soft 0.6s ease both;
 }
