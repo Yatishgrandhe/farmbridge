@@ -33,7 +33,8 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      aria-label="Primary navigation"
+      className={`fixed top-0 left-0 right-0 z-[2000] transition-all duration-300 ${
         scrolled ? 'bg-ash/80 backdrop-blur-md border-b border-wheat/10 py-4' : 'bg-transparent py-6'
       }`}
     >
@@ -49,17 +50,17 @@ export function Navigation() {
               priority
             />
           </div>
-          <span className="text-wheat font-display font-bold text-[1.58rem] tracking-tight leading-none whitespace-nowrap max-[420px]:hidden">
+          <span className="text-wheat font-display font-bold text-brand tracking-tight leading-none whitespace-nowrap max-[420px]:hidden">
             FarmBridge
           </span>
         </Link>
 
-        <div className="hidden min-[1290px]:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-[12px] font-body tracking-wide transition-colors ${
+              className={`text-nav font-body tracking-wide transition-colors ${
                 pathname === link.href ? 'text-wheat font-semibold' : 'text-wheat/60 hover:text-wheat'
               }`}
             >
@@ -68,19 +69,19 @@ export function Navigation() {
           ))}
           <Link
             href="/eligibility"
-            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-[12px] font-semibold rounded-full transition-colors"
+            className="px-4 py-2.5 bg-wheat/10 text-wheat hover:bg-wheat hover:text-ash font-body text-nav font-semibold rounded-full transition-colors"
           >
             Check Eligibility
           </Link>
           <Link
             href="/resources#submit-resource"
-            className="px-4 py-2.5 bg-growth text-parchment hover:bg-growth/90 font-body text-[12px] font-semibold rounded-full transition-colors"
+            className="px-4 py-2.5 bg-growth text-parchment hover:bg-growth/90 font-body text-nav font-semibold rounded-full transition-colors"
           >
             Submit Resource
           </Link>
           <Link
             href="/login"
-            className="px-4 py-2.5 border border-wheat/20 text-wheat/80 hover:text-wheat font-body text-[12px] font-semibold rounded-full transition-colors"
+            className="px-4 py-2.5 border border-wheat/20 text-wheat/80 hover:text-wheat font-body text-nav font-semibold rounded-full transition-colors"
           >
             Log In
           </Link>
@@ -88,7 +89,7 @@ export function Navigation() {
 
         <button
           onClick={() => setMobileOpen(prev => !prev)}
-          className="min-[1290px]:hidden px-3 py-2 rounded-lg border border-wheat/20 text-wheat text-xs font-mono uppercase tracking-widest"
+          className="lg:hidden px-3 py-2 rounded-lg border border-wheat/20 text-wheat text-xs font-mono uppercase tracking-widest"
           aria-expanded={mobileOpen}
           aria-label="Toggle navigation menu"
         >
@@ -99,11 +100,11 @@ export function Navigation() {
       {mobileOpen && (
         <>
           <button
-            className="min-[1290px]:hidden fixed inset-0 bg-ash/50 backdrop-blur-[1px]"
+            className="lg:hidden fixed inset-0 bg-ash/50 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
             aria-label="Close navigation overlay"
           />
-          <div className="min-[1290px]:hidden fixed top-0 right-0 h-screen w-[320px] border-l border-wheat/10 bg-ash/95 backdrop-blur-md p-5">
+          <div className="lg:hidden fixed top-0 right-0 h-screen w-[320px] border-l border-wheat/10 bg-ash/95 backdrop-blur-md p-5">
             <div className="flex items-center justify-between mb-4">
               <p className="text-wheat font-mono text-xs uppercase tracking-widest">Navigation</p>
               <button

@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useMemo, useRef } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import L from 'leaflet'
 import { COUNTY_COORDINATES } from '@/lib/data/countyCoordinates'
 import { COUNTY_ZIP_CODES } from '@/lib/data/countyZipCodes'
-import { useState } from 'react'
 
 type CountyRisk = {
   name: string
@@ -60,7 +60,10 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         coords: COUNTY_COORDINATES[county.name],
         zipCodes: COUNTY_ZIP_CODES[county.name] ?? [],
       }))
-      .filter((county) => county.coords)
+      .filter(
+        (county): county is typeof county & { coords: { lat: number; lng: number } } =>
+          county.coords !== undefined
+      )
       .filter((county) => {
         if (!normalizedZip) return true
         return county.zipCodes.some((zip) => zip.startsWith(normalizedZip))
@@ -81,7 +84,10 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         ...overlay,
         coords: COUNTY_COORDINATES[overlay.countyName],
       }))
-      .filter((overlay) => overlay.coords)
+      .filter(
+        (overlay): overlay is typeof overlay & { coords: { lat: number; lng: number } } =>
+          overlay.coords !== undefined
+      )
       .filter((overlay) => (normalizedZip ? (overlay.zipCode ?? '').startsWith(normalizedZip) : true))
   }, [overlays, zipFilter])
 
@@ -190,7 +196,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
   }, [markers, visibleOverlays])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative z-0">
       <div className="flex flex-wrap items-end gap-3">
         <div>
           <label className="block text-xs text-wheat/60 uppercase tracking-widest font-mono mb-1">
@@ -220,12 +226,12 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         viewport={{ once: true }}
         className="rounded-2xl border border-wheat/10 overflow-hidden shadow-card"
       >
-        <div ref={mapRef} className="h-[420px] w-full" />
+        <div ref={mapRef} className="h-[420px] w-full relative z-0" />
       </motion.div>
 
       {selectedCounty && (
         <div className="rounded-2xl border border-growth/30 bg-growth/10 p-5">
-          <h4 className="font-display text-2xl text-wheat mb-2">{selectedCounty.name} County Details</h4>
+          <h3 className="font-display text-2xl text-wheat mb-2">{selectedCounty.name} County Details</h3>
           <div className="grid md:grid-cols-2 gap-3 text-sm">
             <p className="text-wheat/80">FIPS: <span className="text-wheat">{selectedCounty.fipsCode}</span></p>
             <p className="text-wheat/80">Drought Level: <span className="text-wheat">{selectedCounty.droughtLevel ?? 'Unknown'}</span></p>
@@ -243,7 +249,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
 
       {selectedOverlay && (
         <div className="rounded-2xl border border-ember/35 bg-ember/10 p-5">
-          <h4 className="font-display text-2xl text-wheat mb-2">{selectedOverlay.title}</h4>
+          <h3 className="font-display text-2xl text-wheat mb-2">{selectedOverlay.title}</h3>
           <div className="grid md:grid-cols-2 gap-3 text-sm">
             <p className="text-wheat/80">
               Type:{' '}

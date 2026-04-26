@@ -81,7 +81,7 @@ export function GlobalSidebarShell({
             {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
           </button>
         </div>
-        <nav className="p-3 space-y-2 overflow-y-auto">
+        <nav aria-label="Dashboard navigation" className="p-3 space-y-2 overflow-y-auto">
           {visibleNavItems.map((item) => (
             <Link
               key={item.href}
@@ -117,6 +117,7 @@ export function GlobalSidebarShell({
         </div>
       </aside>
       <main
+        id="main-content"
         className={`min-h-screen transition-all ${collapsed ? 'ml-20' : 'ml-72'} px-6 pb-8 pt-2 md:px-8 md:pb-10 md:pt-2 lg:px-10 lg:pb-12 lg:pt-2`}
       >
         <div className="max-w-[1400px] mx-auto">

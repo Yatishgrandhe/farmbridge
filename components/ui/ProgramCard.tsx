@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Database } from '@/lib/types/database.types'
+import { Badge } from '@/components/ui/Badge'
 
 type Program = Database['public']['Tables']['programs']['Row']
 
@@ -24,13 +25,11 @@ export function ProgramCard({ program, urgent, style }: ProgramCardProps) {
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-wheat/50 font-mono text-[10px] uppercase tracking-widest">
+            <span className="text-wheat/50 font-mono text-xs uppercase tracking-widest">
               {program.agency}
             </span>
             {urgent && (
-              <span className="bg-crisis text-parchment text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">
-                Urgent
-              </span>
+              <Badge className="bg-crisis text-parchment px-2 py-0.5 font-bold tracking-normal">Urgent</Badge>
             )}
           </div>
           <h3 className="text-xl font-display font-bold text-wheat group-hover:text-white transition-colors">

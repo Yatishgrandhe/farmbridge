@@ -19,7 +19,7 @@ export default async function ImpactPage() {
 
   const droughtBuckets = ['moderate', 'severe', 'extreme']
   const droughtData = droughtBuckets.map((level) => ({
-    label: level[0].toUpperCase() + level.slice(1),
+    label: `${level.charAt(0).toUpperCase()}${level.slice(1)}`,
     value: (counties ?? []).filter((county) => county.drought_level === level).length,
   }))
 
@@ -29,7 +29,7 @@ export default async function ImpactPage() {
       .map((county) => county.precipitation_deficit_inches ?? 0)
       .filter((value) => typeof value === 'number' && Number.isFinite(value))
     const avg = deficits.length > 0 ? deficits.reduce((sum, n) => sum + n, 0) / deficits.length : 0
-    return { label: level[0].toUpperCase() + level.slice(1), value: Number(avg.toFixed(2)) }
+    return { label: `${level.charAt(0).toUpperCase()}${level.slice(1)}`, value: Number(avg.toFixed(2)) }
   })
 
   const primaryDisasterCount =
@@ -39,10 +39,10 @@ export default async function ImpactPage() {
   const metricRows = metrics ?? []
   const droughtCoverageSeries = metricRows
     .filter((row) => row.metric_name === 'nc_drought_coverage_pct')
-    .map((row) => ({ label: row.date.slice(0, 7), value: Number(row.value) }))
+    .map((row) => ({ label: row.date?.slice(0, 7) ?? 'N/A', value: Number(row.value) }))
   const ureaSeries = metricRows
     .filter((row) => row.metric_name === 'urea_price_per_ton')
-    .map((row) => ({ label: row.date.slice(0, 7), value: Number(row.value) }))
+    .map((row) => ({ label: row.date?.slice(0, 7) ?? 'N/A', value: Number(row.value) }))
 
   return (
     <div className="container mx-auto px-6 py-32 min-h-screen">

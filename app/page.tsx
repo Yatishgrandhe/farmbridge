@@ -1,5 +1,5 @@
-import { HeroSection } from '@/components/sections/HeroSection'
 import Link from 'next/link'
+import { HeroSection } from '@/components/sections/HeroSection'
 import { createServerClient } from '@/lib/supabase/server'
 import { CountyReliefMapSection } from '@/components/maps/CountyReliefMapSection'
 
@@ -162,54 +162,6 @@ export default async function Home() {
     <main>
       <HeroSection stats={liveHeroStats} />
 
-      <section className="container mx-auto px-6 pb-18">
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-4">
-            <span className="text-crisis font-mono text-xs uppercase tracking-widest">County Intelligence Map</span>
-            <h3 className="font-display text-3xl text-wheat font-bold">Filter by ZIP and open county detail cards</h3>
-            <p className="text-wheat/65 text-sm">
-              Click markers to view county popups, then open full details with drought status, deficit,
-              disaster fields, and representative ZIP coverage for planning.
-            </p>
-            <CountyReliefMapSection
-              counties={(countyRiskRows ?? []).map((county) => ({
-                name: county.name,
-                fipsCode: county.fips_code,
-                droughtLevel: county.drought_level,
-                precipitationDeficitInches: county.precipitation_deficit_inches,
-                isPrimaryDisasterArea: county.is_primary_disaster_area,
-                isContiguousDisasterArea: county.is_contiguous_disaster_area,
-                disasterNumber: county.disaster_number,
-                disasterDeclarationDate: county.disaster_declaration_date,
-                topsoilMoisture: county.topsoil_moisture,
-                updatedAt: county.updated_at,
-              }))}
-              overlays={overlayItems}
-            />
-          </div>
-          <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
-            <h4 className="font-display text-2xl text-wheat mb-3">Open datasets used</h4>
-            <p className="text-wheat/70 text-sm mb-4">
-              Trusted public sources that support county boundaries, drought signals, and response context.
-            </p>
-            <ul className="space-y-3">
-              {DATASET_LINKS.map((dataset) => (
-                <li key={dataset.href}>
-                  <a
-                    href={dataset.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sm text-ember hover:text-wheat transition-colors underline underline-offset-4"
-                  >
-                    {dataset.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       <section className="container mx-auto px-6 py-20">
         <div className="max-w-3xl mb-10 animate-fade-in-soft">
           <span className="text-growth font-mono text-xs uppercase tracking-widest">Quick Start</span>
@@ -239,7 +191,55 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto px-6 pb-24 animate-fade-in-soft [animation-delay:240ms]">
+      <section className="container mx-auto px-6 pb-18">
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <span className="text-crisis font-mono text-xs uppercase tracking-widest">County Intelligence Map</span>
+            <h2 className="font-display text-3xl text-wheat font-bold">Filter by ZIP and open county detail cards</h2>
+            <p className="text-wheat/65 text-sm">
+              Click markers to view county popups, then open full details with drought status, deficit,
+              disaster fields, and representative ZIP coverage for planning.
+            </p>
+            <CountyReliefMapSection
+              counties={(countyRiskRows ?? []).map((county) => ({
+                name: county.name,
+                fipsCode: county.fips_code,
+                droughtLevel: county.drought_level,
+                precipitationDeficitInches: county.precipitation_deficit_inches,
+                isPrimaryDisasterArea: county.is_primary_disaster_area,
+                isContiguousDisasterArea: county.is_contiguous_disaster_area,
+                disasterNumber: county.disaster_number,
+                disasterDeclarationDate: county.disaster_declaration_date,
+                topsoilMoisture: county.topsoil_moisture,
+                updatedAt: county.updated_at,
+              }))}
+              overlays={overlayItems}
+            />
+          </div>
+          <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
+            <h3 className="font-display text-2xl text-wheat mb-3">Open datasets used</h3>
+            <p className="text-wheat/70 text-sm mb-4">
+              Trusted public sources that support county boundaries, drought signals, and response context.
+            </p>
+            <ul className="space-y-3">
+              {DATASET_LINKS.map((dataset) => (
+                <li key={dataset.href}>
+                  <a
+                    href={dataset.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-ember hover:text-wheat transition-colors underline underline-offset-4"
+                  >
+                    {dataset.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 pb-24 animate-fade-in-soft animate-delay-240">
         <div className="rounded-3xl border border-growth/30 bg-growth/10 p-8 md:p-10 grid md:grid-cols-2 gap-8">
           <div>
             <span className="text-ember font-mono text-xs uppercase tracking-widest">Submission Flow</span>

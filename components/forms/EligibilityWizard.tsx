@@ -49,6 +49,9 @@ const STEPS = [
   { id: 'situation', title: 'Your Situation', subtitle: 'Have you experienced losses?' },
   { id: 'results', title: 'Your Programs', subtitle: "Here's what you qualify for" },
 ]
+const LOCATION_STEP = STEPS[0]!
+const OPERATION_STEP = STEPS[1]!
+const SITUATION_STEP = STEPS[2]!
 
 interface EligibilityWizardProps {
   countyOptions: string[]
@@ -95,15 +98,18 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Step progress */}
-      <div className="flex items-center gap-2 mb-10">
+      <div className="flex items-start gap-2 mb-10">
         {STEPS.map((s, i) => (
           <div key={s.id} className="flex items-center gap-2 flex-1 last:flex-none">
-            <div className={`flex items-center justify-center w-8 h-8 rounded-full border text-xs font-mono transition-all ${
-              i < step ? 'bg-growth border-growth text-parchment' :
-              i === step ? 'bg-crisis border-crisis text-parchment' :
-              'border-wheat/20 text-wheat/30'
-            }`}>
-              {i < step ? '✓' : i + 1}
+            <div className="space-y-2">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full border text-xs font-mono transition-all ${
+                i < step ? 'bg-growth border-growth text-parchment' :
+                i === step ? 'bg-crisis border-crisis text-parchment' :
+                'border-wheat/20 text-wheat/30'
+              }`}>
+                {i < step ? '✓' : i + 1}
+              </div>
+              <p className="text-[11px] text-wheat/60 whitespace-nowrap">{s.title}</p>
             </div>
             {i < STEPS.length - 1 && (
               <div className={`flex-1 h-px transition-all ${i < step ? 'bg-growth' : 'bg-wheat/10'}`} />
@@ -124,14 +130,15 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
           {step === 0 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-display text-2xl font-bold text-wheat">{STEPS[0].title}</h2>
-                <p className="text-wheat/50 text-sm mt-1">{STEPS[0].subtitle}</p>
+                <h2 className="font-display text-2xl font-bold text-wheat">{LOCATION_STEP.title}</h2>
+                <p className="text-wheat/50 text-sm mt-1">{LOCATION_STEP.subtitle}</p>
               </div>
               <div>
-                <label className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
+                <label htmlFor="eligibility-county" className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
                   NC County *
                 </label>
                 <select
+                  id="eligibility-county"
                   {...register('county')}
                   className="w-full bg-soil/50 border border-wheat/20 text-wheat rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-crisis focus:ring-1 focus:ring-crisis"
                 >
@@ -153,8 +160,8 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-display text-2xl font-bold text-wheat">{STEPS[1].title}</h2>
-                <p className="text-wheat/50 text-sm mt-1">{STEPS[1].subtitle}</p>
+                <h2 className="font-display text-2xl font-bold text-wheat">{OPERATION_STEP.title}</h2>
+                <p className="text-wheat/50 text-sm mt-1">{OPERATION_STEP.subtitle}</p>
               </div>
 
               <div>
@@ -180,10 +187,11 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
               </div>
 
               <div>
-                <label className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
+                <label htmlFor="eligibility-farm-size-acres" className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
                   Farm Size (acres)
                 </label>
                 <input
+                  id="eligibility-farm-size-acres"
                   {...register('farmSizeAcres', { valueAsNumber: true })}
                   type="number"
                   placeholder="e.g. 250"
@@ -192,10 +200,11 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
               </div>
 
               <div>
-                <label className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
+                <label htmlFor="eligibility-sales-bracket" className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
                   Annual Farm Sales
                 </label>
                 <select
+                  id="eligibility-sales-bracket"
                   {...register('annualSalesBracket')}
                   className="w-full bg-soil/50 border border-wheat/20 text-wheat rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-crisis"
                 >
@@ -219,8 +228,8 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
           {step === 2 && (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
-                <h2 className="font-display text-2xl font-bold text-wheat">{STEPS[2].title}</h2>
-                <p className="text-wheat/50 text-sm mt-1">{STEPS[2].subtitle}</p>
+                <h2 className="font-display text-2xl font-bold text-wheat">{SITUATION_STEP.title}</h2>
+                <p className="text-wheat/50 text-sm mt-1">{SITUATION_STEP.subtitle}</p>
               </div>
 
               <div className="space-y-4">
@@ -240,10 +249,11 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
               </div>
 
               <div>
-                <label className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
+                <label htmlFor="eligibility-email" className="block text-wheat/70 text-xs font-mono uppercase tracking-widest mb-2">
                   Email (optional — for deadline alerts)
                 </label>
                 <input
+                  id="eligibility-email"
                   {...register('email')}
                   type="email"
                   placeholder="your@email.com"

@@ -1,15 +1,6 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { ProgramCard } from '@/components/ui/ProgramCard'
-
-const CATEGORIES = [
-  { value: 'all', label: 'All Programs' },
-  { value: 'disaster_relief', label: '🚨 Disaster Relief' },
-  { value: 'conservation', label: '🌱 Conservation' },
-  { value: 'loan', label: '💰 Loans' },
-  { value: 'commodity_support', label: '🌽 Commodity Support' },
-  { value: 'mental_health', label: '💙 Mental Health' },
-  { value: 'young_farmer', label: '🌾 Young Farmers' },
-]
+import { PROGRAM_CATEGORIES } from '@/lib/constants/programCategories'
 
 export default async function ProgramsPage({
   searchParams
@@ -54,7 +45,7 @@ export default async function ProgramsPage({
 
         {/* Filter pills */}
         <div className="flex flex-wrap gap-2 mb-8">
-          {CATEGORIES.map(cat => (
+          {PROGRAM_CATEGORIES.map(cat => (
             <a
               key={cat.value}
               href={cat.value === 'all' ? '/programs' : `/programs?category=${cat.value}`}
@@ -64,7 +55,14 @@ export default async function ProgramsPage({
                   : 'border border-wheat/20 text-wheat/60 hover:border-wheat/40 hover:text-wheat'
               }`}
             >
-              {cat.label}
+              {cat.emoji ? (
+                <>
+                  <span aria-hidden="true">{cat.emoji}</span>
+                  <span className="ml-1">{cat.label}</span>
+                </>
+              ) : (
+                cat.label
+              )}
             </a>
           ))}
         </div>

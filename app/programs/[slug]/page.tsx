@@ -1,7 +1,7 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { DeadlineTimer } from '@/components/ui/DeadlineTimer'
+import { createServerClient } from '@/lib/supabase/server'
 
 function formatLabel(key: string) {
   return key
@@ -22,8 +22,8 @@ function renderRuleValue(value: unknown): React.ReactNode {
   if (Array.isArray(value)) {
     return (
       <ul className="space-y-1 list-disc list-inside text-wheat/80 text-sm">
-        {value.map((item, index) => (
-          <li key={index}>
+        {value.map((item) => (
+          <li key={typeof item === 'object' ? JSON.stringify(item) : String(item)}>
             {typeof item === 'object' && item !== null ? (
               <span className="text-wheat/70">Complex requirement provided</span>
             ) : (

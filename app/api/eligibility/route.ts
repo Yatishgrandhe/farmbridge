@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
 import { z } from 'zod'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
 
 const inputSchema = z.object({
   county: z.string(),

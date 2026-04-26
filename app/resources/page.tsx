@@ -63,7 +63,7 @@ export default async function ResourcesPage() {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 animate-fade-in-soft [animation-delay:300ms]">
+        <div className="grid md:grid-cols-2 gap-6 animate-fade-in-soft animate-delay-300">
           <section className="rounded-2xl border border-wheat/10 p-6 bg-ash/60 hover:border-wheat/25 transition-colors">
             <h2 className="font-display text-3xl text-wheat mb-3">Weekly Office Hours</h2>
             <p className="text-wheat/60 text-sm mb-5">
@@ -97,7 +97,7 @@ export default async function ResourcesPage() {
           </section>
         </div>
 
-        <div className="mt-12 animate-fade-in-soft [animation-delay:420ms]">
+        <div className="mt-12 animate-fade-in-soft animate-delay-420">
           <ResourceSubmissionForm />
         </div>
       </div>

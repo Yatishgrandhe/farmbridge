@@ -38,7 +38,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
     >
       {/* Grain texture overlay */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.035]"
+        className="pointer-events-none absolute inset-0 opacity-grain"
         style={{
           backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\\\'0 0 200 200\\\' xmlns=\\\'http://www.w3.org/2000/svg\\\'%3E%3Cfilter id=\\\'noiseFilter\\\'%3E%3CfeTurbulence type=\\\'fractalNoise\\\' baseFrequency=\\\'0.65\\\' numOctaves=\\\'3\\\' stitchTiles=\\\'stitch\\\'/%3E%3C/filter%3E%3Crect width=\\\'100%25\\\' height=\\\'100%25\\\' filter=\\\'url(%23noiseFilter)\\\'/%3E%3C/svg%3E")',
           animation: 'grain 4s steps(8) infinite',
@@ -48,7 +48,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
       {/* Gradient mesh background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-crisis/10 blur-[120px] animate-glow-shift" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-growth/8 blur-[100px] animate-glow-shift [animation-delay:700ms]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-growth/8 blur-[100px] animate-glow-shift animate-delay-700" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[200px] rounded-full bg-ember/6 blur-[80px]" />
       </div>
 
@@ -64,7 +64,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-crisis opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-crisis" />
           </span>
-          <span className="text-crisis font-mono text-xs uppercase tracking-[0.2em]">
+          <span className="text-crisis font-mono text-xs uppercase tracking-wide-em">
             Crisis Response Platform · United States · 2026
           </span>
         </motion.div>
@@ -75,7 +75,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.7 }}
-              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-wheat leading-[0.92] tracking-tight mb-6"
+              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-wheat leading-hero tracking-tight mb-6"
             >
               US Farmers
               <br />
@@ -109,7 +109,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               </Link>
               <Link
                 href="/programs"
-                className="px-8 py-4 border border-wheat/20 text-wheat font-body font-medium rounded-full text-sm tracking-wide hover:border-wheat/50 hover:bg-wheat/5 transition-all"
+                className="px-1 py-4 text-wheat/80 font-body font-medium rounded-full text-sm tracking-wide hover:text-wheat transition-colors underline underline-offset-4"
               >
                 Browse All Programs
               </Link>
@@ -141,7 +141,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
         </div>
 
         {/* Crisis Stats Grid */}
-        <motion.div
+        <motion.dl
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
@@ -155,7 +155,10 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               transition={{ delay: 0.8 + i * 0.1 }}
               className="bg-ash/80 px-6 py-5 group hover:bg-soil/30 transition-colors"
             >
-              <div className="font-mono text-3xl font-bold text-wheat mb-1 tabular-nums">
+              <dt className="text-wheat/40 text-xs leading-tight whitespace-pre-line">
+                {stat.label}
+              </dt>
+              <dd className="font-mono text-3xl font-bold text-wheat mt-1 tabular-nums">
                 <AnimatedCounter
                   value={stat.value}
                   prefix={stat.prefix}
@@ -163,13 +166,10 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
                   decimals={stat.value % 1 !== 0 ? 1 : 0}
                   duration={2500}
                 />
-              </div>
-              <div className="text-wheat/40 text-xs leading-tight whitespace-pre-line">
-                {stat.label}
-              </div>
+              </dd>
             </motion.div>
           ))}
-        </motion.div>
+        </motion.dl>
       </motion.div>
 
     </section>

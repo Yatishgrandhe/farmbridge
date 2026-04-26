@@ -15,23 +15,26 @@ function createThread(): ChatThread {
 
 export function FarmBridgeChatWidget() {
   const [open, setOpen] = useState(false)
-  const [threads, setThreads] = useState<ChatThread[]>([])
-  const [activeThreadId, setActiveThreadId] = useState<string>('')
+  const [threads, setThreads] = useState<ChatThread[]>(() => {
+    if (typeof window === 'undefined') return [createThread()]
+
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return [createThread()]
+
+    const parsed = JSON.parse(raw) as ChatThread[]
+    return parsed.length ? parsed : [createThread()]
+  })
+  const [activeThreadId, setActiveThreadId] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return ''
+
+    const parsed = JSON.parse(raw) as ChatThread[]
+    return parsed[0]?.id ?? ''
+  })
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      const initial = createThread()
-      setThreads([initial])
-      setActiveThreadId(initial.id)
-      return
-    }
-    const parsed = JSON.parse(raw) as ChatThread[]
-    setThreads(parsed)
-    setActiveThreadId(parsed[0]?.id ?? '')
-  }, [])
 
   useEffect(() => {
     if (threads.length) localStorage.setItem(STORAGE_KEY, JSON.stringify(threads))
@@ -96,6 +99,7 @@ export function FarmBridgeChatWidget() {
         onClick={() => setOpen((value) => !value)}
         className="fixed bottom-5 right-5 z-[80] rounded-full bg-growth text-parchment p-3 shadow-card border border-growth/50"
         aria-label="Toggle FarmBridge assistant chat"
+        aria-expanded={open}
       >
         {open ? <X size={20} /> : <MessageCircle size={20} />}
       </button>

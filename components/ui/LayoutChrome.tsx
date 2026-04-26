@@ -50,7 +50,9 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navigation />
-      <div className="flex-1">{children}</div>
+      <div id="main-content" className="flex-1" tabIndex={-1}>
+        {children}
+      </div>
       <SiteFooter />
       {!hideAuthenticatedChrome && <FarmBridgeChatWidget />}
     </>

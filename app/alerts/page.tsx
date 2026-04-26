@@ -1,11 +1,7 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
-
-const levelStyles: Record<string, string> = {
-  High: 'bg-crisis/20 text-crisis border-crisis/40',
-  Medium: 'bg-ember/20 text-ember border-ember/40',
-  Watch: 'bg-sky/20 text-sky border-sky/40',
-}
+import { ALERT_LEVEL_STYLES } from '@/lib/constants/alertLevels'
+import { Badge } from '@/components/ui/Badge'
 
 export default async function AlertsPage() {
   const supabase = await createServerClient()
@@ -49,22 +45,23 @@ export default async function AlertsPage() {
           {countyAlerts.map((alert, index) => (
             <article
               key={`${alert.county}-${alert.issue}`}
+              aria-labelledby={`alert-county-${index}`}
               style={{ animationDelay: `${index * 0.1}s` }}
               className="rounded-2xl border border-wheat/10 bg-soil/50 p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fade-in-soft hover:border-ember/45 hover:-translate-y-0.5 transition-all"
             >
               <div className="space-y-1">
-                <p className="text-wheat font-semibold">{alert.county} County</p>
+                <h2 id={`alert-county-${index}`} className="text-wheat font-semibold text-base">
+                  {alert.county} County
+                </h2>
                 <p className="text-wheat/70 text-sm">{alert.issue}</p>
-                <p className="text-growth text-sm">Recommended action: {alert.action}</p>
+                <p className="text-ember text-sm">Recommended action: {alert.action}</p>
               </div>
-              <span className={`px-3 py-1 text-xs font-mono rounded-full border w-fit animate-pulse ${levelStyles[alert.level]}`}>
-                {alert.level}
-              </span>
+              <Badge className={`border w-fit animate-pulse ${ALERT_LEVEL_STYLES[alert.level]}`}>{alert.level}</Badge>
             </article>
           ))}
         </div>
 
-        <div className="rounded-3xl border border-wheat/10 bg-ash/60 p-8 animate-fade-in-soft [animation-delay:300ms]">
+        <div className="rounded-3xl border border-wheat/10 bg-ash/60 p-8 animate-fade-in-soft animate-delay-300">
           <h2 className="font-display text-3xl text-wheat mb-3">What to do after an alert</h2>
           <ul className="grid md:grid-cols-3 gap-3 text-sm">
             <li className="p-4 rounded-xl border border-wheat/10 text-wheat/75 bg-soil/40">
