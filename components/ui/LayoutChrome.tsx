@@ -6,11 +6,13 @@ import { Navigation } from '@/components/ui/Navigation'
 import { SiteFooter } from '@/components/ui/SiteFooter'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { GlobalSidebarShell } from '@/components/dashboard/GlobalSidebarShell'
+import { FarmBridgeChatWidget } from '@/components/chat/FarmBridgeChatWidget'
 
 export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [isAuthed, setIsAuthed] = useState(false)
   const [fullName, setFullName] = useState('User')
+  const [accountType, setAccountType] = useState<'volunteer' | 'organization'>('volunteer')
 
   useEffect(() => {
     const run = async () => {
@@ -25,10 +27,11 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
       setIsAuthed(true)
       const { data: profile } = await supabase
         .from('profiles')
-        .select('full_name')
+        .select('full_name, account_type')
         .eq('auth_user_id', user.id)
         .maybeSingle()
       setFullName(profile?.full_name ?? user.email ?? 'User')
+      setAccountType((profile?.account_type as 'volunteer' | 'organization') ?? 'volunteer')
     }
     run()
   }, [pathname])
@@ -36,7 +39,12 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const hideAuthenticatedChrome = pathname.startsWith('/login') || pathname.startsWith('/signup')
 
   if (isAuthed && !hideAuthenticatedChrome) {
-    return <GlobalSidebarShell fullName={fullName}>{children}</GlobalSidebarShell>
+    return (
+      <GlobalSidebarShell fullName={fullName} accountType={accountType}>
+        {children}
+        <FarmBridgeChatWidget />
+      </GlobalSidebarShell>
+    )
   }
 
   return (
@@ -44,6 +52,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
       <Navigation />
       <div className="flex-1">{children}</div>
       <SiteFooter />
+      {!hideAuthenticatedChrome && <FarmBridgeChatWidget />}
     </>
   )
 }

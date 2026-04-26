@@ -50,7 +50,7 @@ export function SettingsForm({ defaultValues }: SettingsFormProps) {
           />
         </div>
         <div>
-          <label className="text-wheat/55 text-xs">ZIP Code (NC)</label>
+          <label className="text-wheat/55 text-xs">ZIP Code</label>
           <input
             name="zipCode"
             defaultValue={defaultValues.zipCode}

@@ -1,22 +1,17 @@
-import { COUNTY_ZIP_CODES } from '@/lib/data/countyZipCodes'
+const US_STATES = new Set([
+  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
+  'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+  'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC',
+])
 
-const NC_STATE = 'NC'
-
-const NC_ZIP_SET = new Set(
-  Object.values(COUNTY_ZIP_CODES)
-    .flat()
-    .map((zip) => zip.trim())
-)
-
-export function isValidNcZip(zipCode: string) {
-  const normalized = zipCode.trim()
-  return /^\d{5}$/.test(normalized) && NC_ZIP_SET.has(normalized)
+export function isValidUsZip(zipCode: string) {
+  return /^\d{5}$/.test(zipCode.trim())
 }
 
-export function normalizeNcState(state: string) {
-  return state.trim().toUpperCase() === NC_STATE ? NC_STATE : state.trim().toUpperCase()
+export function normalizeUsState(state: string) {
+  return state.trim().toUpperCase()
 }
 
-export function assertNcState(state: string) {
-  return normalizeNcState(state) === NC_STATE
+export function assertUsState(state: string) {
+  return US_STATES.has(normalizeUsState(state))
 }

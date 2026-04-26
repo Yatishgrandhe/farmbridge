@@ -38,13 +38,6 @@ export async function POST(request: Request) {
     submitterProfileId = profile?.id ?? null
   }
 
-  const { data: county } = await supabase
-    .from('counties')
-    .select('fips_code')
-    .eq('fips_code', parsed.data.countyFips)
-    .maybeSingle()
-  if (!county) return NextResponse.json({ error: 'County must be a valid North Carolina county' }, { status: 400 })
-
   const { data, error } = await supabase
     .from('resource_submissions')
     .insert({
@@ -53,10 +46,10 @@ export async function POST(request: Request) {
       provider_name: parsed.data.providerName ?? null,
       category: parsed.data.category ?? null,
       description: parsed.data.description,
-      county_fips: parsed.data.countyFips,
+      county_fips: parsed.data.countyFips || null,
       address: parsed.data.address,
       city: parsed.data.city,
-      state: 'NC',
+      state: parsed.data.state,
       zip_code: parsed.data.zipCode,
       contact_name: parsed.data.contactName,
       contact_email: parsed.data.contactEmail,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { assertNcState, isValidNcZip } from '@/lib/validation/location'
+import { assertUsState, isValidUsZip } from '@/lib/validation/location'
 
 const requiredText = (label: string) => z.string().trim().min(1, `${label} is required`)
 
@@ -7,11 +7,11 @@ export const listingSchema = z.object({
   listingType: z.enum(['farm', 'program']),
   title: requiredText('Title'),
   description: requiredText('Description'),
-  countyFips: requiredText('County'),
+  countyFips: z.string().trim().optional().nullable(),
   address: requiredText('Address'),
   city: requiredText('City'),
-  state: requiredText('State').refine(assertNcState, 'State must be NC'),
-  zipCode: requiredText('ZIP').refine(isValidNcZip, 'ZIP must be a valid NC ZIP'),
+  state: requiredText('State').refine(assertUsState, 'State must be a valid US state code'),
+  zipCode: requiredText('ZIP').refine(isValidUsZip, 'ZIP must be a valid US ZIP'),
   contactName: requiredText('Contact name'),
   contactEmail: z.string().trim().email('Contact email must be valid'),
   contactPhone: z.string().trim().optional().nullable(),
@@ -38,11 +38,11 @@ export const resourceSubmissionSchema = z.object({
   providerName: z.string().trim().optional().nullable(),
   category: z.string().trim().optional().nullable(),
   description: requiredText('Description'),
-  countyFips: requiredText('County'),
+  countyFips: z.string().trim().optional().nullable(),
   address: requiredText('Address'),
   city: requiredText('City'),
-  state: requiredText('State').refine(assertNcState, 'State must be NC'),
-  zipCode: requiredText('ZIP').refine(isValidNcZip, 'ZIP must be a valid NC ZIP'),
+  state: requiredText('State').refine(assertUsState, 'State must be a valid US state code'),
+  zipCode: requiredText('ZIP').refine(isValidUsZip, 'ZIP must be a valid US ZIP'),
   contactName: requiredText('Contact name'),
   contactEmail: z.string().trim().email('Contact email must be valid'),
   contactPhone: z.string().trim().optional().nullable(),

@@ -22,10 +22,10 @@ export default async function VolunteerPage() {
         <div className="max-w-3xl">
           <span className="text-growth font-mono text-xs uppercase tracking-widest">Volunteer + Manpower Hub</span>
           <h1 className="font-display text-5xl text-wheat font-bold mt-3 mb-4">
-            Coordinate farm and program manpower across North Carolina
+            Coordinate farm and program manpower across the United States
           </h1>
           <p className="text-wheat/70 leading-relaxed">
-            Browse open opportunities, post manpower needs, and submit resource programs.
+            Browse open opportunities and post manpower needs.
             Volunteers can sign up with exact time ranges and declared hours. Logged-in hour history
             is credited after organization approval.
           </p>

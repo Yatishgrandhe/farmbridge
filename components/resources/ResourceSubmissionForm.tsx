@@ -1,10 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { US_STATE_CODES } from '@/lib/data/usStates'
 
-type CountyOption = { fips_code: string; name: string }
-
-export function ResourceSubmissionForm({ counties }: { counties: CountyOption[] }) {
+export function ResourceSubmissionForm() {
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -17,7 +16,7 @@ export function ResourceSubmissionForm({ counties }: { counties: CountyOption[] 
       providerName: formData.get('providerName'),
       category: formData.get('category'),
       description: formData.get('description'),
-      countyFips: formData.get('countyFips'),
+      countyFips: null,
       address: formData.get('address'),
       city: formData.get('city'),
       state: formData.get('state'),
@@ -43,7 +42,7 @@ export function ResourceSubmissionForm({ counties }: { counties: CountyOption[] 
     <section id="submit-resource" className="rounded-2xl border border-growth/25 bg-growth/10 p-6">
       <h2 className="font-display text-3xl text-wheat mb-2">Submit a Resource</h2>
       <p className="text-wheat/70 text-sm mb-5">
-        Add a new support program so it can be reviewed and shown to farmers statewide.
+        Add a new support program so it can be reviewed and shown to farmers nationwide.
       </p>
       {message && <p className="text-sm text-ember mb-3">{message}</p>}
       <form action={submitResource} className="grid md:grid-cols-2 gap-3">
@@ -51,18 +50,16 @@ export function ResourceSubmissionForm({ counties }: { counties: CountyOption[] 
         <input name="providerName" placeholder="Provider organization" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
         <input name="category" placeholder="Category (grants, labor, transport...)" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
         <textarea name="description" placeholder="How this supports farms/programs" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat min-h-24" required />
-        <select name="countyFips" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
-          <option value="">Select county</option>
-          {counties.map((county) => (
-            <option key={county.fips_code} value={county.fips_code}>
-              {county.name}
+        <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+        <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+        <select name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
+          {US_STATE_CODES.map((state) => (
+            <option key={state} value={state}>
+              {state}
             </option>
           ))}
         </select>
-        <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="zipCode" placeholder="NC ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+        <input name="zipCode" placeholder="ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
         <input name="contactName" placeholder="Contact name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
         <input name="contactEmail" placeholder="Contact email" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
         <input name="contactPhone" placeholder="Contact phone" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />

@@ -28,8 +28,8 @@ const NAV_ITEMS = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
   { href: '/dashboard/signups', label: 'Signups', icon: ClipboardList },
   { href: '/dashboard/hours', label: 'Hours', icon: Timer },
-  { href: '/dashboard/listings', label: 'Listings', icon: Sprout },
-  { href: '/dashboard/resources', label: 'Resources', icon: Wrench },
+  { href: '/dashboard/listings', label: 'Listings', icon: Sprout, requireOrg: true },
+  { href: '/dashboard/resources', label: 'Resources', icon: Wrench, requireOrg: true },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
   { href: '/volunteer', label: 'Volunteer Hub', icon: HandHelping },
   { href: '/programs', label: 'Programs', icon: FolderKanban },
@@ -43,9 +43,11 @@ const NAV_ITEMS = [
 export function GlobalSidebarShell({
   children,
   fullName,
+  accountType,
 }: {
   children: React.ReactNode
   fullName: string
+  accountType: 'volunteer' | 'organization'
 }) {
   const pathname = usePathname()
   const router = useRouter()
@@ -58,8 +60,10 @@ export function GlobalSidebarShell({
     router.refresh()
   }
 
+  const visibleNavItems = NAV_ITEMS.filter((item) => !(item.requireOrg && accountType !== 'organization'))
+
   return (
-    <div className="min-h-screen bg-ash">
+    <div className="min-h-screen bg-ash auth-shell">
       <aside
         className={`fixed top-0 left-0 z-50 h-screen border-r border-wheat/10 bg-soil/90 backdrop-blur-md transition-all flex flex-col ${
           collapsed ? 'w-20' : 'w-72'
@@ -78,7 +82,7 @@ export function GlobalSidebarShell({
           </button>
         </div>
         <nav className="p-3 space-y-2 overflow-y-auto">
-          {NAV_ITEMS.map((item) => (
+          {visibleNavItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -95,9 +99,11 @@ export function GlobalSidebarShell({
         </nav>
         <div className="mt-auto p-4 border-t border-wheat/10 bg-soil/95">
           {!collapsed && (
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-3">
+              <div className="flex items-center gap-2">
               <UserCircle2 size={16} className="text-wheat/75" />
               <p className="text-wheat text-sm font-semibold truncate">{fullName}</p>
+              </div>
               <p className="text-wheat/55 text-xs">Signed in</p>
             </div>
           )}
@@ -111,9 +117,11 @@ export function GlobalSidebarShell({
         </div>
       </aside>
       <main
-        className={`min-h-screen transition-all ${collapsed ? 'ml-20' : 'ml-72'} p-6 md:p-8 lg:p-10`}
+        className={`min-h-screen transition-all ${collapsed ? 'ml-20' : 'ml-72'} px-6 pb-8 pt-2 md:px-8 md:pb-10 md:pt-2 lg:px-10 lg:pb-12 lg:pt-2`}
       >
-        <div className="max-w-[1400px] mx-auto">{children}</div>
+        <div className="max-w-[1400px] mx-auto">
+          {children}
+        </div>
       </main>
     </div>
   )

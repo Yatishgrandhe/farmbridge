@@ -98,3 +98,11 @@
 .animate-fade-in-soft {
   animation: fade-in-soft 0.6s ease both;
 }
+
+/* In logged-in sidebar mode, remove legacy navbar top offsets. */
+.auth-shell .pt-20,
+.auth-shell .pt-24,
+.auth-shell .pt-28,
+.auth-shell .pt-32 {
+  padding-top: 0 !important;
+}

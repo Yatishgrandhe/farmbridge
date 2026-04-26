@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-body' })
 const spaceMono = Space_Mono({ weight: ['400', '700'], subsets: ['latin'], variable: '--font-mono' })
 
 export const metadata: Metadata = {
-  title: 'FarmBridge | NC Agriculture Crisis Response',
-  description: 'Connecting North Carolina farmers to federal relief programs, drought data, and community support.',
+  title: 'FarmBridge | US Agriculture Crisis Response',
+  description: 'Connecting farmers across the United States to relief programs, drought data, and community support.',
   icons: {
     icon: '/logo-mark.png',
     shortcut: '/logo-mark.png',

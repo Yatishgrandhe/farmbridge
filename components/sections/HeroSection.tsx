@@ -14,9 +14,9 @@ type HeroStat = {
 }
 
 const DEFAULT_STATS: HeroStat[] = [
-  { value: 82, suffix: '', label: 'NC counties\nfederal disaster areas', prefix: '' },
-  { value: 46, suffix: '%', label: 'rise in farm\nbankruptcies (2025)', prefix: '+' },
-  { value: 50, suffix: '%', label: 'fertilizer price\nsurge (Iran war)', prefix: '+' },
+  { value: 50, suffix: '', label: 'states with active\nrelief tracking focus', prefix: '' },
+  { value: 46, suffix: '%', label: 'rise in farm\nbankruptcies trend', prefix: '+' },
+  { value: 50, suffix: '%', label: 'fertilizer price\nsurge pressure', prefix: '+' },
   { value: 624.7, suffix: 'B', label: 'total US farm\ndebt (record)', prefix: '$' },
 ]
 
@@ -65,7 +65,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-crisis" />
           </span>
           <span className="text-crisis font-mono text-xs uppercase tracking-[0.2em]">
-            Crisis Response Platform · North Carolina · 2026
+            Crisis Response Platform · United States · 2026
           </span>
         </motion.div>
 
@@ -77,7 +77,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               transition={{ delay: 0.2, duration: 0.7 }}
               className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-wheat leading-[0.92] tracking-tight mb-6"
             >
-              NC Farmers
+              US Farmers
               <br />
               <span className="text-crisis italic">deserve to know</span>
               <br />
@@ -90,8 +90,8 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               transition={{ delay: 0.4 }}
               className="text-wheat/70 text-lg md:text-xl max-w-xl mb-10 leading-relaxed font-body"
             >
-              100% of North Carolina is in drought. Fertilizer costs are up 50%. Federal relief
-              programs exist - but most farmers don&apos;t know about them. FarmBridge changes that.
+              National drought, debt pressure, and rising inputs are squeezing farms coast to coast.
+              Relief programs exist - but many producers still can&apos;t find the right path. FarmBridge changes that.
             </motion.p>
 
             <motion.div
@@ -125,7 +125,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
             <div className="relative rounded-3xl overflow-hidden border border-wheat/15 bg-soil/30 shadow-card">
               <Image
                 src={HERO_IMAGES.field}
-                alt="North Carolina farmland landscape"
+                alt="United States farmland landscape"
                 width={900}
                 height={700}
                 className="w-full h-[420px] object-cover"
@@ -134,7 +134,7 @@ export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {
               <div className="absolute inset-0 bg-gradient-to-t from-ash/80 via-ash/20 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-ash/65 border border-wheat/15 backdrop-blur-sm">
                 <p className="text-wheat text-sm font-semibold">Regional drought + rising input costs</p>
-                <p className="text-wheat/70 text-xs mt-1">Fast matching and urgent-deadline tracking for NC farms.</p>
+                <p className="text-wheat/70 text-xs mt-1">Fast matching and urgent-deadline tracking for farms nationwide.</p>
               </div>
             </div>
           </motion.div>

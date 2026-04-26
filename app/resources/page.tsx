@@ -4,10 +4,9 @@ import { ResourceSubmissionForm } from '@/components/resources/ResourceSubmissio
 
 export default async function ResourcesPage() {
   const supabase = await createServerClient()
-  const [{ count: liveResourceCount }, { data: resources }, { data: counties }] = await Promise.all([
+  const [{ count: liveResourceCount }, { data: resources }] = await Promise.all([
     supabase.from('resources').select('*', { count: 'exact', head: true }),
     supabase.from('resources').select('name,type,notes,hours,website_url').limit(24),
-    supabase.from('counties').select('fips_code,name').order('name'),
   ])
   const resourcesByType = (resources ?? []).reduce<Record<string, string[]>>((acc, resource) => {
     const key = resource.type ?? 'other'
@@ -36,7 +35,7 @@ export default async function ResourcesPage() {
           <h1 className="font-display text-5xl text-wheat font-bold mt-3 mb-4">Resources That Save Filing Time</h1>
           <p className="text-wheat/70 leading-relaxed">
             Download practical templates, follow submission checklists, and use guided prep
-            materials designed around NC drought-response applications. Database currently tracks{' '}
+            materials designed around US drought-response applications. Database currently tracks{' '}
             <span className="text-ember font-semibold">{liveResourceCount ?? 0}</span> local resource records.
           </p>
         </div>
@@ -99,7 +98,7 @@ export default async function ResourcesPage() {
         </div>
 
         <div className="mt-12 animate-fade-in-soft [animation-delay:420ms]">
-          <ResourceSubmissionForm counties={counties ?? []} />
+          <ResourceSubmissionForm />
         </div>
       </div>
     </main>

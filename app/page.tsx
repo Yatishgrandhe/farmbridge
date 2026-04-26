@@ -104,7 +104,7 @@ export default async function Home() {
       contactPhone: listing.contact_phone ?? null,
       address: listing.address ?? null,
       city: listing.city ?? null,
-      state: listing.state ?? 'NC',
+      state: listing.state ?? 'US',
       createdAt: listing.created_at ?? null,
     })) ?? []),
     ...((resourceRows ?? []).map((resource) => ({
@@ -118,7 +118,7 @@ export default async function Home() {
       contactPhone: resource.contact_phone ?? null,
       address: resource.address ?? null,
       city: resource.city ?? null,
-      state: resource.state ?? 'NC',
+      state: resource.state ?? 'US',
       createdAt: resource.created_at ?? null,
     })) ?? []),
   ].filter((item) => item.countyName)
@@ -147,7 +147,7 @@ export default async function Home() {
     {
       value: primaryDisasterCount ?? 0,
       suffix: '',
-      label: 'primary disaster\ncounties in NC',
+      label: 'primary disaster\nregions in dataset',
       prefix: '',
     },
     {

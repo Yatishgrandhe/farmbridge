@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { US_STATE_CODES } from '@/lib/data/usStates'
 
 type CountyOption = { fips_code: string; name: string }
 
@@ -72,7 +73,7 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
       listingType: formData.get('listingType'),
       title: formData.get('title'),
       description: formData.get('description'),
-      countyFips: formData.get('countyFips'),
+      countyFips: null,
       address: formData.get('address'),
       city: formData.get('city'),
       state: formData.get('state'),
@@ -178,7 +179,7 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
                 </div>
                 <p className="text-sm text-wheat/75">{listing.description}</p>
                 <p className="text-xs text-wheat/55">
-                  {listing.address}, {listing.city}, NC {listing.zip_code}
+                  {listing.address}, {listing.city}, {listing.state} {listing.zip_code}
                 </p>
                 <p className="text-xs text-wheat/55">
                   {listing.volunteer_date} • {listing.start_time} - {listing.end_time} • Need {listing.required_volunteers}
@@ -278,18 +279,16 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
           </select>
           <input name="title" placeholder="Listing title" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
           <textarea name="description" placeholder="Describe the volunteer need" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat min-h-24" required />
-          <select name="countyFips" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
-            <option value="">Select county</option>
-            {counties.map((county) => (
-              <option key={county.fips_code} value={county.fips_code}>
-                {county.name}
+          <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+          <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+          <select name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
+            {US_STATE_CODES.map((state) => (
+              <option key={state} value={state}>
+                {state}
               </option>
             ))}
           </select>
-          <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-          <input name="zipCode" placeholder="NC ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
+          <input name="zipCode" placeholder="ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
           <input name="contactName" placeholder="Contact name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
           <input name="contactEmail" placeholder="Contact email" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
           <input name="contactPhone" placeholder="Contact phone" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />

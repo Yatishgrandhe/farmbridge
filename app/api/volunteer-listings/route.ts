@@ -43,13 +43,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Organization account required to create listings' }, { status: 403 })
   }
 
-  const { data: county } = await supabase
-    .from('counties')
-    .select('fips_code')
-    .eq('fips_code', parsed.data.countyFips)
-    .maybeSingle()
-  if (!county) return NextResponse.json({ error: 'County must be a valid North Carolina county' }, { status: 400 })
-
   const { data, error } = await supabase
     .from('volunteer_listings')
     .insert({
@@ -57,10 +50,10 @@ export async function POST(request: Request) {
       title: parsed.data.title,
       description: parsed.data.description,
       program_id: parsed.data.programId ?? null,
-      county_fips: parsed.data.countyFips,
+      county_fips: parsed.data.countyFips || null,
       address: parsed.data.address,
       city: parsed.data.city,
-      state: 'NC',
+      state: parsed.data.state,
       zip_code: parsed.data.zipCode,
       contact_name: parsed.data.contactName,
       contact_email: parsed.data.contactEmail,
