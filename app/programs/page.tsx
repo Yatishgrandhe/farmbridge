@@ -30,7 +30,7 @@ export default async function ProgramsPage({
     <main className="min-h-screen bg-ash">
       <div className="container mx-auto px-6 pt-24 pb-16">
         {/* Page header */}
-        <div className="mb-12" style={{ animation: 'var(--animate-fade-up)' }}>
+        <div className="mb-12 animate-fade-in-soft">
           <span className="text-crisis font-mono text-xs uppercase tracking-widest">
             Federal &amp; State Programs
           </span>
@@ -95,6 +95,14 @@ export default async function ProgramsPage({
             />
           ))}
         </div>
+        {(programs?.length ?? 0) === 0 && (
+          <div className="mt-8 rounded-2xl border border-wheat/10 bg-soil/40 px-5 py-8 text-center">
+            <p className="text-wheat/85 font-semibold">No programs match this filter yet.</p>
+            <p className="text-wheat/65 text-sm mt-1">
+              Try a different category or clear filters to view all active programs.
+            </p>
+          </div>
+        )}
       </div>
     </main>
   )

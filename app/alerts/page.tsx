@@ -42,6 +42,14 @@ export default async function AlertsPage() {
         </div>
 
         <div className="space-y-4 mb-14">
+          {countyAlerts.length === 0 && (
+            <div className="rounded-2xl border border-wheat/10 bg-soil/40 px-5 py-8 text-center">
+              <p className="text-wheat/85 font-semibold">No live alerts available right now.</p>
+              <p className="text-wheat/65 text-sm mt-1">
+                Check back shortly for updated county risk and deadline signals.
+              </p>
+            </div>
+          )}
           {countyAlerts.map((alert, index) => (
             <article
               key={`${alert.county}-${alert.issue}`}

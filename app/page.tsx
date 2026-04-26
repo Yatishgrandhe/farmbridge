@@ -76,9 +76,8 @@ export default async function Home() {
     supabase.from('counties').select('precipitation_deficit_inches'),
     supabase
       .from('counties')
-      .select('name,fips_code,drought_level,precipitation_deficit_inches,is_primary_disaster_area,is_contiguous_disaster_area,disaster_number,disaster_declaration_date,topsoil_moisture,updated_at')
-      .order('updated_at', { ascending: false })
-      .limit(20),
+      .select('name,fips_code,state_abbr,lat,lng,representative_zip_codes,drought_level,precipitation_deficit_inches,is_primary_disaster_area,is_contiguous_disaster_area,disaster_number,disaster_declaration_date,topsoil_moisture,updated_at')
+      .order('name', { ascending: true }),
     supabase
       .from('volunteer_listings')
       .select('id,title,county_fips,address,city,state,zip_code,contact_name,contact_email,contact_phone,created_at,status')
@@ -91,13 +90,16 @@ export default async function Home() {
       .limit(60),
   ])
 
-  const countyByFips = new Map((countyRiskRows ?? []).map((county) => [county.fips_code, county.name]))
+  const countyByFips = new Map((countyRiskRows ?? []).map((county) => [county.fips_code, county]))
   const overlayItems = [
     ...((listingRows ?? []).map((listing) => ({
       id: listing.id,
       locationType: 'listing' as const,
       title: listing.title,
-      countyName: countyByFips.get(listing.county_fips) ?? '',
+      countyName: countyByFips.get(listing.county_fips)?.name ?? '',
+      countyFips: listing.county_fips,
+      countyLat: countyByFips.get(listing.county_fips)?.lat ?? null,
+      countyLng: countyByFips.get(listing.county_fips)?.lng ?? null,
       zipCode: listing.zip_code ?? null,
       contactName: listing.contact_name ?? null,
       contactEmail: listing.contact_email ?? null,
@@ -111,7 +113,10 @@ export default async function Home() {
       id: resource.id,
       locationType: 'resource_submission' as const,
       title: resource.program_name,
-      countyName: countyByFips.get(resource.county_fips) ?? '',
+      countyName: countyByFips.get(resource.county_fips)?.name ?? '',
+      countyFips: resource.county_fips,
+      countyLat: countyByFips.get(resource.county_fips)?.lat ?? null,
+      countyLng: countyByFips.get(resource.county_fips)?.lng ?? null,
       zipCode: resource.zip_code ?? null,
       contactName: resource.contact_name ?? null,
       contactEmail: resource.contact_email ?? null,
@@ -157,10 +162,23 @@ export default async function Home() {
       prefix: '',
     },
   ]
+  const hasHeroData =
+    (activeProgramsCount ?? 0) > 0 ||
+    (urgentProgramsCount ?? 0) > 0 ||
+    (primaryDisasterCount ?? 0) > 0 ||
+    averageDeficitInches > 0
 
   return (
     <main>
       <HeroSection stats={liveHeroStats} />
+      {!hasHeroData && (
+        <section className="container mx-auto px-6 pt-6">
+          <div className="rounded-xl border border-ember/40 bg-ember/10 px-4 py-3 text-sm text-wheat/85">
+            Live county and program stats are currently unavailable. Displayed values may be temporary placeholders
+            while data refresh completes.
+          </div>
+        </section>
+      )}
 
       <section className="container mx-auto px-6 py-20">
         <div className="max-w-3xl mb-10 animate-fade-in-soft">
@@ -183,7 +201,9 @@ export default async function Home() {
               style={{ animationDelay: `${index * 0.12}s` }}
               className="bg-soil/50 border border-wheat/10 rounded-2xl p-6 hover:border-growth/40 hover:-translate-y-1 transition-all animate-fade-in-soft"
             >
-              <h3 className="font-display text-2xl text-wheat font-semibold mb-2">{path.title}</h3>
+              <span className="block font-display text-2xl text-wheat font-semibold mb-2" role="heading" aria-level={3}>
+                {path.title}
+              </span>
               <p className="text-wheat/65 text-sm leading-relaxed mb-5">{path.description}</p>
               <span className="text-growth text-sm font-semibold">{path.cta} →</span>
             </Link>
@@ -200,21 +220,31 @@ export default async function Home() {
               Click markers to view county popups, then open full details with drought status, deficit,
               disaster fields, and representative ZIP coverage for planning.
             </p>
-            <CountyReliefMapSection
-              counties={(countyRiskRows ?? []).map((county) => ({
-                name: county.name,
-                fipsCode: county.fips_code,
-                droughtLevel: county.drought_level,
-                precipitationDeficitInches: county.precipitation_deficit_inches,
-                isPrimaryDisasterArea: county.is_primary_disaster_area,
-                isContiguousDisasterArea: county.is_contiguous_disaster_area,
-                disasterNumber: county.disaster_number,
-                disasterDeclarationDate: county.disaster_declaration_date,
-                topsoilMoisture: county.topsoil_moisture,
-                updatedAt: county.updated_at,
-              }))}
-              overlays={overlayItems}
-            />
+            {countyRiskRows && countyRiskRows.length > 0 ? (
+              <CountyReliefMapSection
+                counties={(countyRiskRows ?? []).map((county) => ({
+                  name: county.name,
+                  fipsCode: county.fips_code,
+                  stateAbbr: county.state_abbr,
+                  lat: county.lat,
+                  lng: county.lng,
+                  zipCodes: county.representative_zip_codes ?? [],
+                  droughtLevel: county.drought_level,
+                  precipitationDeficitInches: county.precipitation_deficit_inches,
+                  isPrimaryDisasterArea: county.is_primary_disaster_area,
+                  isContiguousDisasterArea: county.is_contiguous_disaster_area,
+                  disasterNumber: county.disaster_number,
+                  disasterDeclarationDate: county.disaster_declaration_date,
+                  topsoilMoisture: county.topsoil_moisture,
+                  updatedAt: county.updated_at,
+                }))}
+                overlays={overlayItems}
+              />
+            ) : (
+              <div className="rounded-2xl border border-wheat/10 bg-soil/40 px-5 py-8 text-center text-wheat/70 text-sm">
+                County map data is currently unavailable. Please check back in a moment.
+              </div>
+            )}
           </div>
           <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
             <h3 className="font-display text-2xl text-wheat mb-3">Open datasets used</h3>

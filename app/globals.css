@@ -157,6 +157,12 @@
   animation-delay: 700ms;
 }
 
+:focus-visible {
+  outline: 2px solid var(--color-crisis);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
+}
+
 /* In logged-in sidebar mode, remove legacy navbar top offsets. */
 .auth-shell .pt-20,
 .auth-shell .pt-24,

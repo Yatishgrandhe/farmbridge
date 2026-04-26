@@ -5,6 +5,10 @@ import dynamic from 'next/dynamic'
 type CountyRisk = {
   name: string
   fipsCode: string
+  stateAbbr: string | null
+  lat: number | null
+  lng: number | null
+  zipCodes: string[]
   droughtLevel: string | null
   precipitationDeficitInches: number | null
   isPrimaryDisasterArea: boolean | null
@@ -20,6 +24,9 @@ type MapOverlay = {
   locationType: 'listing' | 'resource_submission'
   title: string
   countyName: string
+  countyFips: string | null
+  countyLat: number | null
+  countyLng: number | null
   zipCode: string | null
   contactName: string | null
   contactEmail: string | null

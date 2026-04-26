@@ -4,12 +4,14 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import L from 'leaflet'
-import { COUNTY_COORDINATES } from '@/lib/data/countyCoordinates'
-import { COUNTY_ZIP_CODES } from '@/lib/data/countyZipCodes'
 
 type CountyRisk = {
   name: string
   fipsCode: string
+  stateAbbr: string | null
+  lat: number | null
+  lng: number | null
+  zipCodes: string[]
   droughtLevel: string | null
   precipitationDeficitInches: number | null
   isPrimaryDisasterArea: boolean | null
@@ -25,6 +27,9 @@ type MapOverlay = {
   locationType: 'listing' | 'resource_submission'
   title: string
   countyName: string
+  countyFips: string | null
+  countyLat: number | null
+  countyLng: number | null
   zipCode: string | null
   contactName: string | null
   contactEmail: string | null
@@ -43,6 +48,7 @@ interface CountyReliefMapProps {
 function colorForLevel(level: string | null) {
   if (level === 'extreme') return 'var(--color-crisis)'
   if (level === 'severe') return 'var(--color-ember)'
+  if (level === 'none') return 'var(--color-sky)'
   return 'var(--color-growth)'
 }
 
@@ -55,15 +61,8 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
   const markers = useMemo(() => {
     const normalizedZip = zipFilter.trim()
     return counties
-      .map((county) => ({
-        ...county,
-        coords: COUNTY_COORDINATES[county.name],
-        zipCodes: COUNTY_ZIP_CODES[county.name] ?? [],
-      }))
-      .filter(
-        (county): county is typeof county & { coords: { lat: number; lng: number } } =>
-          county.coords !== undefined
-      )
+      .map((county) => ({ ...county, zipCodes: county.zipCodes ?? [] }))
+      .filter((county): county is typeof county & { lat: number; lng: number } => county.lat !== null && county.lng !== null)
       .filter((county) => {
         if (!normalizedZip) return true
         return county.zipCodes.some((zip) => zip.startsWith(normalizedZip))
@@ -80,14 +79,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
   const visibleOverlays = useMemo(() => {
     const normalizedZip = zipFilter.trim()
     return overlays
-      .map((overlay) => ({
-        ...overlay,
-        coords: COUNTY_COORDINATES[overlay.countyName],
-      }))
-      .filter(
-        (overlay): overlay is typeof overlay & { coords: { lat: number; lng: number } } =>
-          overlay.coords !== undefined
-      )
+      .filter((overlay): overlay is typeof overlay & { countyLat: number; countyLng: number } => overlay.countyLat !== null && overlay.countyLng !== null)
       .filter((overlay) => (normalizedZip ? (overlay.zipCode ?? '').startsWith(normalizedZip) : true))
   }, [overlays, zipFilter])
 
@@ -100,8 +92,8 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     if (!mapRef.current) return
 
     const map = L.map(mapRef.current, {
-      center: [35.5, -79.0],
-      zoom: 7,
+      center: [39.5, -98.35],
+      zoom: 4,
       scrollWheelZoom: false,
     })
 
@@ -111,7 +103,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
 
     markers.forEach((county) => {
       const isPrimary = Boolean(county.isPrimaryDisasterArea)
-      const circle = L.circleMarker([county.coords.lat, county.coords.lng], {
+      const circle = L.circleMarker([county.lat, county.lng], {
         color: colorForLevel(county.droughtLevel),
         fillColor: colorForLevel(county.droughtLevel),
         fillOpacity: 0.7,
@@ -129,6 +121,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       circle.bindPopup(
         `<div>
           <p><strong>${county.name} County</strong></p>
+          <p>State: ${county.stateAbbr ?? 'N/A'}</p>
           <p>Drought: ${county.droughtLevel ?? 'Unknown'}</p>
           <p>Deficit: ${deficit} in</p>
           <p>Status: ${status}</p>
@@ -147,7 +140,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
 
     visibleOverlays.forEach((overlay, index) => {
       const marker = L.circleMarker(
-        [overlay.coords.lat + (index % 5) * 0.018, overlay.coords.lng - (index % 4) * 0.014],
+        [overlay.countyLat + (index % 5) * 0.018, overlay.countyLng - (index % 4) * 0.014],
         {
           color: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
           fillColor: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
@@ -199,15 +192,20 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     <div className="space-y-4 relative z-0">
       <div className="flex flex-wrap items-end gap-3">
         <div>
-          <label className="block text-xs text-wheat/60 uppercase tracking-widest font-mono mb-1">
+          <label htmlFor="zip-filter" className="block text-xs text-wheat/60 uppercase tracking-widest font-mono mb-1">
             Filter by ZIP code
           </label>
           <input
+            id="zip-filter"
+            aria-describedby="zip-filter-hint"
             value={zipFilter}
             onChange={(e) => setZipFilter(e.target.value.replace(/\D/g, '').slice(0, 5))}
             placeholder="e.g. 28202"
             className="w-44 bg-soil/70 border border-wheat/20 rounded-lg px-3 py-2 text-sm text-wheat"
           />
+          <p id="zip-filter-hint" className="sr-only">
+            Enter a 5-digit ZIP code to filter counties and overlay points.
+          </p>
         </div>
         <button
           onClick={() => setZipFilter('')}
@@ -226,7 +224,13 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         viewport={{ once: true }}
         className="rounded-2xl border border-wheat/10 overflow-hidden shadow-card"
       >
-        <div ref={mapRef} className="h-[420px] w-full relative z-0" />
+        {markers.length === 0 ? (
+          <div className="h-[420px] w-full relative z-0 bg-soil/40 flex items-center justify-center px-4 text-center">
+            <p className="text-wheat/70 text-sm">No counties found for this ZIP filter. Try clearing or changing the ZIP code.</p>
+          </div>
+        ) : (
+          <div ref={mapRef} className="h-[420px] w-full relative z-0" />
+        )}
       </motion.div>
 
       {selectedCounty && (
@@ -234,6 +238,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
           <h3 className="font-display text-2xl text-wheat mb-2">{selectedCounty.name} County Details</h3>
           <div className="grid md:grid-cols-2 gap-3 text-sm">
             <p className="text-wheat/80">FIPS: <span className="text-wheat">{selectedCounty.fipsCode}</span></p>
+            <p className="text-wheat/80">State: <span className="text-wheat">{selectedCounty.stateAbbr ?? 'N/A'}</span></p>
             <p className="text-wheat/80">Drought Level: <span className="text-wheat">{selectedCounty.droughtLevel ?? 'Unknown'}</span></p>
             <p className="text-wheat/80">Precipitation Deficit: <span className="text-wheat">{selectedCounty.precipitationDeficitInches?.toFixed(1) ?? 'N/A'} in</span></p>
             <p className="text-wheat/80">Topsoil Moisture: <span className="text-wheat">{selectedCounty.topsoilMoisture ?? 'N/A'}</span></p>
