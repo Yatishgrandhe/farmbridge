@@ -1,6 +1,9 @@
 import { HeroSection } from '@/components/sections/HeroSection'
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
+import { WebGLFarmScene } from '@/components/3d/WebGLFarmScene'
+import { SplineShowcase } from '@/components/3d/SplineShowcase'
+import { CountyReliefMapSection } from '@/components/maps/CountyReliefMapSection'
 
 const QUICK_PATHS = [
   {
@@ -30,6 +33,21 @@ const ACTION_STEPS = [
   'Track deadlines and submit with proof of receipt.',
 ]
 
+const DATASET_LINKS = [
+  {
+    name: 'NC OneMap County Boundary Polygons',
+    href: 'https://www.nconemap.gov/datasets/NCEM-GIS::north-carolina-state-and-county-boundary-polygons',
+  },
+  {
+    name: 'U.S. Drought Monitor Data Downloads',
+    href: 'https://droughtmonitor.unl.edu/Data.aspx',
+  },
+  {
+    name: 'Drought.gov County Data Explorer',
+    href: 'https://www.drought.gov/county/data',
+  },
+]
+
 export default async function Home() {
   const supabase = await createServerClient()
 
@@ -39,6 +57,7 @@ export default async function Home() {
     { count: primaryDisasterCount },
     { count: severeDroughtCount },
     { data: countiesWithDeficit },
+    { data: countyRiskRows },
   ] = await Promise.all([
     supabase.from('programs').select('*', { count: 'exact', head: true }).eq('active', true),
     supabase
@@ -55,6 +74,11 @@ export default async function Home() {
       .select('*', { count: 'exact', head: true })
       .in('drought_level', ['severe', 'extreme']),
     supabase.from('counties').select('precipitation_deficit_inches'),
+    supabase
+      .from('counties')
+      .select('name,fips_code,drought_level,precipitation_deficit_inches,is_primary_disaster_area,is_contiguous_disaster_area,disaster_number,disaster_declaration_date,topsoil_moisture,updated_at')
+      .order('updated_at', { ascending: false })
+      .limit(20),
   ])
 
   const precipitationDeficits = (countiesWithDeficit ?? [])
@@ -95,6 +119,72 @@ export default async function Home() {
   return (
     <main>
       <HeroSection stats={liveHeroStats} />
+
+      <section className="container mx-auto px-6 py-18">
+        <div className="grid lg:grid-cols-2 gap-6 items-stretch">
+          <div className="space-y-4">
+            <span className="text-growth font-mono text-xs uppercase tracking-widest">WebGL + Motion</span>
+            <h2 className="font-display text-4xl text-wheat font-bold">Interactive Relief Visual Layer</h2>
+            <p className="text-wheat/70">
+              Real-time animated visuals blend WebGL geometry with crisis metrics to create an immersive,
+              high-signal landing experience for farmers and policymakers.
+            </p>
+            <WebGLFarmScene />
+          </div>
+          <div className="space-y-4">
+            <span className="text-ember font-mono text-xs uppercase tracking-widest">Spline 3D</span>
+            <h3 className="font-display text-3xl text-wheat font-bold">3D branded scene block</h3>
+            <p className="text-wheat/65 text-sm">
+              Spline scene rendering is GPU-backed and complements Framer Motion transitions for richer storytelling.
+            </p>
+            <SplineShowcase />
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-6 pb-18">
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            <span className="text-crisis font-mono text-xs uppercase tracking-widest">Leaflet Map</span>
+            <h3 className="font-display text-3xl text-wheat font-bold">County drought and disaster locations</h3>
+            <CountyReliefMapSection
+              counties={(countyRiskRows ?? []).map((county) => ({
+                name: county.name,
+                fipsCode: county.fips_code,
+                droughtLevel: county.drought_level,
+                precipitationDeficitInches: county.precipitation_deficit_inches,
+                isPrimaryDisasterArea: county.is_primary_disaster_area,
+                isContiguousDisasterArea: county.is_contiguous_disaster_area,
+                disasterNumber: county.disaster_number,
+                disasterDeclarationDate: county.disaster_declaration_date,
+                topsoilMoisture: county.topsoil_moisture,
+                updatedAt: county.updated_at,
+              }))}
+            />
+          </div>
+          <div className="rounded-2xl border border-wheat/10 bg-soil/50 p-6">
+            <h4 className="font-display text-2xl text-wheat mb-3">Open datasets used</h4>
+            <p className="text-wheat/70 text-sm mb-4">
+              Sources for expanding map layers and live drought/agriculture feeds.
+            </p>
+            <ul className="space-y-3">
+              {DATASET_LINKS.map((dataset) => (
+                <li key={dataset.href}>
+                  <a
+                    href={dataset.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-ember hover:text-wheat transition-colors underline underline-offset-4"
+                  >
+                    {dataset.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       <section className="container mx-auto px-6 py-20">
         <div className="max-w-3xl mb-10 animate-fade-in-soft">
           <span className="text-growth font-mono text-xs uppercase tracking-widest">Quick Start</span>

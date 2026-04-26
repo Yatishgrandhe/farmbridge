@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, Space_Mono } from 'next/font/google'
 import './globals.css'
+import 'leaflet/dist/leaflet.css'
 import { Navigation } from '@/components/ui/Navigation'
 import { SiteFooter } from '@/components/ui/SiteFooter'
 
