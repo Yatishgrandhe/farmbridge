@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/ui/SiteFooter'
 import { createBrowserClient } from '@/lib/supabase/client'
 import { GlobalSidebarShell } from '@/components/dashboard/GlobalSidebarShell'
 import { FarmBridgeChatWidget } from '@/components/chat/FarmBridgeChatWidget'
+import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 
 export function LayoutChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -41,6 +42,7 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
   if (isAuthed && !hideAuthenticatedChrome) {
     return (
       <GlobalSidebarShell fullName={fullName} accountType={accountType}>
+        <ScrollAnimator />
         {children}
         <FarmBridgeChatWidget />
       </GlobalSidebarShell>
@@ -49,8 +51,9 @@ export function LayoutChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <ScrollAnimator />
       <Navigation />
-      <div id="main-content" className="flex-1" tabIndex={-1}>
+      <div id="main-content" tabIndex={-1}>
         {children}
       </div>
       <SiteFooter />

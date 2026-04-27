@@ -16,7 +16,17 @@ export default function SupportPage(){
     <main className={styles.container}>
       <ScrollAnimator />
       <div className={styles.inner}>
-        <header className={`${styles.header} animate-on-scroll`}>
+        <header
+          className={`${styles.header} animate-on-scroll`}
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&auto=format&fit=crop&q=80')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderRadius: 'var(--radius-lg)',
+            padding: 'var(--space-lg)',
+          }}
+        >
           <h1 className={styles.headerTitle}>Navigating federal bureaucracy is hard. We are here to help.</h1>
           <p className={styles.headerText}>Our volunteers typically respond within 24 hours.</p>
         </header>

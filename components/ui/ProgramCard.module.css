@@ -1,114 +1,82 @@
 .card {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  padding: 1.5rem;
-  border-radius: 1.6rem 1rem 1.6rem 1rem;
-  border: 1px solid rgba(242, 231, 213, 0.15);
-  background-color: rgba(47, 36, 28, 0.35); /* bg-soil/35 */
-  box-shadow: var(--shadow-card);
-  transition: transform 0.3s ease, border-color 0.3s ease;
-  text-decoration: none;
-  color: inherit;
+  display: block;
+  background: var(--color-field);
+  border: 1px solid var(--color-fog);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), background-color var(--transition-base);
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(226, 164, 92, 0.4); /* border-ember/40 */
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--color-harvest);
 }
 
 .cardUrgent {
-  background-color: rgba(201, 120, 62, 0.08); /* bg-crisis/8 */
-  border-color: rgba(201, 120, 62, 0.45); /* border-crisis/45 */
-}
-
-.cardUrgent:hover {
-  border-color: rgba(201, 120, 62, 0.7); /* border-crisis/70 */
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  background: var(--color-urgent-bg);
+  border-left: 3px solid var(--color-urgent);
 }
 
 .meta {
   display: flex;
+  gap: var(--space-sm);
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .agency {
-  color: rgba(242, 231, 213, 0.5); /* text-wheat/50 */
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--color-mist);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+}
+
+.urgentBadge {
+  background: var(--color-urgent);
+  color: var(--color-straw);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .title {
-  font-size: 1.25rem;
+  margin: var(--space-sm) 0;
   font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--color-wheat);
-  transition: color 0.2s ease;
-  margin: 0;
-}
-
-.card:hover .title {
-  color: var(--color-parchment);
+  font-size: 1.2rem;
+  color: var(--color-straw);
 }
 
 .summary {
-  color: rgba(242, 231, 213, 0.7); /* text-wheat/70 */
-  font-size: 0.875rem;
-  line-height: 1.625;
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin: 0 0 var(--space-md);
+  color: var(--color-grain);
 }
 
 .footer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: auto;
+  display: grid;
+  gap: var(--space-sm);
 }
 
 .footerItem {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-}
-
-.deadline {
-  color: rgba(242, 231, 213, 0.5);
-}
-
-.deadlineUrgent {
-  color: var(--color-crisis);
-}
-
-.funding {
-  color: var(--color-growth);
+  justify-content: space-between;
+  font-size: 0.88rem;
 }
 
 .footerLabel {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(242, 231, 213, 0.45);
+  color: var(--color-mist);
 }
 
-.footerValue {
-  /* color inherits from .deadline, .deadlineUrgent, or .funding */
+.deadline .footerValue {
+  color: var(--color-amber);
+}
+
+.deadlineUrgent .footerValue {
+  color: var(--color-urgent);
+}
+
+.funding .footerValue {
+  color: var(--color-grain);
 }

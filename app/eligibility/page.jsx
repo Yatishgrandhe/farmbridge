@@ -11,7 +11,18 @@ export default async function EligibilityPage(){
   return (
     <main className={styles.main}>
       <ScrollAnimator />
-      <section className={`${styles.container} animate-on-scroll`}>
+      <section
+        className={`${styles.container} animate-on-scroll`}
+        style={{
+          backgroundImage:
+            "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&auto=format&fit=crop&q=80')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          borderRadius: 'var(--radius-lg)',
+          paddingTop: 'var(--space-2xl)',
+          paddingBottom: 'var(--space-2xl)',
+        }}
+      >
         <header className={styles.header}>
           <p className={styles.label}>Personalized Matching</p>
           <h1 className={styles.title}>Find the support you need.</h1>

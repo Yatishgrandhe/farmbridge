@@ -4,41 +4,27 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
-  AlertTriangle,
-  BarChart3,
-  BookOpen,
+  LayoutDashboard,
+  FolderKanban,
+  Bell,
+  Clock,
+  ClipboardCheck,
+  Settings,
+  LogOut,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
-  FolderKanban,
-  HandHelping,
-  Info,
-  LayoutDashboard,
-  LifeBuoy,
-  LogOut,
-  Settings,
-  Sprout,
-  Timer,
-  UserCircle2,
-  Wrench,
+  User,
 } from 'lucide-react'
 import { createBrowserClient } from '@/lib/supabase/client'
 import styles from './GlobalSidebarShell.module.css'
 
 const NAV_ITEMS = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/signups', label: 'Signups', icon: ClipboardList },
-  { href: '/dashboard/hours', label: 'Hours', icon: Timer },
-  { href: '/dashboard/listings', label: 'Listings', icon: Sprout, requireOrg: true },
-  { href: '/dashboard/resources', label: 'Resources', icon: Wrench, requireOrg: true },
+  { href: '/programs', label: 'My Programs', icon: FolderKanban },
+  { href: '/alerts', label: 'Saved Alerts', icon: Bell },
+  { href: '/dashboard/hours', label: 'Volunteer Hours', icon: Clock },
+  { href: '/dashboard/signups', label: 'Application Tracker', icon: ClipboardCheck },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { href: '/volunteer', label: 'Volunteer Hub', icon: HandHelping },
-  { href: '/programs', label: 'Programs', icon: FolderKanban },
-  { href: '/resources', label: 'Resource Page', icon: BookOpen },
-  { href: '/alerts', label: 'Alerts', icon: AlertTriangle },
-  { href: '/impact', label: 'Impact', icon: BarChart3 },
-  { href: '/about', label: 'About', icon: Info },
-  { href: '/support', label: 'Support', icon: LifeBuoy },
 ]
 
 export function GlobalSidebarShell({
@@ -61,63 +47,60 @@ export function GlobalSidebarShell({
     router.refresh()
   }
 
-  const visibleNavItems = NAV_ITEMS.filter((item) => !(item.requireOrg && accountType !== 'organization'))
-
   return (
     <div className={styles.shell}>
-      <aside
-        className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : styles.sidebarExpanded}`}
-      >
+      <aside className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : styles.sidebarExpanded}`}>
         <div className={styles.header}>
-          {!collapsed && (
-            <div>
-              <p className={styles.headerTitle}>FarmBridge</p>
-              <p className={styles.headerSubtitle}>Logged-in navigation</p>
-            </div>
-          )}
+          <Link href="/" className={styles.logo}>
+            <span className={styles.logoDot} />
+            {!collapsed && <span className={styles.logoText}>FARMBRIDGE</span>}
+          </Link>
           <button
-            onClick={() => setCollapsed((value) => !value)}
+            onClick={() => setCollapsed(!collapsed)}
             className={styles.collapseButton}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
           </button>
         </div>
-        <nav aria-label="Dashboard navigation" className={styles.nav}>
-          {visibleNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`${styles.navLink} ${pathname === item.href ? styles.navLinkActive : ''} ${collapsed ? styles.navLinkCentered : ''}`}
-            >
-              <item.icon size={16} aria-hidden />
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
-          ))}
+
+        <nav className={styles.nav}>
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''} ${collapsed ? styles.navLinkCentered : ''}`}
+              >
+                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            )
+          })}
         </nav>
+
         <div className={styles.footer}>
           {!collapsed && (
-            <div className={styles.userInfo}>
-              <div className={styles.userNameRow}>
-                <UserCircle2 size={16} />
-                <p className={styles.userName}>{fullName}</p>
+            <div className={styles.userSection}>
+              <div className={styles.userAvatar}>
+                <User size={16} />
               </div>
-              <p className={styles.userStatus}>Signed in</p>
+              <div className={styles.userDetails}>
+                <p className={styles.userName}>{fullName || 'Farmer'}</p>
+                <p className={styles.userCounty}>NC Agricultural Network</p>
+              </div>
             </div>
           )}
-          <button
-            onClick={signOut}
-            className={styles.logoutButton}
-          >
-            <LogOut size={15} />
-            {!collapsed && 'Log out'}
+          <button onClick={signOut} className={styles.logoutButton}>
+            <LogOut size={16} />
+            {!collapsed && <span>Sign Out</span>}
           </button>
         </div>
       </aside>
-      <main
-        id="main-content"
-        className={`${styles.main} ${collapsed ? styles.mainCollapsed : styles.mainExpanded}`}
-      >
-        <div className={styles.contentContainer}>
+
+      <main className={styles.main}>
+        <div className={styles.content}>
           {children}
         </div>
       </main>

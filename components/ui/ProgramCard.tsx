@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import type { Database } from '@/lib/types/database.types'
-import { Badge } from '@/components/ui/Badge'
 import styles from './ProgramCard.module.css'
 
 type Program = Database['public']['Tables']['programs']['Row']
@@ -26,9 +25,7 @@ export function ProgramCard({ program, urgent, style }: ProgramCardProps) {
             <span className={styles.agency}>
               {program.agency}
             </span>
-            {urgent && (
-              <Badge className="bg-crisis text-parchment px-2 py-0.5 font-bold tracking-normal border-none">Urgent</Badge>
-            )}
+            {urgent && <span className={styles.urgentBadge}>URGENT</span>}
           </div>
           <h3 className={styles.title}>
             {program.name} {program.acronym && `(${program.acronym})`}

@@ -1,16 +1,16 @@
 import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import { OverviewPanel } from '@/components/dashboard/OverviewPanel'
-import styles from './dashboard.module.css'
+import styles from '../dashboard.module.css'
 
-export default function DashboardPage() {
+export default function OverviewPage() {
   return (
     <main className={styles.dashboardPage}>
       <ScrollAnimator />
       
       <section className={`${styles.dashboardHero} animate-on-scroll`}>
         <div className={styles.heroContent}>
-          <p className="label">LIVE OPERATIONS</p>
-          <h1 className="display-lg">FarmBridge Command Dashboard</h1>
+          <p className="label">INTELLECTUAL OVERVIEW</p>
+          <h1 className="display-lg">Operational Command</h1>
           <p className="body-md" style={{ maxWidth: '600px' }}>
             Real-time synchronization of relief files, county risk signals, and active support queues across the NC network.
           </p>

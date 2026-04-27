@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import 'leaflet/dist/leaflet.css'
+import { LayoutChrome } from '@/components/ui/LayoutChrome'
 
 export const metadata: Metadata = {
   title: 'FarmBridge | US Agriculture Crisis Response',
@@ -50,6 +51,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
+              document.documentElement.classList.add('js-enabled');
               if ('scrollRestoration' in history) {
                 history.scrollRestoration = 'manual';
               }
@@ -59,7 +61,7 @@ export default function RootLayout({
             `,
           }}
         />
-        {children}
+        <LayoutChrome>{children}</LayoutChrome>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

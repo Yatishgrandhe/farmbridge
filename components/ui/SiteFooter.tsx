@@ -22,15 +22,15 @@ export function SiteFooter() {
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.brandColumn}>
-            <h2 className={styles.brandTitle}>FarmBridge</h2>
+            <h2 className={styles.brandTitle}><span className={styles.dot} /> FARMBRIDGE</h2>
             <p className={styles.brandDescription}>
-              A North Carolina-first relief navigation platform helping farmers identify eligible
-              funding, track hard deadlines, and access local support quickly.
+              A North Carolina-first relief navigation platform helping farmers identify eligible funding, track hard deadlines, and access local support quickly.
             </p>
+            <p className={styles.bottomTag}>2026 FarmBridge — Built for NC Agricultural Resilience</p>
           </div>
 
           <div>
-            <h3 className={styles.sectionTitle}>Platform</h3>
+            <h3 className={styles.sectionTitle}>PLATFORM</h3>
             <ul className={styles.linkList}>
               {footerLinks.platform.map((item) => (
                 <li key={item.href}>
@@ -43,7 +43,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className={styles.sectionTitle}>Resources</h3>
+            <h3 className={styles.sectionTitle}>RESOURCES</h3>
             <ul className={styles.linkList}>
               {footerLinks.resources.map((item) => (
                 <li key={item.href}>
@@ -56,12 +56,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className={styles.bottom}>
-          <p className={styles.copyright}>
-            2026 FarmBridge - Built for NC Agricultural Resilience
-          </p>
-          <p className={styles.disclaimer}>Not affiliated with USDA, NCDA&CS, or SBA.</p>
-        </div>
+        <div className={styles.bottom}>Not affiliated with USDA, NCDA&CS, or SBA. · Crisis Response Platform · United States · 2026</div>
       </div>
     </footer>
   )

@@ -19,7 +19,7 @@ const DEFAULT_STATS: HeroStat[] = [
 
 const HERO_IMAGES = {
   field:
-    'https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=1200&auto=format&fit=crop&q=80',
 }
 
 export function HeroSection({ stats = DEFAULT_STATS }: { stats?: HeroStat[] }) {

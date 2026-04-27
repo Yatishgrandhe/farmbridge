@@ -10,10 +10,11 @@ export function useScrollAnimation(selector = '.animate-on-scroll') {
           }
         })
       },
-      { threshold: 0.12, rootMargin: '0px 0px -48px 0px' },
+      { threshold: 0.12, rootMargin: '0px 0px -48px 0px' }
     )
 
-    document.querySelectorAll(selector).forEach((el) => observer.observe(el))
+    document.querySelectorAll(selector).forEach((node) => observer.observe(node))
+
     return () => observer.disconnect()
   }, [selector])
 }

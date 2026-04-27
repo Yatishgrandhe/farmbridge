@@ -3,6 +3,7 @@ import { ProgramCard } from '@/components/ui/ProgramCard'
 import { DeadlineTimer } from '@/components/ui/DeadlineTimer'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/types/database.types'
+import { Activity, Clock, Layers, Zap } from 'lucide-react'
 import styles from './OverviewPanel.module.css'
 
 type Program = Database['public']['Tables']['programs']['Row']
@@ -28,19 +29,23 @@ export async function OverviewPanel() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <h1>Dashboard Overview</h1>
-          <p>Manage applications, signups, and county support operations.</p>
+          <p className="label">COMMAND CENTER</p>
+          <h1>Intelligence Overview</h1>
+          <p className="body-md">Real-time operational monitoring of relief flows, county risks, and application queues.</p>
         </div>
         <div>
           <Link href="/volunteer" className={styles.actionButton}>
-            Open Volunteer Hub
+            VOLUNTEER HUB →
           </Link>
         </div>
       </header>
 
       <div className={styles.grid}>
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Priority Programs ({savedPrograms?.length ?? 0})</h2>
+        <section>
+          <h2 className={styles.sectionTitle}>
+            <Layers size={18} />
+            PRIORITY PROGRAMS ({savedPrograms?.length ?? 0})
+          </h2>
           <div className={styles.programGrid}>
             {(savedPrograms ?? []).map((program: Program) => (
               <ProgramCard key={program.id} program={program} />
@@ -48,11 +53,14 @@ export async function OverviewPanel() {
           </div>
 
           <div className={styles.panel}>
-            <h3 className={styles.panelTitle}>Action Queue</h3>
+            <h3 className={styles.panelTitle}>
+              <span>COMMAND FEED</span>
+              <Activity size={14} />
+            </h3>
             <ul className={styles.list}>
-              {(actionQueue.length > 0 ? actionQueue : ['No urgent action queue items right now.']).map((task) => (
+              {(actionQueue.length > 0 ? actionQueue : ['Operational status normal. No urgent actions required.']).map((task) => (
                 <li key={task} className={styles.listItem}>
-                  <span className={styles.listBullet}>●</span>
+                  <span className={styles.listBullet}>•</span>
                   <span>{task}</span>
                 </li>
               ))}
@@ -60,9 +68,12 @@ export async function OverviewPanel() {
           </div>
         </section>
 
-        <aside className={styles.section}>
+        <aside>
           <div className={styles.panel}>
-            <h3 className={styles.panelTitle}>Upcoming Deadlines</h3>
+            <h3 className={styles.panelTitle}>
+              <span>UPCOMING DEADLINES</span>
+              <Clock size={14} />
+            </h3>
             <div className={styles.deadlineList}>
               {(savedPrograms ?? []).map((program: Program) => (
                 <div key={program.id} className={styles.deadlineItem}>
@@ -70,7 +81,7 @@ export async function OverviewPanel() {
                   {program.deadline ? (
                     <DeadlineTimer deadline={program.deadline} compact />
                   ) : (
-                    <p className={styles.deadlineNone}>No deadline listed</p>
+                    <p className={styles.deadlineNone}>No critical deadline listed</p>
                   )}
                 </div>
               ))}
@@ -78,9 +89,12 @@ export async function OverviewPanel() {
           </div>
 
           <div className={styles.updatePanel}>
-            <h3 className={styles.panelTitle}>Recent Updates</h3>
+            <h3 className={styles.panelTitle}>
+              <span>NETWORK UPDATES</span>
+              <Zap size={14} />
+            </h3>
             <ul className={styles.updateList}>
-              {(updates.length > 0 ? updates : ['Dataset synced. No new county updates yet.']).map((item) => (
+              {(updates.length > 0 ? updates : ['All nodes reporting stable. County sync complete.']).map((item) => (
                 <li key={item} className={styles.updateItem}>
                   {item}
                 </li>
@@ -92,4 +106,3 @@ export async function OverviewPanel() {
     </div>
   )
 }
-
