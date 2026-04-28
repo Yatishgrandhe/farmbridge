@@ -1,120 +1,66 @@
 .container {
-  padding: var(--space-lg) 0 var(--space-xl);
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  padding-bottom: var(--space-xl);
-  border-bottom: 1px solid var(--border-strong);
-  margin-bottom: var(--space-2xl);
-  position: relative;
-}
-
-.headerContent h1 {
-  font-family: var(--font-display);
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--color-straw);
-  margin-bottom: var(--space-xs);
-  letter-spacing: -0.02em;
-}
-
-.headerContent p {
-  color: var(--color-mist);
-  font-size: 1.1rem;
-  max-width: 600px;
-}
-
-.actionButton {
-  display: inline-block;
-  background: var(--color-harvest);
-  color: #ffffff;
-  text-decoration: none;
-  font-family: var(--font-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  padding: 16px 32px;
-  border-radius: var(--radius-pill);
-  box-shadow: 0 8px 24px rgba(196, 98, 45, 0.3);
-  transition: all var(--transition-base);
-  text-transform: uppercase;
-}
-
-.actionButton:hover {
-  background: var(--color-harvest-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(196, 98, 45, 0.5);
+  background: var(--bg-base);
+  padding: var(--space-2xl) 40px;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: var(--space-3xl);
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--space-2xl);
 }
 
 .sectionTitle {
   font-family: var(--font-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-harvest);
-  margin-bottom: var(--space-2xl);
+  color: var(--text-muted);
+  margin-bottom: var(--space-xl);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .sectionTitle::after {
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--color-fog);
+  background: var(--border);
 }
 
 .programGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-xl);
-  margin-bottom: var(--space-3xl);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
 }
 
 .panel {
-  background: var(--color-field);
-  border: 1px solid var(--color-fog);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
   border-radius: var(--radius-lg);
-  padding: var(--space-2xl);
-  margin-bottom: var(--space-2xl);
-  position: relative;
-  overflow: hidden;
-}
-
-.panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-harvest), transparent);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .panelTitle {
   font-family: var(--font-accent);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-mist);
-  margin-bottom: var(--space-2xl);
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.panelTitle svg {
+  color: var(--text-faint);
 }
 
 .list {
@@ -128,25 +74,24 @@
 
 .listItem {
   display: flex;
-  gap: 16px;
-  color: var(--color-straw);
-  font-size: 1rem;
+  gap: 12px;
+  color: var(--text-body);
+  font-size: 0.9rem;
   line-height: 1.6;
   padding: 12px;
-  background: rgba(242, 231, 213, 0.02);
-  border-radius: 8px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
-  transition: all var(--transition-base);
+  transition: border-color 0.15s ease;
 }
 
 .listItem:hover {
-  background: rgba(242, 231, 213, 0.04);
-  border-color: var(--color-fog);
+  border-color: var(--border);
 }
 
 .listBullet {
-  color: var(--color-harvest);
-  font-size: 1.2rem;
+  color: var(--accent);
+  font-size: 1.1rem;
   line-height: 1;
 }
 
@@ -157,8 +102,8 @@
 }
 
 .deadlineItem {
-  padding-bottom: var(--space-lg);
-  border-bottom: 1px solid var(--color-fog);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border);
 }
 
 .deadlineItem:last-child {
@@ -168,24 +113,24 @@
 
 .deadlineName {
   font-family: var(--font-display);
-  color: var(--color-straw);
-  font-size: 1.2rem;
-  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-bottom: var(--space-sm);
 }
 
 .deadlineNone {
   font-size: 0.85rem;
-  color: var(--color-grain);
+  color: var(--text-faint);
   font-style: italic;
+  font-family: var(--font-accent);
 }
 
 .updatePanel {
-  background: var(--color-soil);
-  border: 1px solid var(--color-fog);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-2xl);
-  position: relative;
+  padding: var(--space-xl);
 }
 
 .updateList {
@@ -198,37 +143,49 @@
 }
 
 .updateItem {
-  font-size: 0.9rem;
-  color: var(--color-mist);
-  padding: 12px;
-  border-left: 3px solid var(--color-harvest);
-  background: rgba(196, 98, 45, 0.05);
-  border-radius: 0 8px 8px 0;
+  font-size: 0.85rem;
+  color: var(--text-body);
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-light);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
-/* RESPONSIVENESS AT 1180PX BREAKPOINT */
+.actionButton {
+  margin-top: var(--space-lg);
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  background: var(--accent);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.actionButton:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 1180px) {
   .grid {
     grid-template-columns: 1fr;
-    gap: var(--space-xl);
-  }
-  
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-xl);
-  }
-  
-  .headerContent h1 {
-    font-size: 2.5rem;
+    gap: var(--space-lg);
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    padding: var(--space-lg);
+    padding: var(--space-xl) 24px;
   }
-  
+
   .programGrid {
     grid-template-columns: 1fr;
   }

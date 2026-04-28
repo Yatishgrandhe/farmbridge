@@ -56,6 +56,47 @@ export type Database = {
         }
         Relationships: []
       }
+      nc_zip_codes: {
+        Row: {
+          city: string | null
+          county_fips: string | null
+          county_name: string
+          created_at: string
+          id: string
+          state_abbr: string
+          state_fips: string
+          zip_code: string
+        }
+        Insert: {
+          city?: string | null
+          county_fips?: string | null
+          county_name: string
+          created_at?: string
+          id?: string
+          state_abbr?: string
+          state_fips?: string
+          zip_code: string
+        }
+        Update: {
+          city?: string | null
+          county_fips?: string | null
+          county_name?: string
+          created_at?: string
+          id?: string
+          state_abbr?: string
+          state_fips?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'nc_zip_codes_county_fips_fkey'
+            columns: ['county_fips']
+            isOneToOne: false
+            referencedRelation: 'counties'
+            referencedColumns: ['fips_code']
+          },
+        ]
+      }
       crisis_metrics: {
         Row: {
           date: string

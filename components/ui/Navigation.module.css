@@ -181,7 +181,7 @@
   display: none;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1410px) {
   .desktopMenu,
   .actions {
     display: none;

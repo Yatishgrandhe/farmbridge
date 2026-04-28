@@ -1,0 +1,247 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-base);
+  display: grid;
+  grid-template-columns: 55% 45%;
+}
+
+.leftPanel {
+  background: var(--bg-base);
+  padding: 80px 64px;
+  padding-top: var(--space-3xl);
+  display: flex;
+  align-items: center;
+}
+
+.leftContent {
+  max-width: 540px;
+}
+
+.eyebrow {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-accent);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--accent-text);
+}
+
+.eyebrow svg {
+  color: var(--accent);
+}
+
+.codeRow {
+  margin: 8px 0 0;
+  display: inline-flex;
+  gap: 6px;
+}
+
+.digit {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: riseIn 0.5s ease-out both;
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+}
+
+.digit:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.digit:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.zero {
+  color: var(--accent);
+}
+
+.heading {
+  margin: 8px 0 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: riseIn 0.5s ease-out 0.3s both;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-style: italic;
+  color: var(--text-primary);
+}
+
+.subtext {
+  margin: 12px 0 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: riseIn 0.5s ease-out 0.4s both;
+  font-family: var(--font-accent);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  max-width: 420px;
+  color: var(--text-body);
+}
+
+.divider {
+  width: 48px;
+  height: 2px;
+  margin: 28px 0;
+  background: var(--border);
+}
+
+.actionRow {
+  margin-top: 28px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: riseIn 0.5s ease-out 0.5s both;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  padding: 11px 22px;
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.primaryButton {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(196, 98, 45, 0.2);
+}
+
+.primaryButton:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(196, 98, 45, 0.3);
+}
+
+.secondaryButton {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  font-weight: 500;
+}
+
+.secondaryButton:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.helperLinks {
+  margin: 20px 0 0;
+  font-family: var(--font-accent);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.helperLinks a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.helperLinks a:hover {
+  color: var(--accent);
+}
+
+.rightPanel {
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustrationWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.fieldSvg {
+  width: 320px;
+  height: 320px;
+}
+
+.sprout {
+  transform-origin: center 246px;
+  animation: sway 3s ease-in-out infinite;
+}
+
+.caption {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-accent);
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sway {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+@media (max-width: 980px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .leftPanel {
+    padding: 40px 24px;
+    padding-top: var(--space-3xl);
+    min-height: 100vh;
+  }
+
+  .rightPanel {
+    display: none;
+  }
+
+  .actionRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    justify-content: center;
+  }
+}

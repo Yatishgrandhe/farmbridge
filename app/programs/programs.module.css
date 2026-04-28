@@ -1,12 +1,13 @@
 .page {
   background: var(--color-soil);
   min-height: 100vh;
+  padding-top: var(--space-lg);
 }
 
 /* NEWSPAPER HEADER */
 .header {
   max-width: 1400px;
-  margin: 0 auto var(--space-3xl);
+  margin: 0 auto var(--space-2xl);
   padding: 0 var(--space-xl);
   text-align: center;
 }
@@ -14,9 +15,16 @@
 .headerTop {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
   border-bottom: 2px solid var(--border-strong);
-  padding-bottom: var(--space-sm);
-  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.headerTop .label {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
 }
 
 .headerMain h1 {
@@ -110,10 +118,47 @@
   padding: 0 var(--space-xl);
 }
 
+.mapBand {
+  max-width: 1400px;
+  margin: 0 auto var(--space-3xl);
+  padding: 0 var(--space-xl);
+}
+
+.mapBandInner {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.mapIntro {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mapTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+.mapLead {
+  font-size: 0.9375rem;
+  color: var(--text-body);
+  line-height: 1.55;
+  margin: 0;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2xl);
+  gap: var(--space-3xl);
   align-items: stretch;
 }
 
@@ -256,6 +301,11 @@
 }
 
 @media (max-width: 768px) {
+  .headerTop {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .headerMain h1 {
     font-size: 3rem;
   }

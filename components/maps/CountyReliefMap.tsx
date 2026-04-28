@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
+import { NC_LAT_LNG_BOUNDS, NC_LAT_LNG_MAX_BOUNDS_PADDED } from '@/lib/maps/ncMapConstants'
 import styles from './CountyReliefMap.module.css'
 
 type CountyRisk = {
@@ -97,11 +98,34 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     [visibleOverlays, selectedOverlayId]
   )
 
-  const hasMapData = markers.length > 0 || visibleOverlays.length > 0
+  const ncCountyTotal = useMemo(() => counties.filter((c) => c.lat !== null && c.lng !== null).length, [counties])
+
+  const distinctZipCount = useMemo(() => {
+    const unique = new Set<string>()
+    for (const c of counties) {
+      for (const z of c.zipCodes ?? []) unique.add(z)
+    }
+    return unique.size
+  }, [counties])
+
+  const disasterCountyCount = useMemo(
+    () => counties.filter((c) => c.isPrimaryDisasterArea || c.isContiguousDisasterArea).length,
+    [counties]
+  )
+
+  const avgRainfallDeficit = useMemo(() => {
+    const vals = counties
+      .map((c) => c.precipitationDeficitInches)
+      .filter((v): v is number => typeof v === 'number')
+    if (!vals.length) return null
+    const sum = vals.reduce((acc, value) => acc + value, 0)
+    return Math.round((sum / vals.length) * 10) / 10
+  }, [counties])
 
   useEffect(() => {
-    if (!mapRef.current || !hasMapData) return
+    if (!mapRef.current) return
 
+    let disposed = false
     const urgent = readCssVar('--urgent')
     const accent = readCssVar('--accent')
     const safe = readCssVar('--safe')
@@ -119,10 +143,18 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       muted: muted || '#7a7568',
     }
 
+    const ncFallbackBounds = L.latLngBounds(NC_LAT_LNG_BOUNDS)
+    const ncPanLimits = L.latLngBounds(NC_LAT_LNG_MAX_BOUNDS_PADDED)
+
     const map = L.map(mapRef.current, {
-      center: [35.5, -79.5],
+      center: [35.55, -79.0],
       zoom: 7,
+      minZoom: 6,
+      maxZoom: 14,
       scrollWheelZoom: false,
+      worldCopyJump: false,
+      maxBounds: ncPanLimits,
+      maxBoundsViscosity: 1.0,
     })
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -153,7 +185,9 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
           ? 'Contiguous disaster area'
           : 'Monitoring'
       const deficit = county.precipitationDeficitInches?.toFixed(1) ?? 'N/A'
-      const zipPreview = county.zipCodes.slice(0, 2).join(', ') || 'N/A'
+      const zc = county.zipCodes ?? []
+      const zipPreview =
+        zc.length === 0 ? 'None' : zc.length <= 4 ? zc.join(', ') : `${zc.slice(0, 4).join(', ')} +${zc.length - 4} more`
       const btnStyle = `margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:${btnBg};color:${btnFg};cursor:pointer;font-size:12px;font-weight:600;`
       const popStyle = `font-family: system-ui,sans-serif;color:${text};background:${bg};`
       circle.bindPopup(
@@ -163,7 +197,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
           <p style="margin:4px 0;font-size:13px;">Drought: ${escHtml(county.droughtLevel ?? 'Unknown')}</p>
           <p style="margin:4px 0;font-size:13px;">Deficit: ${deficit} in</p>
           <p style="margin:4px 0;font-size:13px;">Status: ${status}</p>
-          <p style="margin:4px 0;font-size:13px;">ZIPs: ${escHtml(zipPreview)}</p>
+          <p style="margin:4px 0;font-size:13px;">ZIPs (${zc.length}): ${escHtml(zipPreview)}</p>
           <button type="button" data-county="${encodeURIComponent(county.name)}" class="map-detail-btn" style="${btnStyle}">
             View Details
           </button>
@@ -212,8 +246,42 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       })
     })
 
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 9 })
+    const fitNorthCarolina = () => {
+      if (disposed) return
+      map.invalidateSize()
+      let target: L.LatLngBounds
+      if (bounds.isValid()) {
+        const sw = bounds.getSouthWest()
+        const ne = bounds.getNorthEast()
+        const collapsed =
+          Math.abs(sw.lat - ne.lat) < 1e-8 && Math.abs(sw.lng - ne.lng) < 1e-8
+        if (collapsed) {
+          const c = bounds.getCenter()
+          target = L.latLngBounds([c.lat - 0.4, c.lng - 0.55], [c.lat + 0.4, c.lng + 0.55])
+        } else {
+          target = bounds.pad(0.06)
+        }
+      } else {
+        target = ncFallbackBounds
+      }
+      map.fitBounds(target, { padding: [48, 48], maxZoom: 10 })
+    }
+
+    let rafId = 0
+    let timeoutId = 0
+    map.whenReady(() => {
+      if (disposed) return
+      fitNorthCarolina()
+      rafId = requestAnimationFrame(fitNorthCarolina)
+      timeoutId = window.setTimeout(fitNorthCarolina, 160)
+    })
+
+    let resizeObserver: ResizeObserver | null = null
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        fitNorthCarolina()
+      })
+      resizeObserver.observe(mapRef.current)
     }
 
     const clickHandler = (event: Event) => {
@@ -239,10 +307,14 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     map.getContainer().addEventListener('click', clickHandler)
 
     return () => {
+      disposed = true
+      if (rafId) cancelAnimationFrame(rafId)
+      if (timeoutId) window.clearTimeout(timeoutId)
+      resizeObserver?.disconnect()
       map.getContainer().removeEventListener('click', clickHandler)
       map.remove()
     }
-  }, [markers, visibleOverlays, hasMapData])
+  }, [markers, visibleOverlays])
 
   return (
     <div className={styles.container}>
@@ -267,19 +339,20 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
           Clear
         </button>
         <p className={styles.statsText}>
-          Showing {markers.length + visibleOverlays.length} mapped locations
+          NC · {ncCountyTotal} counties · {distinctZipCount} ZIP codes · {disasterCountyCount} disaster counties · avg
+          deficit {avgRainfallDeficit?.toFixed(1) ?? 'N/A'} in · {markers.length + visibleOverlays.length} on map
+          {zipFilter.trim() ? ` (filtered)` : ''}
         </p>
       </div>
 
       <div className={styles.mapWrapper}>
-        {!hasMapData ? (
-          <div className={styles.mapFallback}>
-            <p className={styles.fallbackText}>
-              No county or volunteer data matched this filter. Try clearing the ZIP code or check back after data loads.
+        <div ref={mapRef} className={styles.mapContainer} />
+        {markers.length === 0 && visibleOverlays.length === 0 && (
+          <div className={styles.mapEmptyOverlay} role="status">
+            <p className={styles.mapEmptyText}>
+              No pins match this ZIP filter. Clear the filter to see all North Carolina counties.
             </p>
           </div>
-        ) : (
-          <div ref={mapRef} className={styles.mapContainer} />
         )}
       </div>
 

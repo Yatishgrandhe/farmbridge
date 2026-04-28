@@ -67,6 +67,7 @@
 }
 
 .mapWrapper {
+  position: relative;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -82,25 +83,25 @@
   z-index: 0;
 }
 
-.mapFallback {
-  height: min(52vh, 520px);
-  min-height: 360px;
-  width: 100%;
-  position: relative;
-  z-index: 0;
-  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-sunken) 100%);
+.mapEmptyOverlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 var(--space-lg);
+  padding: var(--space-lg);
   text-align: center;
+  pointer-events: none;
+  z-index: 500;
+  background: color-mix(in srgb, var(--bg-elevated) 62%, transparent);
 }
 
-.fallbackText {
-  color: var(--text-muted);
+.mapEmptyText {
+  margin: 0;
+  max-width: 360px;
   font-size: 0.9375rem;
-  max-width: 420px;
-  line-height: 1.55;
+  line-height: 1.5;
+  color: var(--text-body);
 }
 
 .detailPanel {

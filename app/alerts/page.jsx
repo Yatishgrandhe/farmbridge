@@ -29,30 +29,30 @@ export default async function AlertsPage() {
 
   return (
     <main className={styles.main}>
-      <section className={`${styles.banner} animate-on-scroll`}>
-        <div className={styles.bannerContent}>
-          <p className={styles.liveLabel}>
-            <span className={styles.pulseDot} /> SAVED ALERTS
-          </p>
-          <h1 className="display-lg">Your watchlist</h1>
-          <p className="body-md">
+      <section className={`${styles.topBanner} animate-on-scroll`}>
+        <div className={styles.bannerRow}>
+          <div className={styles.bannerText}>
+            <p className={styles.bannerEyebrow}>SAVED ALERTS</p>
+            <h1 className={styles.bannerHeading}>Your watchlist</h1>
+            <p className={styles.bannerSubtext}>
             Counties and programs you opted into through FarmBridge. Only alerts tied to your account are shown here.
+            </p>
+          </div>
+          <p className={styles.countText}>
+            {user?.email ? `${alerts.length} SAVED` : 'SIGN IN TO VIEW'}
           </p>
         </div>
-        <p className={styles.countText}>
-          {user?.email ? `${alerts.length} SAVED` : 'SIGN IN TO VIEW'}
-        </p>
       </section>
 
       {!user?.email ? (
-        <div className={`${styles.loginHint} animate-on-scroll`}>
+        <div className={`${styles.loginHint} animate-on-scroll`} style={{ margin: '24px 40px 0' }}>
           <p className="body-md">Sign in to load deadline alerts you have saved to your profile.</p>
           <Link href="/login?redirectTo=/alerts" className={styles.primaryAction}>
             Sign in
           </Link>
         </div>
       ) : alerts.length === 0 ? (
-        <div className={`${styles.emptyState} animate-on-scroll`}>
+        <div className={`${styles.emptyState} animate-on-scroll`} style={{ margin: '24px 40px 0' }}>
           <p className="body-md">You don&apos;t have any saved alerts yet.</p>
           <p className={styles.emptyHint}>
             Use the county monitor or eligibility tools to subscribe when they send alerts to your email.

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createBrowserClient } from '@/lib/supabase/client'
 import styles from './auth.module.css'
 
@@ -12,6 +12,26 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [programLine, setProgramLine] = useState('Active programs')
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch('/api/public/stats')
+        const data = await res.json()
+        const n = typeof data.programCount === 'number' ? data.programCount : 0
+        if (!cancelled) {
+          setProgramLine(n > 0 ? `${n} active program${n === 1 ? '' : 's'}` : 'Active programs')
+        }
+      } catch {
+        if (!cancelled) setProgramLine('Active programs')
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const onSubmit = async (event) => {
     event.preventDefault()
@@ -48,7 +68,7 @@ export default function LoginPage() {
             </div>
             <div className={styles.trustItem}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-              <span>100+ Programs</span>
+              <span>{programLine}</span>
             </div>
             <div className={styles.trustItem}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>

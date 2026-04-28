@@ -15,6 +15,8 @@ import {
   ChevronRight,
   User,
   Wrench,
+  BookOpen,
+  HandHeart,
 } from 'lucide-react'
 import { createBrowserClient } from '@/lib/supabase/client'
 import styles from './GlobalSidebarShell.module.css'
@@ -23,11 +25,20 @@ const NAV_ITEMS = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
   { href: '/programs', label: 'My Programs', icon: FolderKanban },
   { href: '/toolkit', label: 'Toolkit', icon: Wrench },
+  { href: '/resources', label: 'Resource Center', icon: BookOpen },
+  { href: '/volunteer', label: 'Volunteer', icon: HandHeart },
   { href: '/alerts', label: 'Saved Alerts', icon: Bell },
   { href: '/dashboard/hours', label: 'Volunteer Hours', icon: Clock },
   { href: '/dashboard/signups', label: 'Application Tracker', icon: ClipboardCheck },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ]
+
+function navLinkActive(pathname: string, href: string) {
+  if (href === '/dashboard/overview') {
+    return pathname === '/dashboard' || pathname === '/dashboard/overview'
+  }
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 export function GlobalSidebarShell({
   children,
@@ -68,7 +79,7 @@ export function GlobalSidebarShell({
 
         <nav className={styles.nav}>
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = navLinkActive(pathname, item.href)
             return (
               <Link
                 key={item.href}

@@ -7,8 +7,13 @@ for (const [name, zips] of Object.entries(raw)) {
   BY_LOWER.set(name.trim().toLowerCase(), zips as string[])
 }
 
-/** All zip codes for an NC county name (case-insensitive). */
+/** Match DB labels like "Wake County" or "Wake" to JSON keys like "Wake". */
+export function normalizeNcCountyLabelForZipLookup(countyName: string): string {
+  return countyName.replace(/\s+county\s*$/i, '').trim().toLowerCase()
+}
+
+/** All zip codes for an NC county name (case-insensitive; strips a trailing "County"). */
 export function getZipsForNcCountyName(countyName: string): string[] {
-  const key = countyName.trim().toLowerCase()
-  return BY_LOWER.get(key) ?? []
+  const bare = normalizeNcCountyLabelForZipLookup(countyName)
+  return BY_LOWER.get(bare) ?? []
 }

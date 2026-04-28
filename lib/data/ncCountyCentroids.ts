@@ -103,6 +103,9 @@ const ROWS: [string, number, number][] = [
   ['37199', 35.889326, -82.303954],
 ]
 
+/** Same order as US Census NC county codes (37001 Alamance … 37199 Yancey). See NCSU county FIPS reference. */
+export const NC_COUNTY_FIPS_ORDERED: readonly string[] = ROWS.map(([fips]) => fips)
+
 export const NC_COUNTY_CENTROIDS: Record<string, { lat: number; lng: number }> = Object.fromEntries(
   ROWS.map(([fips, lat, lng]) => [fips, { lat, lng }])
 )

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { SettingsForm } from '@/components/dashboard/SettingsForm'
@@ -25,17 +26,28 @@ export default async function DashboardSettingsPage() {
 
   return (
     <main className={styles.dashboardPage}>
-      <section className={`${styles.dashboardHero} animate-on-scroll`}>
-        <div className={styles.heroContent}>
-          <p className="label">ACCOUNT</p>
-          <h1 className="display-lg">Settings</h1>
-          <p className="body-md" style={{ maxWidth: '600px' }}>
+      <section className={`${styles.topBanner} animate-on-scroll`}>
+        <div className={styles.bannerRow}>
+          <div className={styles.bannerText}>
+            <p className={styles.bannerEyebrow}>ACCOUNT</p>
+            <h1 className={styles.bannerHeading}>Settings</h1>
+            <p className={styles.bannerSubtext}>
             Update your profile details. Email is tied to your login and cannot be changed here.
-          </p>
+            </p>
+          </div>
         </div>
       </section>
 
-      <div className="animate-on-scroll">
+      <nav className="animate-on-scroll" aria-label="Dashboard shortcuts" style={{ margin: '24px 40px 20px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+          <Link href="/alerts" className={styles.secondaryButton}>Saved alerts</Link>
+          <Link href="/resources" className={styles.secondaryButton}>Resource center</Link>
+          <Link href="/volunteer" className={styles.secondaryButton}>Volunteer hub</Link>
+          <Link href="/toolkit" className={styles.secondaryButton}>Toolkit</Link>
+        </div>
+      </nav>
+
+      <div className="animate-on-scroll" style={{ padding: '0 40px 32px' }}>
         <SettingsForm
           defaultValues={{
             fullName: profile.full_name ?? '',

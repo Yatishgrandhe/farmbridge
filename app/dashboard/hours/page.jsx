@@ -49,19 +49,21 @@ export default async function VolunteerHoursPage() {
 
   return (
     <main className={styles.dashboardPage}>
-      <section className={`${styles.dashboardHero} animate-on-scroll`}>
-        <div className={styles.heroContent}>
-          <p className="label">VOLUNTEER</p>
-          <h1 className="display-lg">Volunteer hours</h1>
-          <p className="body-md" style={{ maxWidth: '600px' }}>
+      <section className={`${styles.topBanner} animate-on-scroll`}>
+        <div className={styles.bannerRow}>
+          <div className={styles.bannerText}>
+            <p className={styles.bannerEyebrow}>VOLUNTEER HOURS</p>
+            <h1 className={styles.bannerHeading}>Volunteer Hours</h1>
+            <p className={styles.bannerSubtext}>
             {isOrg
               ? 'Review submitted hours from volunteers across your listings.'
               : 'Track submitted hours and approval status for your volunteer shifts.'}
-          </p>
+            </p>
+          </div>
         </div>
       </section>
 
-      <div className={`animate-on-scroll ${listStyles.wrap}`}>
+      <div className={`animate-on-scroll ${listStyles.wrap}`} style={{ margin: '24px 40px 32px' }}>
         {rows.length === 0 ? (
           <p className={listStyles.empty}>No volunteer hour records yet.</p>
         ) : (

@@ -49,17 +49,19 @@ export default async function ApplicationTrackerPage() {
 
   return (
     <main className={styles.dashboardPage}>
-      <section className={`${styles.dashboardHero} animate-on-scroll`}>
-        <div className={styles.heroContent}>
-          <p className="label">APPLICATIONS</p>
-          <h1 className="display-lg">Application tracker</h1>
-          <p className="body-md" style={{ maxWidth: '600px' }}>
+      <section className={`${styles.topBanner} animate-on-scroll`}>
+        <div className={styles.bannerRow}>
+          <div className={styles.bannerText}>
+            <p className={styles.bannerEyebrow}>APPLICATION TRACKER</p>
+            <h1 className={styles.bannerHeading}>Application Tracker</h1>
+            <p className={styles.bannerSubtext}>
             Volunteer signups linked to your account {isOrg ? 'and your organization listings' : ''}.
-          </p>
+            </p>
+          </div>
         </div>
       </section>
 
-      <div className={`animate-on-scroll ${listStyles.wrap}`}>
+      <div className={`animate-on-scroll ${listStyles.wrap}`} style={{ margin: '24px 40px 32px' }}>
         {rows.length === 0 ? (
           <p className={listStyles.empty}>No applications yet.</p>
         ) : (

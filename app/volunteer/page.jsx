@@ -20,27 +20,19 @@ export default async function VolunteerPage(){
 
   return (
     <main className={styles.main}>
-      <div className={styles.container}>
-        <header
-          className={`${styles.header} animate-on-scroll`}
-          style={{
-            backgroundImage:
-              "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.72)), url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&auto=format&fit=crop&q=80')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: 'var(--radius-lg)',
-            padding: 'var(--space-lg)',
-          }}
-        >
-          <p className={`${styles.tagline} label`}>Volunteer + Manpower Hub</p>
+      <section className={`${styles.header} animate-on-scroll`}>
+        <div className={styles.headerRow}>
+          <div>
+            <p className={styles.tagline}>Volunteer + Manpower Hub</p>
           <h1 className={styles.title}>Coordinate farm and program manpower across the United States.</h1>
           <p className={styles.description}>Browse open opportunities now; sign in for tracked hours and approvals.</p>
+          </div>
           {!user && <p className={styles.loginNotice}>Login required to create listings and track approved hours.</p>}
-        </header>
-        <section className="animate-on-scroll">
-          <VolunteerHub counties={counties??[]} initialListings={listings??[]} canCreateListing={canCreateListing} />
-        </section>
-      </div>
+        </div>
+      </section>
+      <section className="animate-on-scroll">
+        <VolunteerHub counties={counties??[]} initialListings={listings??[]} canCreateListing={canCreateListing} />
+      </section>
     </main>
   )
 }

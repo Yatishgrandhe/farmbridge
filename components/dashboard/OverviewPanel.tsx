@@ -9,13 +9,40 @@ import styles from './OverviewPanel.module.css'
 
 type Program = Database['public']['Tables']['programs']['Row']
 
-export async function OverviewPanel() {
+export interface DashboardOverviewData {
+  savedPrograms: Program[]
+  latestCounties: { name: string | null; updated_at: string | null }[]
+  actionQueue: string[]
+  updates: string[]
+  counts: {
+    activePrograms: number
+    urgentFiles: number
+    countiesTracked: number
+    networkUpdates: number
+  }
+}
+
+export async function getDashboardOverviewData(): Promise<DashboardOverviewData> {
   const supabase = await createServerClient()
-  
-  const [{ data: savedPrograms }, { data: latestCounties }, { data: urgentPrograms }] = await Promise.all([
+
+  const recentThresholdIso = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+
+  const [
+    { data: savedPrograms },
+    { data: latestCounties },
+    { data: urgentPrograms },
+    { count: activeProgramsCount },
+    { count: urgentFilesCount },
+    { count: countiesTrackedCount },
+    { count: networkUpdatesCount },
+  ] = await Promise.all([
     supabase.from('programs').select('*').eq('active', true).order('is_urgent', { ascending: false }).limit(4),
     supabase.from('counties').select('name,updated_at').order('updated_at', { ascending: false }).limit(3),
     supabase.from('programs').select('name,deadline_label').eq('active', true).eq('is_urgent', true).limit(3),
+    supabase.from('programs').select('id', { count: 'exact', head: true }).eq('active', true),
+    supabase.from('programs').select('id', { count: 'exact', head: true }).eq('active', true).eq('is_urgent', true),
+    supabase.from('counties').select('id', { count: 'exact', head: true }),
+    supabase.from('counties').select('id', { count: 'exact', head: true }).gte('updated_at', recentThresholdIso),
   ])
 
   const actionQueue = (urgentPrograms ?? []).map(
@@ -26,29 +53,38 @@ export async function OverviewPanel() {
     (county) => `${county.name} county data refreshed ${county.updated_at ? 'recently' : 'in latest load'}.`
   )
 
+  return {
+    savedPrograms: savedPrograms ?? [],
+    latestCounties: latestCounties ?? [],
+    actionQueue,
+    updates,
+    counts: {
+      activePrograms: activeProgramsCount ?? 0,
+      urgentFiles: urgentFilesCount ?? 0,
+      countiesTracked: countiesTrackedCount ?? 0,
+      networkUpdates: networkUpdatesCount ?? 0,
+    },
+  }
+}
+
+interface OverviewPanelProps {
+  data?: DashboardOverviewData
+}
+
+export async function OverviewPanel({ data }: OverviewPanelProps) {
+  const overviewData = data ?? (await getDashboardOverviewData())
+  const { savedPrograms, actionQueue, updates } = overviewData
+
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <p className="label">COMMAND CENTER</p>
-          <h1>Intelligence Overview</h1>
-          <p className="body-md">Real-time operational monitoring of relief flows, county risks, and application queues.</p>
-        </div>
-        <div>
-          <Link href="/volunteer" className={styles.actionButton}>
-            VOLUNTEER HUB →
-          </Link>
-        </div>
-      </header>
-
       <div className={styles.grid}>
         <section>
           <h2 className={styles.sectionTitle}>
             <Layers size={18} />
-            PRIORITY PROGRAMS ({savedPrograms?.length ?? 0})
+            PRIORITY PROGRAMS ({savedPrograms.length})
           </h2>
           <div className={styles.programGrid}>
-            {(savedPrograms ?? []).map((program: Program) => (
+            {savedPrograms.map((program: Program) => (
               <ProgramCard key={program.id} program={program} />
             ))}
           </div>
@@ -76,7 +112,7 @@ export async function OverviewPanel() {
               <Clock size={14} />
             </h3>
             <div className={styles.deadlineList}>
-              {(savedPrograms ?? []).map((program: Program) => (
+              {savedPrograms.map((program: Program) => (
                 <div key={program.id} className={styles.deadlineItem}>
                   <p className={styles.deadlineName}>{program.name}</p>
                   {program.deadline ? (
@@ -102,6 +138,9 @@ export async function OverviewPanel() {
               ))}
             </ul>
           </div>
+          <Link href="/volunteer" className={styles.actionButton}>
+            VOLUNTEER HUB
+          </Link>
         </aside>
       </div>
     </div>

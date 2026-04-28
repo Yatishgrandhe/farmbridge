@@ -5,6 +5,8 @@ import { useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import type { Database } from '@/lib/types/database.types'
 import { ProgramCard } from '@/components/ui/ProgramCard'
+import type { CountyRisk, MapOverlay } from '@/components/maps/CountyReliefMapSection'
+import { CountyReliefMapSection } from '@/components/maps/CountyReliefMapSection'
 import styles from '@/app/programs/programs.module.css'
 
 type Program = Database['public']['Tables']['programs']['Row']
@@ -13,7 +15,15 @@ function categoryLabel(cat: string) {
   return cat.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-export function ProgramsPageClient({ programs }: { programs: Program[] }) {
+export function ProgramsPageClient({
+  programs,
+  counties,
+  overlays,
+}: {
+  programs: Program[]
+  counties: CountyRisk[]
+  overlays: MapOverlay[]
+}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const rawCategory = searchParams.get('category')
@@ -100,15 +110,23 @@ export function ProgramsPageClient({ programs }: { programs: Program[] }) {
         </div>
       </section>
 
+      <section className={`${styles.mapBand} animate-on-scroll`}>
+        <div className={styles.mapBandInner}>
+          <header className={styles.mapIntro}>
+            <p className="label">FIELD MAP</p>
+            <h2 className={styles.mapTitle}>County relief snapshot</h2>
+            <p className={styles.mapLead}>
+              Same live view as the home page: drought stress, disaster flags, and volunteer footprint across North Carolina.
+            </p>
+          </header>
+          <CountyReliefMapSection counties={counties} overlays={overlays} />
+        </div>
+      </section>
+
       <section className={`${styles.gridSection} animate-on-scroll`}>
         <div className={styles.grid}>
           {filteredPrograms.map((program) => (
-            <ProgramCard
-              key={program.id}
-              program={program}
-              urgent={Boolean(program.is_urgent)}
-              style={{ height: '100%', minHeight: '280px' }}
-            />
+            <ProgramCard key={program.id} program={program} urgent={Boolean(program.is_urgent)} />
           ))}
         </div>
         {filteredPrograms.length === 0 && (
