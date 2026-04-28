@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './resources.module.css'
 
 export default async function ResourcesPage() {
@@ -9,7 +8,6 @@ export default async function ResourcesPage() {
 
   return (
     <main className={styles.page}>
-      <ScrollAnimator />
       <div className={styles.bgImage} />
       
       {/* Page Header - Wide editorial masthead */}
@@ -19,6 +17,12 @@ export default async function ResourcesPage() {
           <h1 className="display-lg">Resources That Save Filing Time.</h1>
           <p className="body-sm">
             Database currently tracks <span className={styles.countNumber}>{count ?? 0}</span> local resource records
+          </p>
+          <p className={styles.toolkitCue}>
+            <Link href="/toolkit" className={styles.toolkitLink}>
+              Open operational toolkit →
+            </Link>
+            <span className={styles.toolkitHint}> Checklists, filing workflow, and trusted agency links.</span>
           </p>
         </div>
       </section>

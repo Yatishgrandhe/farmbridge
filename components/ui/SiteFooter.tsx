@@ -5,11 +5,13 @@ const footerLinks = {
   platform: [
     { href: '/programs', label: 'Relief Programs' },
     { href: '/eligibility', label: 'Eligibility Wizard' },
+    { href: '/toolkit', label: 'Operational Toolkit' },
     { href: '/dashboard', label: 'Farmer Dashboard' },
-    { href: '/alerts', label: 'County Alerts' },
+    { href: '/alerts', label: 'Saved Alerts' },
   ],
   resources: [
-    { href: '/resources', label: 'Application Toolkit' },
+    { href: '/toolkit', label: 'Operational Toolkit' },
+    { href: '/resources', label: 'Resource Center' },
     { href: '/support', label: 'Support Center' },
     { href: '/impact', label: 'Impact Data' },
     { href: '/about', label: 'About FarmBridge' },
@@ -26,7 +28,7 @@ export function SiteFooter() {
             <p className={styles.brandDescription}>
               A North Carolina-first relief navigation platform helping farmers identify eligible funding, track hard deadlines, and access local support quickly.
             </p>
-            <p className={styles.bottomTag}>2026 FarmBridge — Built for NC Agricultural Resilience</p>
+            <p className={styles.bottomTag}>2026 FarmBridge · Built for NC Agricultural Resilience</p>
           </div>
 
           <div>

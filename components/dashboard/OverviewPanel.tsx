@@ -1,9 +1,10 @@
 import Link from 'next/link'
+import { Activity, Clock, Layers, Zap } from 'lucide-react'
+
 import { ProgramCard } from '@/components/ui/ProgramCard'
 import { DeadlineTimer } from '@/components/ui/DeadlineTimer'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/types/database.types'
-import { Activity, Clock, Layers, Zap } from 'lucide-react'
 import styles from './OverviewPanel.module.css'
 
 type Program = Database['public']['Tables']['programs']['Row']

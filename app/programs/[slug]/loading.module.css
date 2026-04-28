@@ -1,0 +1,92 @@
+.main {
+  min-height: 100vh;
+  background: var(--bg-base);
+}
+
+.inner {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-xl);
+}
+
+.line {
+  border-radius: var(--radius-sm);
+  background: var(--border);
+}
+
+.lineShort {
+  height: 16px;
+  width: 10rem;
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-sm);
+  background: var(--border);
+}
+
+.lineTitle {
+  height: 40px;
+  width: 82%;
+  margin-bottom: var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--border);
+}
+
+.lineBody {
+  height: 20px;
+  width: 100%;
+  margin-bottom: var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--border);
+}
+
+.lineBodyNarrow {
+  height: 20px;
+  width: 92%;
+  margin-bottom: var(--space-2xl);
+  border-radius: var(--radius-sm);
+  background: var(--border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.panel {
+  height: 224px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(110deg, var(--bg-sunken) 0%, var(--bg-surface) 45%, var(--bg-sunken) 90%);
+  background-size: 200% 100%;
+  border: 1px solid var(--border);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.sidePanel {
+  height: 288px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(110deg, var(--bg-sunken) 0%, var(--bg-surface) 45%, var(--bg-sunken) 90%);
+  background-size: 200% 100%;
+  border: 1px solid var(--border);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}

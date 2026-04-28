@@ -1,5 +1,5 @@
 .container {
-  padding: var(--space-2xl);
+  padding: var(--space-lg) 0 var(--space-xl);
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -8,9 +8,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-bottom: var(--space-2xl);
-  border-bottom: 1px solid var(--color-fog);
-  margin-bottom: var(--space-3xl);
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border-strong);
+  margin-bottom: var(--space-2xl);
   position: relative;
 }
 
@@ -32,7 +32,7 @@
 .actionButton {
   display: inline-block;
   background: var(--color-harvest);
-  color: var(--color-straw);
+  color: #ffffff;
   text-decoration: none;
   font-family: var(--font-accent);
   font-size: 0.75rem;

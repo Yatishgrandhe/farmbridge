@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import styles from './CrisisTicker.module.css'
 
-const TICKER_ITEMS = [
+const DEFAULT_TICKER_ITEMS = [
   '🚨 82 NC counties declared federal disaster areas · April 21, 2026',
   '🌵 100% of NC in drought · Worst in 131 years of record-keeping',
   '💰 Fertilizer prices up 50% due to Iran war / Strait of Hormuz closure',
@@ -14,8 +14,9 @@ const TICKER_ITEMS = [
   '💧 47 NC counties in extreme drought · 95% in severe or worse',
 ]
 
-export function CrisisTicker() {
+export function CrisisTicker({ items }: { items?: string[] }) {
   const ref = useRef<HTMLDivElement>(null)
+  const tickerItems = items && items.length > 0 ? items : DEFAULT_TICKER_ITEMS
 
   return (
     <div className={styles.ticker}>
@@ -23,7 +24,7 @@ export function CrisisTicker() {
         ref={ref}
         className={styles.scroll}
       >
-        {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+        {[...tickerItems, ...tickerItems].map((item, i) => (
           <span key={i} className={styles.item}>
             {item}
           </span>

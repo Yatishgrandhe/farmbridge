@@ -1,16 +1,18 @@
+import styles from './loading.module.css'
+
 export default function DashboardLoading() {
   return (
-    <main className="min-h-screen bg-ash">
-      <div className="container mx-auto px-6 py-32 animate-fade-in-soft">
-        <div className="h-10 w-72 rounded bg-wheat/10 mb-8" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            <div className="h-44 rounded-2xl bg-soil/60 border border-wheat/10" />
-            <div className="h-44 rounded-2xl bg-soil/60 border border-wheat/10" />
+    <main className={styles.main}>
+      <div className={styles.inner}>
+        <div className={styles.titleBar} />
+        <div className={styles.grid}>
+          <div className={styles.stack}>
+            <div className={styles.cardSkeleton} />
+            <div className={styles.cardSkeleton} />
           </div>
-          <div className="space-y-4">
-            <div className="h-44 rounded-2xl bg-soil/60 border border-wheat/10 animate-float-gentle" />
-            <div className="h-44 rounded-2xl bg-soil/60 border border-wheat/10" />
+          <div className={styles.stack}>
+            <div className={styles.cardSkeleton} />
+            <div className={styles.cardSkeleton} />
           </div>
         </div>
       </div>

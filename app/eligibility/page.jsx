@@ -1,6 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { EligibilityWizard } from '@/components/forms/EligibilityWizard'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './eligibility.module.css'
 
 export default async function EligibilityPage(){
@@ -10,7 +9,6 @@ export default async function EligibilityPage(){
 
   return (
     <main className={styles.main}>
-      <ScrollAnimator />
       <section
         className={`${styles.container} animate-on-scroll`}
         style={{

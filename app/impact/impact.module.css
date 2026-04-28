@@ -1,7 +1,6 @@
 .page {
-  background: var(--color-soil);
+  background: var(--bg-base);
   min-height: 100vh;
-  padding-top: 120px;
 }
 
 /* WAR ROOM HEADER */
@@ -11,10 +10,11 @@
   margin: 0 auto var(--space-3xl);
   padding: var(--space-3xl) var(--space-xl);
   text-align: center;
-  border: 1px solid var(--color-fog);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--color-field);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 .headerGlow {
@@ -49,18 +49,20 @@
 
 .statCard {
   position: relative;
-  background: var(--color-field);
-  border: 1px solid var(--color-fog);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
   padding: var(--space-2xl);
   border-radius: var(--radius-lg);
   text-align: center;
   overflow: hidden;
   transition: all var(--transition-base);
+  box-shadow: var(--shadow-xs);
 }
 
 .statCard:hover {
-  border-color: var(--color-harvest);
-  transform: translateY(-5px);
+  border-color: rgba(196, 98, 45, 0.4);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
 
 .cardGlow {
@@ -78,7 +80,7 @@
   font-family: var(--font-display);
   font-size: 3.5rem;
   font-weight: 700;
-  color: var(--color-straw);
+  color: var(--text-primary);
   margin-bottom: var(--space-sm);
   position: relative;
   z-index: 2;
@@ -89,7 +91,7 @@
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: var(--color-mist);
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
@@ -105,10 +107,11 @@
 }
 
 .matrixContainer {
-  background: var(--color-field);
-  border: 1px solid var(--color-fog);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-xs);
 }
 
 .matrixTable {
@@ -119,19 +122,19 @@
 
 .matrixTable th {
   padding: var(--space-lg);
-  background: rgba(242, 231, 213, 0.03);
-  color: var(--color-mist);
+  background: var(--bg-surface);
+  color: var(--text-muted);
   font-family: var(--font-accent);
   font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--color-fog);
+  border-bottom: 1px solid var(--border);
 }
 
 .matrixTable td {
   padding: var(--space-lg);
-  border-bottom: 1px solid var(--color-fog);
-  color: var(--color-straw);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-body);
   font-size: 1rem;
 }
 
@@ -171,7 +174,9 @@
   height: 500px;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--color-fog);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-sunken);
+  box-shadow: var(--shadow-sm);
 }
 
 .mapGlow {
@@ -182,11 +187,8 @@
   z-index: 2;
 }
 
-.visionVisual img {
-  width: 100%;
-  height: 100%;
+.visionImg {
   object-fit: cover;
-  filter: saturate(0.5) contrast(1.2);
 }
 
 .visionContent h2 {

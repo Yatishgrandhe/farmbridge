@@ -1,21 +1,52 @@
 .loadingState {
-  height: 420px;
-  border-radius: 1rem;
-  background-color: rgba(47, 36, 28, 0.6);
-  border: 1px solid rgba(242, 231, 213, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(242, 231, 213, 0.5);
-  font-size: 0.875rem;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  height: min(52vh, 520px);
+  min-height: 360px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    110deg,
+    var(--bg-sunken) 0%,
+    var(--bg-surface) 40%,
+    var(--bg-sunken) 80%
+  );
+  background-size: 200% 100%;
+  border: 1px solid var(--border);
+  animation: shimmer 1.4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
   }
-  50% {
-    opacity: .5;
+  100% {
+    background-position: -100% 0;
   }
+}
+
+.loadingInner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--space-lg);
+  gap: var(--space-sm);
+}
+
+.loadingBar {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(122, 117, 104, 0.15);
+  width: 55%;
+}
+
+.loadingBarWide {
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(122, 117, 104, 0.15);
+  width: 85%;
+}
+
+.loadingHint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
 }

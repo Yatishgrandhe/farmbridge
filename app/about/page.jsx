@@ -1,6 +1,5 @@
 'use client'
 
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './about.module.css'
 
 const MILESTONES = [
@@ -13,8 +12,6 @@ const MILESTONES = [
 export default function AboutPage() {
   return (
     <main className={styles.page}>
-      <ScrollAnimator />
-      
       {/* FULL WIDTH EDITORIAL HERO */}
       <section className={`${styles.hero} animate-on-scroll`}>
         <div 
@@ -45,7 +42,7 @@ export default function AboutPage() {
               stretched to their breaking points.
             </p>
             <p className="body-md">
-              We realized that the information was out there, but it was fragmented—buried in 
+              We realized that the information was out there, but it was fragmented, buried in 
               agency PDFs, county press releases, and federal registers. FarmBridge was built 
               to consolidate that intelligence into a single, operational dashboard for the modern producer.
             </p>
@@ -53,7 +50,7 @@ export default function AboutPage() {
             <blockquote className={styles.pullQuote}>
               &ldquo;The hardest part was never the work in the field. It was finding the right 
               door to knock on before the deadline closed.&rdquo;
-              <cite>— James R., Wayne County Tobacco Farmer</cite>
+              <cite>James R., Wayne County Tobacco Farmer</cite>
             </blockquote>
 
             <p className="body-md">

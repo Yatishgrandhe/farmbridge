@@ -1,12 +1,9 @@
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import { OverviewPanel } from '@/components/dashboard/OverviewPanel'
 import styles from '../dashboard.module.css'
 
 export default function OverviewPage() {
   return (
     <main className={styles.dashboardPage}>
-      <ScrollAnimator />
-      
       <section className={`${styles.dashboardHero} animate-on-scroll`}>
         <div className={styles.heroContent}>
           <p className="label">INTELLECTUAL OVERVIEW</p>

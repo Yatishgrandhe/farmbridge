@@ -1,7 +1,7 @@
 'use client'
 
+import Image from 'next/image'
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './impact.module.css'
 
 const IMPACT_STATS = [
@@ -22,8 +22,6 @@ const COUNTY_RISKS = [
 export default function ImpactPage() {
   return (
     <main className={styles.page}>
-      <ScrollAnimator />
-      
       {/* SECTION 1: WAR ROOM HEADER */}
       <header className={`${styles.header} animate-on-scroll`}>
         <div className={styles.headerGlow} />
@@ -89,7 +87,14 @@ export default function ImpactPage() {
         <div className={styles.visionGrid}>
           <div className={styles.visionVisual}>
             <div className={styles.mapGlow} />
-            <img src="https://images.unsplash.com/photo-1594142465350-a93108398e09?w=1200&auto=format&fit=crop&q=80" alt="Data Map" />
+            <Image
+              fill
+              className={styles.visionImg}
+              src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1400&q=85"
+              alt="Aerial view of crop fields representing regional impact and data coverage"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
           </div>
           <div className={styles.visionContent}>
             <p className="label">THE DATA MODEL</p>

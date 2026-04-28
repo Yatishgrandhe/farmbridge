@@ -1,27 +1,28 @@
 .container {
-  background-color: rgba(47, 36, 28, 0.84); /* surface-panel background */
-  border: 1px solid rgba(242, 231, 213, 0.14);
-  border-radius: 1.5rem 1rem 1.5rem 1rem;
-  padding: 1.5rem;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-xs);
 }
 
 .title {
   font-family: var(--font-display);
-  color: var(--color-wheat);
-  font-size: 1.25rem;
+  color: var(--text-primary);
+  font-size: 1.15rem;
   font-weight: 600;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 var(--space-lg) 0;
 }
 
 .emptyState {
   height: 100%;
-  border: 1px dashed rgba(242, 231, 213, 0.2);
-  border-radius: 1.2rem 0.85rem 1.2rem 0.85rem;
-  background-color: rgba(47, 36, 28, 0.25);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: var(--space-lg);
 }
 
 .emptyContent {
@@ -29,16 +30,16 @@
 }
 
 .emptyTitle {
-  color: rgba(242, 231, 213, 0.7);
+  color: var(--text-body);
   font-weight: 600;
   margin: 0;
 }
 
 .emptySubtitle {
-  color: rgba(242, 231, 213, 0.5);
-  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-family: var(--font-body);
   font-size: 0.75rem;
-  margin: 0.25rem 0 0 0;
+  margin: var(--space-sm) 0 0 0;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }

@@ -1,6 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { VolunteerHub } from '@/components/volunteer/VolunteerHub'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './volunteer.module.css'
 
 export default async function VolunteerPage(){
@@ -21,7 +20,6 @@ export default async function VolunteerPage(){
 
   return (
     <main className={styles.main}>
-      <ScrollAnimator />
       <div className={styles.container}>
         <header
           className={`${styles.header} animate-on-scroll`}

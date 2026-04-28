@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { US_STATE_CODES } from '@/lib/data/usStates'
+import styles from './ResourceSubmissionForm.module.css'
 
 export function ResourceSubmissionForm() {
   const [submitting, setSubmitting] = useState(false)
@@ -35,39 +36,56 @@ export function ResourceSubmissionForm() {
     const json = await res.json()
 
     setSubmitting(false)
-    setMessage(res.ok ? 'Resource submitted for review.' : typeof json.error === 'string' ? json.error : 'Unable to submit resource')
+    setMessage(
+      res.ok
+        ? 'Resource submitted for review.'
+        : typeof json.error === 'string'
+          ? json.error
+          : 'Unable to submit resource'
+    )
   }
 
   return (
-    <section id="submit-resource" className="rounded-2xl border border-growth/25 bg-growth/10 p-6">
-      <h2 className="font-display text-3xl text-wheat mb-2">Submit a Resource</h2>
-      <p className="text-wheat/70 text-sm mb-5">
+    <section id="submit-resource" className={styles.section}>
+      <h2 className={styles.title}>Submit a Resource</h2>
+      <p className={styles.lead}>
         Add a new support program so it can be reviewed and shown to farmers nationwide.
       </p>
-      {message && <p className="text-sm text-ember mb-3">{message}</p>}
-      <form action={submitResource} className="grid md:grid-cols-2 gap-3">
-        <input name="programName" placeholder="Program or resource name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="providerName" placeholder="Provider organization" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-        <input name="category" placeholder="Category (grants, labor, transport...)" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-        <textarea name="description" placeholder="How this supports farms/programs" className="md:col-span-2 rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat min-h-24" required />
-        <input name="address" placeholder="Address" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="city" placeholder="City" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <select name="state" defaultValue="NC" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required>
+      {message && <p className={styles.message}>{message}</p>}
+      <form action={submitResource} className={styles.form}>
+        <input
+          name="programName"
+          placeholder="Program or resource name"
+          className={styles.input}
+          required
+        />
+        <input name="providerName" placeholder="Provider organization" className={styles.input} />
+        <input
+          name="category"
+          placeholder="Category (grants, labor, transport...)"
+          className={`${styles.input} ${styles.span2}`}
+        />
+        <textarea
+          name="description"
+          placeholder="How this supports farms/programs"
+          className={`${styles.textarea} ${styles.span2}`}
+          required
+        />
+        <input name="address" placeholder="Address" className={styles.input} required />
+        <input name="city" placeholder="City" className={styles.input} required />
+        <select name="state" defaultValue="NC" className={styles.select} required>
           {US_STATE_CODES.map((state) => (
             <option key={state} value={state}>
               {state}
             </option>
           ))}
         </select>
-        <input name="zipCode" placeholder="ZIP code" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="contactName" placeholder="Contact name" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="contactEmail" placeholder="Contact email" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" required />
-        <input name="contactPhone" placeholder="Contact phone" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-        <input name="websiteUrl" placeholder="Website URL" className="rounded-lg bg-ash/70 border border-wheat/20 px-3 py-2 text-sm text-wheat" />
-        <button
-          disabled={submitting}
-          className="md:col-span-2 rounded-lg bg-growth px-4 py-2.5 text-sm text-parchment font-semibold disabled:opacity-60"
-        >
+        <input name="zipCode" placeholder="ZIP code" className={styles.input} required />
+        <input name="contactName" placeholder="Contact name" className={styles.input} required />
+        <input name="contactEmail" placeholder="Contact email" className={styles.input} required />
+        <input name="contactPhone" placeholder="Contact phone" className={styles.input} />
+        <input name="websiteUrl" placeholder="Website URL" className={styles.input} />
+        <button type="submit" disabled={submitting} className={`${styles.submit} ${styles.span2}`}>
           {submitting ? 'Submitting...' : 'Submit Resource'}
         </button>
       </form>

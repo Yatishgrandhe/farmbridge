@@ -246,7 +246,7 @@ export function VolunteerHub({ counties, initialListings, canCreateListing }: Vo
                   value={signupForm.declaredHours}
                   onChange={(e) => setSignupForm((v) => ({ ...v, declaredHours: e.target.value }))}
                   placeholder="Declared hours"
-                  className={`${styles.input} md:col-span-2`}
+                  className={`${styles.input} ${styles.fullWidth}`}
                 />
               </div>
               <div className={styles.signupActions}>

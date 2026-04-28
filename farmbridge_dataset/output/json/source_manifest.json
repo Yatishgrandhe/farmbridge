@@ -1,0 +1,29 @@
+{
+  "sources": [
+    {
+      "label": "USDA FSA NC disaster designation",
+      "url": "https://www.fsa.usda.gov/news-events/news/04-21-2026/usda-designates-40-north-carolina-counties-natural-disaster-areas-seven",
+      "date": "2026-04-21"
+    },
+    {
+      "label": "Drought.gov Southeast update",
+      "url": "https://www.drought.gov/drought-status-updates/drought-status-update-southeast-2026-04-16",
+      "date": "2026-04-16"
+    },
+    {
+      "label": "AFBF bankruptcies report",
+      "url": "https://www.fb.org/market-intel/farm-bankruptcies-continued-to-climb-in-2025",
+      "date": "2026-02-09"
+    },
+    {
+      "label": "USDA ERS farm income forecast",
+      "url": "https://www.ers.usda.gov/topics/farm-economy/farm-sector-income-finances/highlights-from-the-farm-income-forecast",
+      "date": "2026-02-05"
+    },
+    {
+      "label": "Iran/Hormuz fertilizer shock context",
+      "url": "https://prospect.org/2026/04/21/aftermath-hormuz-farm-crisis-gulf-states-fertilizer-aluminum/",
+      "date": "2026-04-21"
+    }
+  ]
+}

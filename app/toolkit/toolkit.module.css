@@ -1,0 +1,209 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-base);
+  padding-bottom: var(--space-3xl);
+}
+
+.hero {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-xl) var(--space-2xl);
+}
+
+.heroInner {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  padding: var(--space-2xl);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.97) 0%, rgba(245, 232, 223, 0.88) 100%),
+    url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1600&auto=format&fit=crop&q=82');
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.heroInner h1 {
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+.heroInner p {
+  max-width: 640px;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+}
+
+.sectionBlock {
+  margin-bottom: var(--space-3xl);
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-md);
+}
+
+.sectionLead {
+  max-width: 680px;
+  margin-bottom: var(--space-xl);
+}
+
+.steps {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.step {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+  padding: var(--space-lg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.step::before {
+  content: counter(step);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  border: 1px solid rgba(196, 98, 45, 0.35);
+  color: var(--accent-text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepBody h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.stepBody p {
+  font-size: 0.9375rem;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.linkGrid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.linkCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+  box-shadow: var(--shadow-xs);
+}
+
+.linkCard:hover {
+  border-color: rgba(196, 98, 45, 0.4);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.linkCard:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.linkCardTitle {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.linkCardMeta {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.linkCardDesc {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.spanRow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+.internalGrid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.tile {
+  display: block;
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  transition: background var(--transition-base), border-color var(--transition-base);
+}
+
+.tile:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+
+.disclaimer {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-strong);
+  background: var(--bg-surface);
+  max-width: 720px;
+}
+
+@media (max-width: 640px) {
+  .step {
+    grid-template-columns: 1fr;
+  }
+
+  .step::before {
+    justify-self: start;
+  }
+}

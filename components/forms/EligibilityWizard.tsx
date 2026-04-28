@@ -199,9 +199,9 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
               >
                 <option value="">Select range...</option>
                 <option value="under_10k">Under $10,000</option>
-                <option value="10k_100k">$10,000 – $100,000</option>
-                <option value="100k_500k">$100,000 – $500,000</option>
-                <option value="500k_1m">$500,000 – $1 million</option>
+                <option value="10k_100k">$10,000 - $100,000</option>
+                <option value="100k_500k">$100,000 - $500,000</option>
+                <option value="500k_1m">$500,000 - $1 million</option>
                 <option value="over_1m">Over $1 million</option>
               </select>
             </div>
@@ -239,7 +239,7 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
 
             <div>
               <label htmlFor="eligibility-email" className={styles.label}>
-                Email (optional — for deadline alerts)
+                Email (optional, for deadline alerts)
               </label>
               <input
                 id="eligibility-email"
@@ -272,7 +272,9 @@ export function EligibilityWizard({ countyOptions }: EligibilityWizardProps) {
         {step === 3 && (
           <div className={styles.stepContent}>
             <div className={styles.titleGroup}>
-              <span className={styles.resultTag} style={{ color: 'var(--color-growth)' }}>Results</span>
+              <span className={styles.resultTag} style={{ color: 'var(--safe)' }}>
+                Results
+              </span>
               <h2 className={styles.title}>
                 You may qualify for {results.length} program{results.length !== 1 ? 's' : ''}
               </h2>

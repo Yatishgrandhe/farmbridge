@@ -1,0 +1,134 @@
+{
+  "programs": {
+    "state-drought-relief-program": {
+      "required_conditions": [
+        "documented_loss"
+      ],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [
+        "beginning_farmer"
+      ],
+      "county_restriction": "disaster_designated",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "farm-operating-loans": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [
+        "beginning_farmer"
+      ],
+      "county_restriction": "all",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "emergency-conservation-program": {
+      "required_conditions": [
+        "documented_loss"
+      ],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [],
+      "county_restriction": "disaster_designated",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "conservation-reserve-program": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [],
+      "county_restriction": "all",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "environmental-quality-incentives-program": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [
+        "beginning_farmer"
+      ],
+      "county_restriction": "all",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "farm-and-ranch-stress-assistance-network": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [],
+      "county_restriction": "all",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "emergency-commodity-assistance-program": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [],
+      "county_restriction": "all",
+      "eligible_crops": [
+        "corn",
+        "soybeans",
+        "cotton",
+        "wheat",
+        "peanuts"
+      ],
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    },
+    "conservation-stewardship-program": {
+      "required_conditions": [],
+      "disqualifying_conditions": [],
+      "preferred_conditions": [
+        "beginning_farmer"
+      ],
+      "county_restriction": "all",
+      "eligible_crops": null,
+      "min_acres": null,
+      "max_annual_sales": null,
+      "score_weights": {
+        "requires_loss": 25,
+        "beginning_farmer_priority": 15,
+        "urgent_bonus": 10
+      }
+    }
+  }
+}

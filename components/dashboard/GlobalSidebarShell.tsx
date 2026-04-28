@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  Wrench,
 } from 'lucide-react'
 import { createBrowserClient } from '@/lib/supabase/client'
 import styles from './GlobalSidebarShell.module.css'
@@ -21,6 +22,7 @@ import styles from './GlobalSidebarShell.module.css'
 const NAV_ITEMS = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
   { href: '/programs', label: 'My Programs', icon: FolderKanban },
+  { href: '/toolkit', label: 'Toolkit', icon: Wrench },
   { href: '/alerts', label: 'Saved Alerts', icon: Bell },
   { href: '/dashboard/hours', label: 'Volunteer Hours', icon: Clock },
   { href: '/dashboard/signups', label: 'Application Tracker', icon: ClipboardCheck },
@@ -48,7 +50,7 @@ export function GlobalSidebarShell({
   }
 
   return (
-    <div className={styles.shell}>
+    <div className={`${styles.shell} dashboard-shell`}>
       <aside className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : styles.sidebarExpanded}`}>
         <div className={styles.header}>
           <Link href="/" className={styles.logo}>

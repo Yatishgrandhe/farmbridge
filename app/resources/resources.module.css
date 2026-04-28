@@ -38,6 +38,31 @@
   font-family: var(--font-accent);
 }
 
+.toolkitCue {
+  margin-top: var(--space-lg);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+.toolkitLink {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(196, 98, 45, 0.35);
+  transition: color var(--transition-base), border-color var(--transition-base);
+}
+
+.toolkitLink:hover {
+  color: var(--accent-hover);
+  border-bottom-color: var(--accent-hover);
+}
+
+.toolkitHint {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 .contentGrid {
   position: relative;
   z-index: 1;
@@ -209,10 +234,6 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-top: auto;
-}
-
-@media (max-width: 1180px) {
-  .page { padding-top: 100px; }
 }
 
 @media (max-width: 800px) {

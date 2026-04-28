@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react'
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import styles from './CountyReliefMap.module.css'
 
@@ -45,11 +44,21 @@ interface CountyReliefMapProps {
   overlays: MapOverlay[]
 }
 
-function colorForLevel(level: string | null) {
-  if (level === 'extreme') return 'var(--color-crisis)'
-  if (level === 'severe') return 'var(--color-ember)'
-  if (level === 'none') return 'var(--color-sky)'
-  return 'var(--color-growth)'
+function readCssVar(name: string): string {
+  if (typeof document === 'undefined') return ''
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  return v || ''
+}
+
+function droughtFill(level: string | null, palette: { urgent: string; accent: string; safe: string; muted: string }) {
+  if (level === 'exceptional' || level === 'extreme') return palette.urgent
+  if (level === 'severe') return palette.accent
+  if (level === 'moderate' || level === 'none') return palette.muted
+  return palette.safe
+}
+
+function escHtml(s: string) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
 export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
@@ -88,28 +97,55 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     [visibleOverlays, selectedOverlayId]
   )
 
+  const hasMapData = markers.length > 0 || visibleOverlays.length > 0
+
   useEffect(() => {
-    if (!mapRef.current) return
+    if (!mapRef.current || !hasMapData) return
+
+    const urgent = readCssVar('--urgent')
+    const accent = readCssVar('--accent')
+    const safe = readCssVar('--safe')
+    const muted = readCssVar('--text-muted')
+    const text = readCssVar('--text-primary')
+    const bg = readCssVar('--bg-elevated')
+    const btnBg = readCssVar('--safe')
+    const btnFg = readCssVar('--text-on-dark')
+    const warn = readCssVar('--warning')
+
+    const palette = {
+      urgent: urgent || '#c0392b',
+      accent: accent || '#c4622d',
+      safe: safe || '#2d6a4f',
+      muted: muted || '#7a7568',
+    }
 
     const map = L.map(mapRef.current, {
-      center: [39.5, -98.35],
-      zoom: 4,
+      center: [35.5, -79.5],
+      zoom: 7,
       scrollWheelZoom: false,
     })
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
     }).addTo(map)
 
+    const bounds = L.latLngBounds([])
+
     markers.forEach((county) => {
+      const fill = droughtFill(county.droughtLevel, palette)
       const isPrimary = Boolean(county.isPrimaryDisasterArea)
       const circle = L.circleMarker([county.lat, county.lng], {
-        color: colorForLevel(county.droughtLevel),
-        fillColor: colorForLevel(county.droughtLevel),
-        fillOpacity: 0.7,
+        color: fill,
+        fillColor: fill,
+        fillOpacity: 0.72,
         weight: isPrimary ? 2 : 1,
         radius: isPrimary ? 10 : 7,
       }).addTo(map)
+
+      bounds.extend([county.lat, county.lng])
 
       const status = isPrimary
         ? 'Primary disaster area'
@@ -118,15 +154,17 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
           : 'Monitoring'
       const deficit = county.precipitationDeficitInches?.toFixed(1) ?? 'N/A'
       const zipPreview = county.zipCodes.slice(0, 2).join(', ') || 'N/A'
+      const btnStyle = `margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:${btnBg};color:${btnFg};cursor:pointer;font-size:12px;font-weight:600;`
+      const popStyle = `font-family: system-ui,sans-serif;color:${text};background:${bg};`
       circle.bindPopup(
-        `<div>
-          <p><strong>${county.name} County</strong></p>
-          <p>State: ${county.stateAbbr ?? 'N/A'}</p>
-          <p>Drought: ${county.droughtLevel ?? 'Unknown'}</p>
-          <p>Deficit: ${deficit} in</p>
-          <p>Status: ${status}</p>
-          <p>ZIPs: ${zipPreview}</p>
-          <button data-county="${county.name}" class="map-detail-btn" style="margin-top:8px;padding:6px 10px;border:0;border-radius:8px;background:#0f5b4f;color:#f6f8f4;cursor:pointer;font-size:12px;">
+        `<div style="${popStyle}min-width:200px;">
+          <p style="margin:0 0 6px;font-weight:700;">${escHtml(county.name)} County</p>
+          <p style="margin:4px 0;font-size:13px;">State: ${escHtml(county.stateAbbr ?? 'N/A')}</p>
+          <p style="margin:4px 0;font-size:13px;">Drought: ${escHtml(county.droughtLevel ?? 'Unknown')}</p>
+          <p style="margin:4px 0;font-size:13px;">Deficit: ${deficit} in</p>
+          <p style="margin:4px 0;font-size:13px;">Status: ${status}</p>
+          <p style="margin:4px 0;font-size:13px;">ZIPs: ${escHtml(zipPreview)}</p>
+          <button type="button" data-county="${encodeURIComponent(county.name)}" class="map-detail-btn" style="${btnStyle}">
             View Details
           </button>
         </div>`
@@ -139,23 +177,30 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
     })
 
     visibleOverlays.forEach((overlay, index) => {
-      const marker = L.circleMarker(
-        [overlay.countyLat + (index % 5) * 0.018, overlay.countyLng - (index % 4) * 0.014],
-        {
-          color: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
-          fillColor: overlay.locationType === 'listing' ? '#0f5b4f' : '#f4c542',
-          fillOpacity: 0.9,
-          weight: 2,
-          radius: 6,
-        }
-      ).addTo(map)
+      const listingFill = readCssVar('--safe') || palette.safe
+      const resourceFill = warn || palette.accent
+      const olColor = overlay.locationType === 'listing' ? listingFill : resourceFill
 
+      const lat = overlay.countyLat + (index % 5) * 0.018
+      const lng = overlay.countyLng - (index % 4) * 0.014
+      bounds.extend([lat, lng])
+
+      const marker = L.circleMarker([lat, lng], {
+        color: olColor,
+        fillColor: olColor,
+        fillOpacity: 0.88,
+        weight: 2,
+        radius: 6,
+      }).addTo(map)
+
+      const btnStyle = `margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:${btnBg};color:${btnFg};cursor:pointer;font-size:12px;font-weight:600;`
+      const popStyle = `font-family: system-ui,sans-serif;color:${text};background:${bg};`
       marker.bindPopup(
-        `<div>
-          <p><strong>${overlay.title}</strong></p>
-          <p>Type: ${overlay.locationType === 'listing' ? 'Volunteer Listing' : 'Resource Submission'}</p>
-          <p>ZIP: ${overlay.zipCode ?? 'N/A'}</p>
-          <button data-overlay-id="${overlay.id}" class="map-overlay-detail-btn" style="margin-top:8px;padding:6px 10px;border:0;border-radius:8px;background:#0f5b4f;color:#f6f8f4;cursor:pointer;font-size:12px;">
+        `<div style="${popStyle}min-width:200px;">
+          <p style="margin:0 0 6px;font-weight:700;">${escHtml(overlay.title)}</p>
+          <p style="margin:4px 0;font-size:13px;">Type: ${overlay.locationType === 'listing' ? 'Volunteer listing' : 'Resource submission'}</p>
+          <p style="margin:4px 0;font-size:13px;">ZIP: ${escHtml(overlay.zipCode ?? 'N/A')}</p>
+          <button type="button" data-overlay-id="${escHtml(overlay.id)}" class="map-overlay-detail-btn" style="${btnStyle}">
             View Details
           </button>
         </div>`
@@ -167,12 +212,23 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       })
     })
 
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 9 })
+    }
+
     const clickHandler = (event: Event) => {
       const target = event.target as HTMLElement | null
       const button = target?.closest('.map-detail-btn') as HTMLElement | null
-      if (!button) return
-      const countyName = button.getAttribute('data-county')
-      if (countyName) setSelectedCountyName(countyName)
+      if (button) {
+        const raw = button.getAttribute('data-county')
+        if (raw) {
+          try {
+            setSelectedCountyName(decodeURIComponent(raw))
+          } catch {
+            setSelectedCountyName(raw)
+          }
+        }
+      }
 
       const overlayButton = target?.closest('.map-overlay-detail-btn') as HTMLElement | null
       if (overlayButton) {
@@ -186,7 +242,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       map.getContainer().removeEventListener('click', clickHandler)
       map.remove()
     }
-  }, [markers, visibleOverlays])
+  }, [markers, visibleOverlays, hasMapData])
 
   return (
     <div className={styles.container}>
@@ -207,10 +263,7 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
             Enter a 5-digit ZIP code to filter counties and overlay points.
           </p>
         </div>
-        <button
-          onClick={() => setZipFilter('')}
-          className={styles.clearButton}
-        >
+        <button type="button" onClick={() => setZipFilter('')} className={styles.clearButton}>
           Clear
         </button>
         <p className={styles.statsText}>
@@ -219,9 +272,11 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
       </div>
 
       <div className={styles.mapWrapper}>
-        {markers.length === 0 ? (
+        {!hasMapData ? (
           <div className={styles.mapFallback}>
-            <p className={styles.fallbackText}>No counties found for this ZIP filter. Try clearing or changing the ZIP code.</p>
+            <p className={styles.fallbackText}>
+              No county or volunteer data matched this filter. Try clearing the ZIP code or check back after data loads.
+            </p>
           </div>
         ) : (
           <div ref={mapRef} className={styles.mapContainer} />
@@ -232,16 +287,40 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
         <div className={styles.detailPanel}>
           <h3 className={styles.panelTitle}>{selectedCounty.name} County Details</h3>
           <div className={styles.panelGrid}>
-            <p className={styles.panelLabel}>FIPS: <span className={styles.panelValue}>{selectedCounty.fipsCode}</span></p>
-            <p className={styles.panelLabel}>State: <span className={styles.panelValue}>{selectedCounty.stateAbbr ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Drought Level: <span className={styles.panelValue}>{selectedCounty.droughtLevel ?? 'Unknown'}</span></p>
-            <p className={styles.panelLabel}>Precipitation Deficit: <span className={styles.panelValue}>{selectedCounty.precipitationDeficitInches?.toFixed(1) ?? 'N/A'} in</span></p>
-            <p className={styles.panelLabel}>Topsoil Moisture: <span className={styles.panelValue}>{selectedCounty.topsoilMoisture ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Disaster Number: <span className={styles.panelValue}>{selectedCounty.disasterNumber ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Declaration Date: <span className={styles.panelValue}>{selectedCounty.disasterDeclarationDate ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Primary Disaster Area: <span className={styles.panelValue}>{selectedCounty.isPrimaryDisasterArea ? 'Yes' : 'No'}</span></p>
-            <p className={styles.panelLabel}>Contiguous Area: <span className={styles.panelValue}>{selectedCounty.isContiguousDisasterArea ? 'Yes' : 'No'}</span></p>
-            <p className={`${styles.panelLabel} ${styles.spanTwo}`}>Representative ZIP codes: <span className={styles.panelValue}>{(selectedCounty.zipCodes ?? []).join(', ') || 'N/A'}</span></p>
+            <p className={styles.panelLabel}>
+              FIPS: <span className={styles.panelValue}>{selectedCounty.fipsCode}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              State: <span className={styles.panelValue}>{selectedCounty.stateAbbr ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Drought Level: <span className={styles.panelValue}>{selectedCounty.droughtLevel ?? 'Unknown'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Precipitation Deficit:{' '}
+              <span className={styles.panelValue}>{selectedCounty.precipitationDeficitInches?.toFixed(1) ?? 'N/A'} in</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Topsoil Moisture: <span className={styles.panelValue}>{selectedCounty.topsoilMoisture ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Disaster Number: <span className={styles.panelValue}>{selectedCounty.disasterNumber ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Declaration Date: <span className={styles.panelValue}>{selectedCounty.disasterDeclarationDate ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Primary Disaster Area:{' '}
+              <span className={styles.panelValue}>{selectedCounty.isPrimaryDisasterArea ? 'Yes' : 'No'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Contiguous Area:{' '}
+              <span className={styles.panelValue}>{selectedCounty.isContiguousDisasterArea ? 'Yes' : 'No'}</span>
+            </p>
+            <p className={`${styles.panelLabel} ${styles.spanTwo}`}>
+              Representative ZIP codes:{' '}
+              <span className={styles.panelValue}>{(selectedCounty.zipCodes ?? []).join(', ') || 'N/A'}</span>
+            </p>
             <p className={`${styles.updatedAt} ${styles.spanTwo}`}>Last updated: {selectedCounty.updatedAt ?? 'N/A'}</p>
           </div>
         </div>
@@ -257,13 +336,30 @@ export function CountyReliefMap({ counties, overlays }: CountyReliefMapProps) {
                 {selectedOverlay.locationType === 'listing' ? 'Volunteer Listing' : 'Resource Submission'}
               </span>
             </p>
-            <p className={styles.panelLabel}>County: <span className={styles.panelValue}>{selectedOverlay.countyName}</span></p>
-            <p className={styles.panelLabel}>Address: <span className={styles.panelValue}>{selectedOverlay.address ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>City/State: <span className={styles.panelValue}>{selectedOverlay.city ?? 'N/A'}, {selectedOverlay.state ?? 'NC'}</span></p>
-            <p className={styles.panelLabel}>ZIP: <span className={styles.panelValue}>{selectedOverlay.zipCode ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Contact: <span className={styles.panelValue}>{selectedOverlay.contactName ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Email: <span className={styles.panelValue}>{selectedOverlay.contactEmail ?? 'N/A'}</span></p>
-            <p className={styles.panelLabel}>Phone: <span className={styles.panelValue}>{selectedOverlay.contactPhone ?? 'N/A'}</span></p>
+            <p className={styles.panelLabel}>
+              County: <span className={styles.panelValue}>{selectedOverlay.countyName}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Address: <span className={styles.panelValue}>{selectedOverlay.address ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              City/State:{' '}
+              <span className={styles.panelValue}>
+                {selectedOverlay.city ?? 'N/A'}, {selectedOverlay.state ?? 'NC'}
+              </span>
+            </p>
+            <p className={styles.panelLabel}>
+              ZIP: <span className={styles.panelValue}>{selectedOverlay.zipCode ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Contact: <span className={styles.panelValue}>{selectedOverlay.contactName ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Email: <span className={styles.panelValue}>{selectedOverlay.contactEmail ?? 'N/A'}</span>
+            </p>
+            <p className={styles.panelLabel}>
+              Phone: <span className={styles.panelValue}>{selectedOverlay.contactPhone ?? 'N/A'}</span>
+            </p>
             <p className={`${styles.updatedAt} ${styles.spanTwo}`}>Created at: {selectedOverlay.createdAt ?? 'N/A'}</p>
           </div>
         </div>

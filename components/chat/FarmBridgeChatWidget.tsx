@@ -1,92 +1,104 @@
 'use client'
 
-import { useEffect, useMemo, useState, useRef } from 'react'
-import { MessageCircle, Plus, X, Send, Sparkles } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { LucideIcon } from 'lucide-react'
+import {
+  ArrowUp,
+  ClipboardCheck,
+  Clock,
+  CloudRain,
+  MessageSquare,
+  PhoneCall,
+  RotateCcw,
+  Wheat,
+  X,
+} from 'lucide-react'
 import styles from './FarmBridgeChatWidget.module.css'
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string; timestamp: string }
-type ChatThread = { id: string; title: string; createdAt: string; messages: ChatMessage[] }
 
-const STORAGE_KEY = 'farmbridge_chat_threads_v2'
+const STORAGE_KEY = 'farmbridge_chat_v3'
 
-const STARTER_PROMPTS = [
-  { id: 'eligibility', title: 'CHECK STATUS', text: 'Am I eligible for current relief?' },
-  { id: 'disaster', title: 'DISASTER RELIEF', text: 'Find drought programs for Ashe county.' },
-  { id: 'agent', title: 'EXPERT HELP', text: 'How do I talk to a retired agent?' },
-  { id: 'files', title: 'FSA FILING', text: 'What documents do I need for CRP?' },
+const STARTER_CHIPS: { text: string; icon: LucideIcon }[] = [
+  { text: 'Check eligibility', icon: ClipboardCheck },
+  { text: 'Find drought programs', icon: CloudRain },
+  { text: 'Upcoming deadlines', icon: Clock },
+  { text: 'Talk to an agent', icon: PhoneCall },
 ]
-
-function createThread(): ChatThread {
-  const now = new Date().toISOString()
-  return { id: crypto.randomUUID(), title: 'New Chat', createdAt: now, messages: [] }
-}
 
 export function FarmBridgeChatWidget() {
   const [open, setOpen] = useState(false)
-  const [threads, setThreads] = useState<ChatThread[]>(() => {
-    if (typeof window === 'undefined') return [createThread()]
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return [createThread()]
-    try {
-      const parsed = JSON.parse(raw) as ChatThread[]
-      return parsed.length ? parsed : [createThread()]
-    } catch {
-      return [createThread()]
-    }
-  })
-  const [activeThreadId, setActiveThreadId] = useState<string>(() => {
-    if (typeof window === 'undefined') return ''
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return ''
-    try {
-      const parsed = JSON.parse(raw) as ChatThread[]
-      return parsed[0]?.id ?? ''
-    } catch {
-      return ''
-    }
-  })
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showUnreadDot, setShowUnreadDot] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const openRef = useRef(false)
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(threads))
-  }, [threads])
+    openRef.current = open
+    if (open) setShowUnreadDot(false)
+  }, [open])
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as ChatMessage[]
+        if (Array.isArray(parsed)) setMessages(parsed)
+      }
+    } catch {
+      /* ignore */
+    }
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+    } catch {
+      /* ignore quota */
+    }
+  }, [messages, hydrated])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [threads, loading])
+  }, [messages, loading])
 
-  const activeThread = useMemo(
-    () => threads.find((thread) => thread.id === activeThreadId) ?? threads[0],
-    [threads, activeThreadId]
-  )
+  const resizeTextarea = useCallback(() => {
+    const el = textareaRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    const max = 120
+    el.style.height = `${Math.min(el.scrollHeight, max)}px`
+  }, [])
 
-  const newChat = () => {
-    const thread = createThread()
-    setThreads((prev) => [thread, ...prev])
-    setActiveThreadId(thread.id)
-  }
+  useEffect(() => {
+    resizeTextarea()
+  }, [input, resizeTextarea])
 
   const handleSendMessage = async (text: string) => {
-    if (!text.trim() || !activeThread) return
+    if (!text.trim()) return
     setLoading(true)
 
-    const userMessage: ChatMessage = { role: 'user', content: text, timestamp: new Date().toISOString() }
-    const updatedThread = {
-      ...activeThread,
-      title: activeThread.messages.length === 0 ? text.slice(0, 20) : activeThread.title,
-      messages: [...activeThread.messages, userMessage],
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: text.trim(),
+      timestamp: new Date().toISOString(),
     }
-    
-    setThreads((prev) => prev.map((t) => (t.id === activeThread.id ? updatedThread : t)))
+    const updatedMessages = [...messages, userMessage]
+    setMessages(updatedMessages)
 
     try {
       const res = await fetch('/api/chatbot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: updatedThread.messages.map((m) => ({
+          messages: updatedMessages.map((m) => ({
             role: m.role === 'assistant' ? 'model' : 'user',
             content: m.content,
           })),
@@ -96,134 +108,203 @@ export function FarmBridgeChatWidget() {
       const json = await res.json()
       const assistantMessage: ChatMessage = {
         role: 'assistant',
-        content: res.ok ? json.answer : 'I encountered an error connecting to our rural intelligence network. Please try again.',
+        content: res.ok
+          ? json.answer
+          : 'I encountered an error connecting to our rural intelligence network. Please try again.',
         timestamp: new Date().toISOString(),
       }
 
-      setThreads((prev) =>
-        prev.map((t) =>
-          t.id === activeThread.id
-            ? { ...t, messages: [...updatedThread.messages, assistantMessage] }
-            : t
-        )
-      )
+      setMessages((prev) => [...prev, assistantMessage])
+      if (!openRef.current) setShowUnreadDot(true)
     } catch {
-      // Error handling
+      /* network error; loading cleared in finally */
     } finally {
       setLoading(false)
     }
   }
 
   const onSend = () => {
-    if (!input.trim()) return
+    if (!input.trim() || loading) return
     const text = input
     setInput('')
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
     handleSendMessage(text)
   }
+
+  const clearThread = () => {
+    setMessages([])
+    setInput('')
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const formatTime = (iso: string) =>
+    new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
   return (
     <div className={styles.container}>
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
         className={styles.toggleButton}
-        aria-label="Toggle assistant"
+        aria-label={open ? 'Close assistant' : 'Open assistant'}
+        aria-expanded={open}
       >
-        {open ? <X size={24} /> : <MessageCircle size={24} />}
+        <span
+          className={`${styles.toggleIconSlot} ${open ? styles.toggleOpen : styles.toggleClosed}`}
+          aria-hidden
+        >
+          <span className={styles.toggleIconLayer}>
+            <MessageSquare size={20} strokeWidth={2} />
+          </span>
+          <span className={styles.toggleIconLayer}>
+            <X size={20} strokeWidth={2} />
+          </span>
+        </span>
+        {!open && showUnreadDot ? <span className={styles.unreadDot} aria-hidden /> : null}
       </button>
 
-      {open && (
-        <aside className={styles.chatWindow}>
+      {open ? (
+        <aside className={styles.chatWindow} role="dialog" aria-label="FarmBridge AI chat">
           <header className={styles.header}>
-            <div>
-              <p className={styles.headerTitle}>FarmBridge AI</p>
-              <p className={styles.headerSubtitle}>Operational Intelligence</p>
+            <div className={styles.headerLeft}>
+              <div className={styles.botAvatar} aria-hidden>
+                <Wheat size={14} strokeWidth={2} color="white" />
+              </div>
+              <div className={styles.headerTitles}>
+                <span className={styles.headerName}>FarmBridge AI</span>
+                <span className={styles.statusRow}>
+                  <span className={styles.statusDot} />
+                  Online
+                </span>
+              </div>
             </div>
-            <button onClick={newChat} className={styles.newChatButton} title="New Session">
-              <Plus size={16} />
-            </button>
+            <div className={styles.headerActions}>
+              <button
+                type="button"
+                className={styles.headerIconBtn}
+                data-tip="New chat"
+                aria-label="New chat"
+                onClick={clearThread}
+              >
+                <RotateCcw size={14} strokeWidth={2} />
+              </button>
+              <button
+                type="button"
+                className={styles.headerIconBtn}
+                aria-label="Close"
+                onClick={() => setOpen(false)}
+              >
+                <X size={14} strokeWidth={2} />
+              </button>
+            </div>
           </header>
 
-          <div className={styles.mainGrid}>
-            <div className={styles.sidebar}>
-              {threads.map((t, idx) => (
-                <button
-                  key={t.id}
-                  onClick={() => setActiveThreadId(t.id)}
-                  className={`${styles.threadButton} ${
-                    activeThread?.id === t.id ? styles.threadButtonActive : styles.threadButtonInactive
-                  }`}
-                >
-                  <Sparkles size={14} />
-                  <span style={{ fontSize: '10px' }}>{idx + 1}</span>
-                </button>
-              ))}
-            </div>
-            
-            <div className={styles.chatArea}>
-              <div className={styles.messagesList}>
-                {activeThread?.messages.length === 0 && (
-                  <div className={styles.welcomeState}>
-                    <p className="label" style={{ marginBottom: '12px' }}>INITIALIZING ASSISTANT</p>
-                    <h3 className={styles.headerTitle} style={{ fontSize: '1.4rem', marginBottom: '16px' }}>
-                      How can we bridge the gap today?
-                    </h3>
-                    <div className={styles.starterGrid}>
-                      {STARTER_PROMPTS.map((p) => (
-                        <button 
-                          key={p.id} 
-                          className={styles.promptBox}
-                          onClick={() => handleSendMessage(p.text)}
-                        >
-                          <span className={styles.promptTitle}>{p.title}</span>
-                          <span className={styles.promptText}>{p.text}</span>
-                        </button>
-                      ))}
+          <div className={styles.body}>
+            <div className={styles.messagesList}>
+              {messages.length === 0 ? (
+                <div className={styles.welcome}>
+                  <div className={styles.welcomeAvatar} aria-hidden>
+                    <Wheat size={18} strokeWidth={2} color="white" />
+                  </div>
+                  <p className={styles.welcomeHeading}>How can I help?</p>
+                  <p className={styles.welcomeSub}>Ask about programs, deadlines, or eligibility.</p>
+                  <div className={styles.chipGrid}>
+                    {STARTER_CHIPS.map(({ text, icon: Icon }) => (
+                      <button
+                        key={text}
+                        type="button"
+                        className={styles.chip}
+                        onClick={() => handleSendMessage(text)}
+                        disabled={loading}
+                      >
+                        <Icon size={13} strokeWidth={2} className={styles.chipIcon} />
+                        {text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {messages.map((m, i) => (
+                    <div key={`${m.timestamp}-${i}`} className={styles.messageEnter}>
+                      {m.role === 'user' ? (
+                        <div className={styles.userRow}>
+                          <div className={styles.userBubble}>
+                            <p className={styles.bubbleText}>{m.content}</p>
+                          </div>
+                          <span className={`${styles.timestamp} ${styles.timestampUser}`}>{formatTime(m.timestamp)}</span>
+                        </div>
+                      ) : (
+                        <div className={styles.assistantRow}>
+                          <div className={styles.assistantAvatarSmall} aria-hidden>
+                            <Wheat size={12} strokeWidth={2} color="white" />
+                          </div>
+                          <div className={styles.assistantCol}>
+                            <div className={styles.assistantBubble}>
+                              <p className={styles.bubbleText}>{m.content}</p>
+                            </div>
+                            <span className={`${styles.timestamp} ${styles.timestampAssistant}`}>
+                              {formatTime(m.timestamp)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
-                
-                {activeThread?.messages.map((m, i) => (
-                  <div
-                    key={`${m.timestamp}-${i}`}
-                    className={`${styles.messageBubble} ${
-                      m.role === 'user' ? styles.userMessage : styles.assistantMessage
-                    }`}
-                  >
-                    <p>{m.content}</p>
-                    <span className={styles.timestamp}>
-                      {new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                ))}
-                {loading && <p className={styles.loadingText}>ANALYZING DATA...</p>}
-                <div ref={messagesEndRef} />
-              </div>
+                  ))}
+                  {loading ? (
+                    <div className={styles.assistantRow}>
+                      <div className={styles.assistantAvatarSmall} aria-hidden>
+                        <Wheat size={12} strokeWidth={2} color="white" />
+                      </div>
+                      <div className={styles.typingBubble}>
+                        <span className={styles.dot} />
+                        <span className={styles.dot} />
+                        <span className={styles.dot} />
+                      </div>
+                    </div>
+                  ) : null}
+                  <div ref={messagesEndRef} />
+                </>
+              )}
+            </div>
 
-              <div className={styles.inputArea}>
-                <textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      onSend()
-                    }
-                  }}
-                  placeholder="Ask a question..."
-                  className={styles.textarea}
-                />
-                <button
-                  onClick={onSend}
-                  disabled={loading || !input.trim()}
-                  className={styles.sendButton}
-                >
-                  {loading ? '...' : 'SEND COMMAND'}
-                </button>
-              </div>
+            <div className={styles.inputArea}>
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onInput={resizeTextarea}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    onSend()
+                  }
+                }}
+                placeholder="Ask a question..."
+                className={styles.textarea}
+                rows={1}
+                disabled={loading}
+                aria-label="Message"
+              />
+              <button
+                type="button"
+                onClick={onSend}
+                disabled={loading || !input.trim()}
+                className={styles.sendButton}
+                aria-label="Send"
+              >
+                <ArrowUp size={16} strokeWidth={2} />
+              </button>
             </div>
           </div>
         </aside>
-      )}
+      ) : null}
     </div>
   )
 }

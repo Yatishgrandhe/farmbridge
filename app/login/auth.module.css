@@ -136,20 +136,26 @@
 }
 
 .input {
-  background: rgba(242, 231, 213, 0.03);
-  border: 1px solid var(--color-fog);
-  color: var(--color-straw);
-  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  padding: 12px 14px;
+  min-height: 44px;
   border-radius: var(--radius-md);
   font-family: var(--font-body);
   font-size: 1rem;
-  transition: all var(--transition-base);
+  line-height: 1.45;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--text-faint);
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-harvest);
-  background: rgba(242, 231, 213, 0.06);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(196, 98, 45, 0.18);
 }
 
 .forgotLink {
@@ -171,8 +177,8 @@
 }
 
 .submitButton {
-  background: var(--color-harvest);
-  color: var(--color-straw);
+  background: var(--accent);
+  color: #ffffff;
   border: none;
   padding: 18px;
   border-radius: var(--radius-pill);
@@ -208,8 +214,8 @@
 
 .oauthButton {
   background: transparent;
-  border: 1px solid var(--color-fog);
-  color: var(--color-straw);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
   padding: 14px;
   border-radius: var(--radius-pill);
   font-family: var(--font-accent);

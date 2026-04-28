@@ -1,7 +1,7 @@
 .shell {
   display: flex;
   min-height: 100vh;
-  background: var(--color-soil);
+  background: var(--bg-base);
 }
 
 .sidebar {
@@ -9,8 +9,8 @@
   position: fixed;
   left: 0;
   top: 0;
-  background: var(--color-field);
-  border-right: 1px solid var(--color-fog);
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 50;
@@ -60,8 +60,8 @@
 .collapseButton {
   width: 24px;
   height: 24px;
-  border: 1px solid var(--color-fog);
-  background: var(--color-soil);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -98,14 +98,14 @@
 }
 
 .navLinkActive {
-  background: var(--color-furrow);
-  border-left-color: var(--color-harvest);
-  color: var(--color-straw);
+  background: var(--accent-light);
+  border-left-color: var(--accent);
+  color: var(--text-primary);
 }
 
 .navLink:not(.navLinkActive):hover {
-  color: var(--color-grain);
-  background: rgba(242, 231, 213, 0.03);
+  color: var(--text-primary);
+  background: var(--bg-surface);
 }
 
 .navLinkCentered {
@@ -116,7 +116,7 @@
 
 .footer {
   padding: var(--space-lg);
-  border-top: 1px solid var(--color-fog);
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -132,8 +132,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--color-furrow);
-  border: 1px solid var(--color-fog);
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,7 +166,7 @@
   width: 100%;
   padding: 10px;
   background: transparent;
-  border: 1px solid var(--color-fog);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--color-mist);
   font-size: 0.85rem;
@@ -197,7 +197,7 @@
 .content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-2xl);
+  padding: var(--space-md) var(--space-xl) var(--space-2xl);
 }
 
 @media (max-width: 768px) {

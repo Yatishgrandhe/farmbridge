@@ -1,0 +1,125 @@
+.main {
+  min-height: 100vh;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.glowLarge {
+  position: absolute;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 999px;
+  opacity: 0.35;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--safe) 0%, transparent 70%);
+}
+
+.glowSmall {
+  position: absolute;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 999px;
+  opacity: 0.35;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  animation: drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(12px, -8px);
+  }
+}
+
+.dots {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1.4s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  background: var(--safe);
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  background: var(--text-muted);
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.progressTrack {
+  position: relative;
+  z-index: 2;
+  width: 11rem;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: var(--border);
+}
+
+.progressBar {
+  display: block;
+  height: 100%;
+  width: 45%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  animation: sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.label {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

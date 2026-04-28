@@ -1,79 +1,123 @@
 import Link from 'next/link'
 import { createServerClient } from '@/lib/supabase/server'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './alerts.module.css'
-
-function severityLabel(level) {
-  if (!level) return 'None'
-  if (level.toLowerCase().includes('extreme') || level.toLowerCase().includes('severe')) return 'Severe'
-  if (level.toLowerCase().includes('moderate')) return 'Moderate'
-  return 'Watch'
-}
 
 export default async function AlertsPage() {
   const supabase = await createServerClient()
-  const { data: counties } = await supabase
-    .from('counties')
-    .select('name,drought_level,precipitation_deficit_inches')
-    .order('precipitation_deficit_inches', { ascending: false })
-    .limit(12)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  const rows = counties ?? []
-  const maxDeficit = Math.max(1, ...rows.map((item) => Number(item.precipitation_deficit_inches ?? 0)))
+  let alerts = []
+  let countyByFips = new Map()
+
+  if (user?.email) {
+    const { data: rows } = await supabase
+      .from('deadline_alerts')
+      .select('id,email,county_fips,crop_types,program_ids,confirmed,created_at')
+      .eq('email', user.email)
+      .order('created_at', { ascending: false })
+
+    alerts = rows ?? []
+
+    const fipsList = [...new Set(alerts.map((a) => a.county_fips).filter(Boolean))]
+    if (fipsList.length > 0) {
+      const { data: counties } = await supabase.from('counties').select('fips_code,name').in('fips_code', fipsList)
+      countyByFips = new Map((counties ?? []).map((c) => [c.fips_code, c.name]))
+    }
+  }
 
   return (
     <main className={styles.main}>
-      <ScrollAnimator />
       <section className={`${styles.banner} animate-on-scroll`}>
         <div className={styles.bannerContent}>
-          <p className={styles.liveLabel}><span className={styles.pulseDot} /> LIVE RELIEF ALERTS</p>
-          <h1 className="display-lg">County Monitor</h1>
-          <p className="body-md">Real-time drought pressure and rainfall deficits across tracked North Carolina counties.</p>
+          <p className={styles.liveLabel}>
+            <span className={styles.pulseDot} /> SAVED ALERTS
+          </p>
+          <h1 className="display-lg">Your watchlist</h1>
+          <p className="body-md">
+            Counties and programs you opted into through FarmBridge. Only alerts tied to your account are shown here.
+          </p>
         </div>
-        <p className={styles.countText}>{rows.length} COUNTIES UNDER MONITOR</p>
+        <p className={styles.countText}>
+          {user?.email ? `${alerts.length} SAVED` : 'SIGN IN TO VIEW'}
+        </p>
       </section>
 
-      <section className={styles.alertGrid}>
-        {rows.map((county, index) => {
-          const deficit = Number(county.precipitation_deficit_inches ?? 0)
-          const width = `${Math.max(8, (deficit / maxDeficit) * 100)}%`
-          const severity = severityLabel(county.drought_level)
-          const severityClass = severity === 'Severe' ? styles.severe : severity === 'Moderate' ? styles.moderate : styles.none
-          
-          return (
-            <article 
-              key={county.name} 
-              className={`${styles.alertCard} ${severityClass} animate-on-scroll`}
-              style={{ transitionDelay: `${index * 50}ms` }}
-            >
-              <div className={styles.cardHeader}>
-                <h2 className={styles.countyName}>{county.name}</h2>
-                <span className={`${styles.severityPill} ${severityClass}`}>{severity}</span>
-              </div>
-              
-              <div className={styles.rainfallRow}>
-                <div className={styles.rainfallInfo}>
-                  <span className={styles.valueLabel}>PRECIPITATION DEFICIT</span>
-                  <span className={styles.valueLabel}>{deficit.toFixed(1)} IN</span>
+      {!user?.email ? (
+        <div className={`${styles.loginHint} animate-on-scroll`}>
+          <p className="body-md">Sign in to load deadline alerts you have saved to your profile.</p>
+          <Link href="/login?redirectTo=/alerts" className={styles.primaryAction}>
+            Sign in
+          </Link>
+        </div>
+      ) : alerts.length === 0 ? (
+        <div className={`${styles.emptyState} animate-on-scroll`}>
+          <p className="body-md">You don&apos;t have any saved alerts yet.</p>
+          <p className={styles.emptyHint}>
+            Use the county monitor or eligibility tools to subscribe when they send alerts to your email.
+          </p>
+          <Link href="/programs" className={styles.primaryAction}>
+            Browse programs
+          </Link>
+        </div>
+      ) : (
+        <section className={styles.alertGrid}>
+          {alerts.map((alert, index) => {
+            const countyName = alert.county_fips ? countyByFips.get(alert.county_fips) ?? 'County' : 'All counties'
+            const crops = alert.crop_types?.length ? alert.crop_types.join(', ') : 'N/A'
+            const nPrograms = alert.program_ids?.length ?? 0
+            const created = alert.created_at
+              ? new Date(alert.created_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
+              : 'N/A'
+
+            return (
+              <article
+                key={alert.id}
+                className={`${styles.alertCard} animate-on-scroll`}
+                style={{ transitionDelay: `${index * 40}ms` }}
+              >
+                <div className={styles.cardHeader}>
+                  <h2 className={styles.countyName}>{countyName}</h2>
+                  <span className={alert.confirmed ? styles.statusLive : styles.statusPending}>
+                    {alert.confirmed ? 'Confirmed' : 'Pending'}
+                  </span>
                 </div>
-                <div className={styles.track}><span className={styles.fill} style={{ width }} /></div>
-              </div>
-              
-              <p className={styles.recommendation}>
-                Operational Alert: Prioritize drought-relief and operating-credit programs for this region.
-              </p>
-              
-              <button type="button" className={styles.watchButton}>
-                ADD TO WATCHLIST →
-              </button>
-            </article>
-          )
-        })}
-      </section>
+                <dl className={styles.metaList}>
+                  <div>
+                    <dt>FIPS</dt>
+                    <dd>{alert.county_fips ?? 'N/A'}</dd>
+                  </div>
+                  <div>
+                    <dt>Crops</dt>
+                    <dd>{crops}</dd>
+                  </div>
+                  <div>
+                    <dt>Programs tracked</dt>
+                    <dd>{nPrograms}</dd>
+                  </div>
+                  <div>
+                    <dt>Saved</dt>
+                    <dd>{created}</dd>
+                  </div>
+                </dl>
+              </article>
+            )
+          })}
+        </section>
+      )}
 
       <section className={`${styles.ctaStrip} animate-on-scroll`}>
-        <Link href="/programs" className={styles.primaryAction}>Browse Urgent Programs</Link>
-        <Link href="/resources" className={styles.secondaryAction}>Access Operational Toolkit</Link>
+        <Link href="/programs" className={styles.primaryAction}>
+          Browse urgent programs
+        </Link>
+        <Link href="/toolkit" className={styles.secondaryAction}>
+          Operational toolkit
+        </Link>
       </section>
     </main>
   )

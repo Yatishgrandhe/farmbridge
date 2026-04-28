@@ -45,7 +45,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className={styles.container}>
+    <main className={`${styles.container} auth-shell`}>
       {/* Left Panel: Cinematic Immersive Image */}
       <section className={styles.leftPanel}>
         <div className={styles.overlay} />
@@ -111,7 +111,7 @@ export default function SignupPage() {
             </button>
 
             <div className={styles.divider}>
-              <span>— or —</span>
+              <span>or</span>
             </div>
 
             <button type="button" className={styles.oauthButton}>

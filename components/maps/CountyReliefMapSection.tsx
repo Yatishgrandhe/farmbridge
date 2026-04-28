@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import styles from './CountyReliefMapSection.module.css'
 
-type CountyRisk = {
+export type CountyRisk = {
   name: string
   fipsCode: string
   stateAbbr: string | null
@@ -20,7 +20,7 @@ type CountyRisk = {
   updatedAt: string | null
 }
 
-type MapOverlay = {
+export type MapOverlay = {
   id: string
   locationType: 'listing' | 'resource_submission'
   title: string
@@ -43,8 +43,12 @@ const CountyReliefMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className={styles.loadingState}>
-        Loading map...
+      <div className={styles.loadingState} role="status" aria-live="polite" aria-label="Loading map">
+        <div className={styles.loadingInner}>
+          <div className={styles.loadingBarWide} />
+          <div className={styles.loadingBar} />
+          <p className={styles.loadingHint}>Preparing county map…</p>
+        </div>
       </div>
     ),
   }

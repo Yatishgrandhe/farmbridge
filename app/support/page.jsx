@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { ScrollAnimator } from '@/components/ui/ScrollAnimator'
 import styles from './support.module.css'
 
 const FAQ=[
@@ -14,7 +13,6 @@ export default function SupportPage(){
   const [openIndex,setOpenIndex]=useState(0)
   return (
     <main className={styles.container}>
-      <ScrollAnimator />
       <div className={styles.inner}>
         <header
           className={`${styles.header} animate-on-scroll`}

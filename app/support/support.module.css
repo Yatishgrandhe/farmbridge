@@ -203,10 +203,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 1180px) {
-  .container { padding-top: 100px; }
-}
-
 @media (max-width: 900px) {
   .mainGrid { grid-template-columns: 1fr; }
   .contactCard { position: relative; top: 0; }
