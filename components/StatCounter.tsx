@@ -78,7 +78,7 @@ export function StatCounter({
       <p className="font-heading text-3xl font-semibold text-accent sm:text-4xl md:text-5xl">
         {isInView ? display : zeroText}
       </p>
-      <p className="mt-2 text-sm font-medium text-light sm:text-base">{label}</p>
+      <p className="mt-2 text-sm font-medium text-primary sm:text-base">{label}</p>
       {labelDetail ? (
         <p className="mt-1 text-xs text-mid sm:text-sm">{labelDetail}</p>
       ) : null}

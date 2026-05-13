@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function GovernmentPage() {
   return (
-    <main className="min-h-screen bg-white text-primary">
+    <main className="min-h-screen bg-light text-primary">
       <GovernmentMain />
     </main>
   );

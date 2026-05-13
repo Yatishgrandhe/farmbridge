@@ -20,11 +20,11 @@ export function ShareIssueBlock() {
   }
 
   return (
-    <section className="rounded-2xl border border-accent/30 bg-primary/35 p-6 sm:p-8">
-      <h2 className="font-heading text-2xl font-semibold text-accent">
+    <section className="rounded-2xl border border-border bg-elevated p-6 shadow-sm sm:p-8">
+      <h2 className="font-heading text-2xl font-semibold text-primary">
         Share this issue
       </h2>
-      <p className="mt-2 text-sm text-light/85">
+      <p className="mt-2 text-sm text-mid">
         Copy a starter post for X (Twitter). Paste, tag your friends, and add
         your own voice.
       </p>
@@ -32,14 +32,14 @@ export function ShareIssueBlock() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
-        className="mt-5 rounded-lg border border-light/15 bg-black/20 p-4 text-sm italic leading-relaxed text-light/95"
+        className="mt-5 rounded-lg border border-border bg-sunken p-4 text-sm italic leading-relaxed text-mid"
       >
         {SHARE_TEXT}
       </motion.blockquote>
       <button
         type="button"
         onClick={handleCopy}
-        className="mt-5 inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-primary transition hover:brightness-110"
+        className="mt-5 inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-cream transition hover:opacity-90"
       >
         {copied ? "Copied!" : "Copy post text"}
       </button>

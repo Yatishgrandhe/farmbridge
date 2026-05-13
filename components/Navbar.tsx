@@ -27,49 +27,48 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-accent/25 bg-primary/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-light/95 shadow-sm backdrop-blur-sm">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16">
         <Link
           href="/"
-          className="font-heading text-xl font-semibold tracking-tight text-accent"
+          className="font-heading text-lg font-semibold tracking-tight text-primary sm:text-xl"
         >
           LoanedAFuture
         </Link>
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
           {nav.map((item) => {
             const active = isActive(pathname, item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative text-sm font-medium text-light transition hover:text-accent ${
-                  active ? "text-accent" : ""
+                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-accent-soft text-accent"
+                    : "text-mid hover:bg-surface hover:text-primary"
                 }`}
               >
                 {item.label}
-                {active ? (
-                  <span className="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-accent" />
-                ) : null}
               </Link>
             );
           })}
         </nav>
         <button
           type="button"
-          className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-md border border-accent/40 text-light md:hidden"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-md border border-border bg-elevated text-primary md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((v) => !v)}
         >
           <span className="sr-only">Toggle menu</span>
           <span
-            className={`block h-0.5 w-6 bg-light transition ${open ? "translate-y-2 rotate-45" : ""}`}
+            className={`block h-0.5 w-5 bg-primary transition ${open ? "translate-y-2 rotate-45" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-light transition ${open ? "opacity-0" : ""}`}
+            className={`block h-0.5 w-5 bg-primary transition ${open ? "opacity-0" : ""}`}
           />
           <span
-            className={`block h-0.5 w-6 bg-light transition ${open ? "-translate-y-2 -rotate-45" : ""}`}
+            className={`block h-0.5 w-5 bg-primary transition ${open ? "-translate-y-2 -rotate-45" : ""}`}
           />
         </button>
       </div>
@@ -80,10 +79,10 @@ export function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="border-t border-accent/20 bg-primary md:hidden"
+            transition={{ duration: 0.2 }}
+            className="border-t border-border bg-elevated md:hidden"
           >
-            <div className="flex flex-col gap-1 px-4 py-3">
+            <div className="flex flex-col gap-0.5 px-3 py-2">
               {nav.map((item) => {
                 const active = isActive(pathname, item.href);
                 return (
@@ -91,10 +90,10 @@ export function Navbar() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2.5 text-sm font-medium ${
                       active
-                        ? "bg-accent/15 text-accent underline decoration-accent underline-offset-4"
-                        : "text-light hover:bg-light/10"
+                        ? "bg-accent-soft text-accent"
+                        : "text-mid hover:bg-surface hover:text-primary"
                     }`}
                   >
                     {item.label}

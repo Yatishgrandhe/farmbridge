@@ -56,14 +56,14 @@ export function ActionContent() {
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-primary/80" aria-hidden />
+          <div className="absolute inset-0 bg-navy/70" aria-hidden />
         </div>
         <div className="relative z-10 mx-auto max-w-4xl px-4 py-20 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
-            className="font-heading text-4xl font-bold text-accent sm:text-6xl"
+            className="font-heading text-4xl font-bold text-cream sm:text-6xl"
           >
             Turn urgency into action
           </motion.h1>
@@ -71,7 +71,7 @@ export function ActionContent() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="mt-5 text-lg text-light/90"
+            className="mt-5 text-lg text-cream/95"
           >
             AP Gov is not only about knowing institutions: it is about using them.
             Start with one email, one petition signature, one classroom
@@ -80,7 +80,7 @@ export function ActionContent() {
         </div>
       </section>
 
-      <div className="space-y-16 bg-primary px-4 py-16">
+      <div className="space-y-16 bg-surface px-4 py-16">
         <ContactSenateForm />
 
         <motion.section
@@ -89,21 +89,21 @@ export function ActionContent() {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.45 }}
         >
-          <h2 className="font-heading text-2xl font-semibold text-accent sm:text-3xl">
+          <h2 className="font-heading text-2xl font-semibold text-primary sm:text-3xl">
             Sign a petition
           </h2>
           <Link
             href="https://www.studentdebtcrisis.org"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 flex min-h-[140px] items-center justify-center rounded-2xl border-2 border-accent bg-accent px-6 py-10 text-center text-xl font-semibold text-primary shadow-lg transition hover:brightness-110 sm:text-2xl"
+            className="mt-6 flex min-h-[140px] items-center justify-center rounded-2xl border border-accent bg-accent px-6 py-10 text-center text-xl font-semibold text-cream shadow-sm transition hover:opacity-90 sm:text-2xl"
           >
             Visit Student Debt Crisis: add your name to national campaigns
           </Link>
         </motion.section>
 
         <section>
-          <h2 className="font-heading text-2xl font-semibold text-accent sm:text-3xl">
+          <h2 className="font-heading text-2xl font-semibold text-primary sm:text-3xl">
             Organizations to follow
           </h2>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
@@ -115,17 +115,17 @@ export function ActionContent() {
                 initial="hidden"
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex flex-col rounded-xl border border-accent/30 bg-black/25 p-6"
+                className="flex flex-col rounded-xl border border-border bg-elevated p-6 shadow-sm"
               >
-                <h3 className="font-heading text-xl font-semibold text-light">
+                <h3 className="font-heading text-xl font-semibold text-primary">
                   {org.name}
                 </h3>
-                <p className="mt-2 flex-1 text-sm text-light/85">{org.blurb}</p>
+                <p className="mt-2 flex-1 text-sm text-mid">{org.blurb}</p>
                 <a
                   href={org.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-6 inline-flex w-fit items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-primary transition hover:brightness-110"
+                  className="mt-6 inline-flex w-fit items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-semibold text-cream transition hover:opacity-90"
                 >
                   Visit
                 </a>

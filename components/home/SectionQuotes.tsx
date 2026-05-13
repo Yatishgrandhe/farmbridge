@@ -39,9 +39,9 @@ export function SectionQuotes() {
   };
 
   return (
-    <section className="bg-primary px-4 py-16 sm:py-24">
+    <section className="border-y border-border bg-surface px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center font-heading text-3xl font-bold text-accent sm:text-4xl">
+        <h2 className="text-center font-heading text-3xl font-bold text-primary sm:text-4xl">
           What Borrowers and Policymakers Are Saying
         </h2>
 
@@ -65,27 +65,27 @@ export function SectionQuotes() {
               }}
               className="grid min-w-0 cursor-grab grid-cols-1 gap-4 active:cursor-grabbing md:grid-cols-3"
             >
-              <figure className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-light/15 bg-primary/60 p-4 sm:p-6">
-                <blockquote className="text-pretty text-sm leading-relaxed text-light/95 sm:text-base">
+              <figure className="min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-elevated p-4 shadow-sm sm:p-6">
+                <blockquote className="text-pretty text-sm leading-relaxed text-mid sm:text-base">
                   &ldquo;{QUOTES[page].text}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-pretty text-xs leading-snug text-light/70 sm:text-sm">
+                <figcaption className="mt-4 text-pretty text-xs leading-snug text-mid sm:text-sm">
                   {QUOTES[page].cite}
                 </figcaption>
               </figure>
-              <figure className="hidden min-w-0 max-w-full overflow-hidden rounded-2xl border border-light/15 bg-primary/60 p-4 sm:p-6 md:block">
-                <blockquote className="text-pretty text-sm leading-relaxed text-light/95 sm:text-base">
+              <figure className="hidden min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-elevated p-4 shadow-sm sm:p-6 md:block">
+                <blockquote className="text-pretty text-sm leading-relaxed text-mid sm:text-base">
                   &ldquo;{QUOTES[(page + 1) % LEN].text}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-pretty text-xs leading-snug text-light/70 sm:text-sm">
+                <figcaption className="mt-4 text-pretty text-xs leading-snug text-mid sm:text-sm">
                   {QUOTES[(page + 1) % LEN].cite}
                 </figcaption>
               </figure>
-              <figure className="hidden min-w-0 max-w-full overflow-hidden rounded-2xl border border-light/15 bg-primary/60 p-4 sm:p-6 md:block">
-                <blockquote className="text-pretty text-sm leading-relaxed text-light/95 sm:text-base">
+              <figure className="hidden min-w-0 max-w-full overflow-hidden rounded-xl border border-border bg-elevated p-4 shadow-sm sm:p-6 md:block">
+                <blockquote className="text-pretty text-sm leading-relaxed text-mid sm:text-base">
                   &ldquo;{QUOTES[(page + 2) % LEN].text}&rdquo;
                 </blockquote>
-                <figcaption className="mt-4 text-pretty text-xs leading-snug text-light/70 sm:text-sm">
+                <figcaption className="mt-4 text-pretty text-xs leading-snug text-mid sm:text-sm">
                   {QUOTES[(page + 2) % LEN].cite}
                 </figcaption>
               </figure>
@@ -101,7 +101,7 @@ export function SectionQuotes() {
               aria-label={`Show quote group ${i + 1}`}
               onClick={() => setPage(i)}
               className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                i === page ? "bg-accent" : "bg-light/30 hover:bg-light/50"
+                i === page ? "bg-accent" : "bg-border hover:bg-sunken"
               }`}
             />
           ))}

@@ -72,10 +72,7 @@ export function SectionHero() {
           />
         </div>
       </div>
-      <div
-        className="absolute inset-0 -z-20 bg-primary/75"
-        aria-hidden
-      />
+      <div className="absolute inset-0 -z-20 bg-navy/68" aria-hidden />
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-3 pb-28 pt-24 text-center sm:px-4 sm:pb-24 sm:pt-28">
         <motion.div
@@ -86,13 +83,13 @@ export function SectionHero() {
         >
           <motion.p
             variants={fadeUp}
-            className="font-body text-sm font-medium text-light/80 sm:text-base"
+            className="font-body text-sm font-medium text-cream/90 sm:text-base"
           >
             Total federal student loan debt owed
           </motion.p>
           <motion.p
             variants={fadeUp}
-            className="mt-3 font-heading text-2xl font-semibold tracking-tight text-light sm:text-3xl md:text-4xl"
+            className="mt-3 font-heading text-2xl font-semibold tracking-tight text-cream sm:text-3xl md:text-4xl"
           >
             <span className="text-accent">$</span>
             <span className="tabular-nums tracking-tight">{debtDigits}</span>
@@ -103,7 +100,7 @@ export function SectionHero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55, duration: 0.5 }}
-          className="mt-7 max-w-3xl text-pretty px-1 text-base text-light/90 sm:mt-8 sm:px-0 sm:text-lg"
+          className="mt-7 max-w-3xl text-pretty px-1 text-base text-cream/95 sm:mt-8 sm:px-0 sm:text-lg"
         >
           The federal student loan crisis is not a future problem. It is happening
           right now to 43 million Americans. Courts have blocked relief. Congress is
@@ -120,7 +117,7 @@ export function SectionHero() {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/background"
-              className="inline-flex rounded-full bg-accent px-8 py-4 text-sm font-semibold text-primary sm:text-base"
+              className="inline-flex rounded-full bg-accent px-8 py-4 text-sm font-semibold text-cream sm:text-base"
             >
               Explore the Crisis
             </Link>
@@ -128,7 +125,7 @@ export function SectionHero() {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/action"
-              className="inline-flex rounded-full border-2 border-accent bg-transparent px-8 py-4 text-sm font-semibold text-accent sm:text-base"
+              className="inline-flex rounded-full border-2 border-cream/90 bg-transparent px-8 py-4 text-sm font-semibold text-cream sm:text-base"
             >
               Take Action Now
             </Link>
@@ -136,7 +133,7 @@ export function SectionHero() {
         </motion.div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-6 left-4 right-4 z-20 max-w-[min(100%,22rem)] border-l-4 border-accent pl-3 text-left font-mono text-[10px] leading-snug text-light/90 sm:text-xs md:text-sm">
+      <div className="pointer-events-none absolute bottom-6 left-4 right-4 z-20 max-w-[min(100%,22rem)] border-l-4 border-accent pl-3 text-left font-mono text-[10px] leading-snug text-cream/90 sm:text-xs md:text-sm">
         As of {clock || "\u00a0"}
       </div>
     </section>

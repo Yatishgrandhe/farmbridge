@@ -177,7 +177,7 @@ function Flowchart() {
         <span className="text-2xl text-accent" aria-hidden>
           ↓
         </span>
-        <div className="w-full max-w-md rounded-md border-2 border-primary bg-primary px-4 py-3 text-center font-medium text-light">
+        <div className="w-full max-w-md rounded-md border-2 border-navy bg-navy px-4 py-3 text-center font-medium text-cream">
           President signs → agencies write rules → courts review challenges
         </div>
       </div>

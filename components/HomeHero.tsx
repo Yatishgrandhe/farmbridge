@@ -49,7 +49,7 @@ export function HomeHero() {
         </div>
       </motion.div>
       <div
-        className="absolute inset-0 -z-10 bg-primary/65"
+        className="absolute inset-0 -z-10 bg-navy/68"
         aria-hidden
       />
       <div className="relative z-10 mx-auto flex max-w-5xl flex-col gap-8 px-4 pb-16 pt-28 sm:pt-32">
@@ -59,7 +59,7 @@ export function HomeHero() {
             variants={lineVariants}
             initial="hidden"
             animate="show"
-            className="text-sm font-semibold uppercase tracking-[0.2em] text-accent"
+            className="text-sm font-semibold uppercase tracking-[0.2em] text-cream/90"
           >
             AP Government Final Project
           </motion.p>
@@ -68,7 +68,7 @@ export function HomeHero() {
             variants={lineVariants}
             initial="hidden"
             animate="show"
-            className="font-heading mt-4 text-balance text-4xl font-bold leading-tight text-light sm:text-5xl md:text-6xl"
+            className="font-heading mt-4 text-balance text-4xl font-bold leading-tight text-cream sm:text-5xl md:text-6xl"
           >
             $1.7 Trillion. 45 Million Borrowers. One Crisis.
           </motion.h1>
@@ -77,7 +77,7 @@ export function HomeHero() {
             variants={lineVariants}
             initial="hidden"
             animate="show"
-            className="mt-6 max-w-2xl text-pretty text-lg italic text-light/90 sm:text-xl"
+            className="mt-6 max-w-2xl text-pretty text-lg italic text-cream/90 sm:text-xl"
           >
             The federal student loan debt crisis is reshaping the American dream,
             and the government&apos;s response may define a generation.
@@ -92,13 +92,13 @@ export function HomeHero() {
         >
           <Link
             href="/background"
-            className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 text-center text-sm font-semibold text-primary shadow-lg shadow-black/20 transition hover:brightness-110"
+            className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 text-center text-sm font-semibold text-cream shadow-md transition hover:opacity-90"
           >
             Learn the Facts
           </Link>
           <Link
             href="/action"
-            className="inline-flex items-center justify-center rounded-md border-2 border-accent bg-transparent px-6 py-3 text-center text-sm font-semibold text-accent transition hover:bg-accent/10"
+            className="inline-flex items-center justify-center rounded-md border-2 border-cream/90 bg-transparent px-6 py-3 text-center text-sm font-semibold text-cream transition hover:bg-cream/10"
           >
             Take Action
           </Link>

@@ -12,7 +12,7 @@ export function StatTicker() {
   const loop = [...STATS, ...STATS];
 
   return (
-    <div className="border-y border-accent/40 bg-primary py-3 text-light">
+    <div className="border-y border-border bg-surface py-3 text-primary">
       <div className="relative overflow-hidden">
         <div className="ticker-track flex w-max gap-16 whitespace-nowrap px-4 text-sm font-medium sm:text-base">
           {loop.map((text, idx) => (

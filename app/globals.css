@@ -1,21 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #0d1b2a;
-  --accent: #e4a400;
-  --light: #f5f0e8;
-  --mid: #4a5568;
-  --alert: #c0392b;
-  --success: #27ae60;
+  --page: #fafaf8;
+  --surface: #f4f1eb;
+  --elevated: #ffffff;
+  --sunken: #ede9df;
+  --ink: #1a1917;
+  --ink-muted: #5c5850;
+  --border-warm: #ddd9cf;
+  --accent: #b45309;
+  --accent-hover: #923d07;
+  --accent-soft: #f5ebe3;
+  --navy: #243244;
+  --cream: #faf7f2;
+  --alert: #b42318;
+  --success: #2d6a4f;
+
+  --primary: var(--ink);
+  --light: var(--page);
+  --mid: var(--ink-muted);
 }
 
 @theme inline {
-  --color-primary: #0d1b2a;
-  --color-accent: #e4a400;
-  --color-light: #f5f0e8;
-  --color-mid: #4a5568;
-  --color-alert: #c0392b;
-  --color-success: #27ae60;
+  --color-primary: #1a1917;
+  --color-light: #fafaf8;
+  --color-surface: #f4f1eb;
+  --color-elevated: #ffffff;
+  --color-sunken: #ede9df;
+  --color-accent: #b45309;
+  --color-accent-soft: #f5ebe3;
+  --color-mid: #5c5850;
+  --color-navy: #243244;
+  --color-cream: #faf7f2;
+  --color-alert: #b42318;
+  --color-success: #2d6a4f;
+  --color-border: #ddd9cf;
 }
 
 html {
@@ -24,12 +43,14 @@ html {
 
 body {
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  background: var(--light);
-  color: var(--primary);
+  background: var(--page);
+  color: var(--ink-muted);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
 .font-heading {
-  font-family: var(--font-heading), ui-serif, Georgia, serif;
+  font-family: var(--font-heading), Georgia, "Times New Roman", serif;
 }
 
 .font-body {

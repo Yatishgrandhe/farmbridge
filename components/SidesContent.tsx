@@ -43,17 +43,17 @@ export function SidesContent() {
       <div className="grid min-h-[70vh] lg:grid-cols-2">
         <SidePanel
           side="left"
-          bg="bg-primary text-light"
-          text="text-light"
+          bg="bg-surface border-border lg:border-r"
+          text="text-primary"
         >
           <h2 className="font-heading text-3xl font-semibold text-accent">
             The case for relief
           </h2>
-          <p className="text-sm text-light/85">
+          <p className="text-sm text-mid">
             Key figures: Bernie Sanders, Elizabeth Warren, President Biden
             (2021 to 2025 agenda), Rep. Ayanna Pressley.
           </p>
-          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-light/90">
+          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-mid">
             <li>
               <strong className="text-accent">Economic mobility:</strong>{" "}
               monthly payments crowd out saving; reducing balances can free
@@ -74,7 +74,7 @@ export function SidesContent() {
             <h3 className="text-sm font-semibold uppercase tracking-wide text-accent">
               Proposed solutions
             </h3>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-light/90">
+            <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-mid">
               <li>Substantial or full cancellation for federal loans</li>
               <li>Expand and simplify IDR; auto-enrollment for delinquency risk</li>
               <li>Free community college and larger Pell grants</li>
@@ -84,8 +84,8 @@ export function SidesContent() {
               </li>
             </ul>
           </div>
-          <figure className="rounded-lg border border-accent/30 bg-black/20 p-4">
-            <blockquote className="font-heading text-sm italic leading-relaxed text-accent">
+          <figure className="rounded-lg border border-border bg-elevated p-4 shadow-sm">
+            <blockquote className="font-heading text-sm italic leading-relaxed text-primary">
               Warren-style argument (paraphrased): targeted cancellation can shrink
               the racial wealth gap because student debt is concentrated among
               Black and brown borrowers who were steered into borrowing by
@@ -96,17 +96,17 @@ export function SidesContent() {
 
         <SidePanel
           side="right"
-          bg="bg-accent text-primary"
+          bg="bg-accent-soft border-border lg:border-l"
           text="text-primary"
         >
           <h2 className="font-heading text-3xl font-semibold text-primary">
             The case against cancellation
           </h2>
-          <p className="text-sm text-primary/80">
+          <p className="text-sm text-mid">
             Key figures: Betsy DeVos, Sen. John Thune, Rep. Virginia Foxx, Trump
             administration officials.
           </p>
-          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-primary/90">
+          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-mid">
             <li>
               <strong className="text-primary">Fairness:</strong> millions repaid
               loans or chose cheaper paths. Broad cancellation rewards a subset at
@@ -128,7 +128,7 @@ export function SidesContent() {
             <h3 className="text-sm font-semibold uppercase tracking-wide text-primary">
               Proposed alternatives
             </h3>
-            <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-primary/90">
+            <ul className="mt-2 list-disc space-y-2 pl-5 text-sm text-mid">
               <li>Income Share Agreements and private market tools (debated)</li>
               <li>Bigger investments in vocational training and apprenticeships</li>
               <li>
@@ -138,7 +138,7 @@ export function SidesContent() {
               <li>Caps or elimination of Graduate PLUS lending</li>
             </ul>
           </div>
-          <figure className="rounded-lg border border-primary/25 bg-primary/10 p-4">
+          <figure className="rounded-lg border border-border bg-elevated p-4 shadow-sm">
             <blockquote className="font-heading text-sm italic leading-relaxed text-primary">
               Common conservative argument (paraphrased): blanket cancellation
               asks plumbers and nurses to subsidize lawyers and doctors who

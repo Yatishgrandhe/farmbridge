@@ -44,12 +44,12 @@ export function SectionMap() {
         : `This state's average debt is ${diffAbs.toLocaleString("en-US")} dollars below the national average of $${NATIONAL_AVG_DEBT.toLocaleString("en-US")}.`;
 
   return (
-    <section className="bg-primary px-4 py-16 sm:py-24">
+    <section className="border-y border-border bg-surface px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
-        <h2 className="text-center font-heading text-3xl font-bold text-accent sm:text-4xl">
+        <h2 className="text-center font-heading text-3xl font-bold text-primary sm:text-4xl">
           Student Debt Across America
         </h2>
-        <p className="mx-auto mt-4 max-w-3xl text-pretty text-center text-sm text-light/90 sm:text-base">
+        <p className="mx-auto mt-4 max-w-3xl text-pretty text-center text-sm text-mid sm:text-base">
           Click any state to see federal student loan data for that state. Data
           from the U.S. Department of Education.
         </p>
@@ -110,7 +110,7 @@ export function SectionMap() {
           </svg>
         </div>
 
-        <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-4 text-xs text-light">
+        <div className="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-4 text-xs text-mid">
           <span className="flex items-center gap-2">
             <span className="h-3 w-6 rounded-sm" style={{ background: "#FDF3D0" }} />
             Under $15B
@@ -188,7 +188,7 @@ export function SectionMap() {
               <button
                 type="button"
                 onClick={() => setPanelOpen(false)}
-                className="mt-6 rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/5"
+                className="mt-6 rounded-full border border-border px-4 py-2 text-sm font-semibold text-primary transition hover:bg-surface"
               >
                 Close
               </button>

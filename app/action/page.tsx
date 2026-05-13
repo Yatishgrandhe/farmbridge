@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function ActionPage() {
-  return <main className="min-h-screen bg-primary text-light"><ActionContent /></main>;
+  return <main className="min-h-screen bg-light text-primary"><ActionContent /></main>;
 }

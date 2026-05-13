@@ -67,7 +67,7 @@ export function SectionCta() {
           />
         </div>
       </div>
-      <div className="absolute inset-0 -z-0 bg-primary/80" aria-hidden />
+      <div className="absolute inset-0 -z-0 bg-navy/72" aria-hidden />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 text-center">
         <motion.div
@@ -86,7 +86,7 @@ export function SectionCta() {
               hidden: { opacity: 0, y: 24 },
               show: { opacity: 1, y: 0 },
             }}
-            className="font-heading text-pretty text-3xl font-bold leading-tight text-light sm:text-4xl md:text-5xl"
+            className="font-heading text-pretty text-3xl font-bold leading-tight text-cream sm:text-4xl md:text-5xl"
           >
             This is not someone else&apos;s problem.
           </motion.h2>
@@ -95,7 +95,7 @@ export function SectionCta() {
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0 },
             }}
-            className="mx-auto mt-6 max-w-3xl text-pretty text-base text-light/90 sm:text-lg"
+            className="mx-auto mt-6 max-w-3xl text-pretty text-base text-cream/95 sm:text-lg"
           >
             43 million Americans are living this crisis. 44.6 million federal borrowers.
             5.3 million in default. 8 million in limbo. If you have student debt, or
@@ -106,7 +106,7 @@ export function SectionCta() {
         <div className="mt-12 grid min-w-0 grid-cols-1 gap-6 md:grid-cols-3">
           <motion.article
             whileHover={{ y: -6 }}
-            className="min-w-0 overflow-hidden rounded-2xl bg-white p-5 text-left text-primary shadow-xl sm:p-6"
+            className="min-w-0 overflow-hidden rounded-2xl border border-border bg-elevated p-5 text-left text-primary shadow-sm sm:p-6"
           >
             <IconEnvelope />
             <h3 className="mt-4 font-heading text-lg font-bold text-pretty sm:text-xl">
@@ -118,7 +118,7 @@ export function SectionCta() {
             <motion.div className="mt-6" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/action"
-                className="inline-flex rounded-full bg-accent px-5 py-2 text-sm font-semibold text-primary"
+                className="inline-flex rounded-full bg-accent px-5 py-2 text-sm font-semibold text-cream"
               >
                 Open Action Center
               </Link>
@@ -127,7 +127,7 @@ export function SectionCta() {
 
           <motion.article
             whileHover={{ y: -6 }}
-            className="min-w-0 overflow-hidden rounded-2xl bg-white p-5 text-left text-primary shadow-xl sm:p-6"
+            className="min-w-0 overflow-hidden rounded-2xl border border-border bg-elevated p-5 text-left text-primary shadow-sm sm:p-6"
           >
             <IconShare />
             <h3 className="mt-4 font-heading text-lg font-bold text-pretty sm:text-xl">
@@ -142,7 +142,7 @@ export function SectionCta() {
               onClick={copy}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="relative mt-6 inline-flex max-w-full flex-wrap items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-primary"
+              className="relative mt-6 inline-flex max-w-full flex-wrap items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-cream"
             >
               Copy link
               {copied ? (
@@ -160,7 +160,7 @@ export function SectionCta() {
 
           <motion.article
             whileHover={{ y: -6 }}
-            className="min-w-0 overflow-hidden rounded-2xl bg-white p-5 text-left text-primary shadow-xl sm:p-6"
+            className="min-w-0 overflow-hidden rounded-2xl border border-border bg-elevated p-5 text-left text-primary shadow-sm sm:p-6"
           >
             <IconBook />
             <h3 className="mt-4 font-heading text-lg font-bold text-pretty sm:text-xl">
@@ -173,7 +173,7 @@ export function SectionCta() {
             <motion.div className="mt-6" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 href="/background"
-                className="inline-flex rounded-full bg-accent px-5 py-2 text-sm font-semibold text-primary"
+                className="inline-flex rounded-full bg-accent px-5 py-2 text-sm font-semibold text-cream"
               >
                 Read Background
               </Link>

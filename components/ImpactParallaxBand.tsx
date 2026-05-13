@@ -30,9 +30,9 @@ export function ImpactParallaxBand() {
           />
         </div>
       </motion.div>
-      <div className="absolute inset-0 bg-primary/70" aria-hidden />
+      <div className="absolute inset-0 bg-navy/66" aria-hidden />
       <div className="relative z-10 flex h-full items-center justify-center px-4 text-center">
-        <p className="font-heading max-w-3xl text-balance text-2xl text-light sm:text-3xl">
+        <p className="font-heading max-w-3xl text-balance text-2xl text-cream sm:text-3xl">
           Debt is not abstract: it shows up in rent checks skipped, hours picked
           up, and plans postponed.
         </p>

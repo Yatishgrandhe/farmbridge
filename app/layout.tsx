@@ -25,12 +25,12 @@ export default function RootLayout({
         />
         {/* eslint-disable-next-line @next/next/no-page-custom-font -- project requires Google Fonts link tags */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
           rel="stylesheet"
         />
-        <style>{`:root { --font-heading: "Playfair Display", serif; --font-body: "Inter", sans-serif; }`}</style>
+        <style>{`:root { --font-heading: "Playfair Display", Georgia, serif; --font-body: "DM Sans", system-ui, sans-serif; }`}</style>
       </head>
-      <body className="font-body flex min-h-full flex-col bg-light text-primary antialiased">
+      <body className="font-body flex min-h-full flex-col bg-light pt-14 text-primary antialiased sm:pt-16">
         <Navbar />
         <div className="flex flex-1 flex-col">{children}</div>
         <Footer />

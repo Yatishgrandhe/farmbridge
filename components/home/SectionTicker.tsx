@@ -22,8 +22,8 @@ function Row() {
     <div className="flex shrink-0 items-center gap-4 whitespace-nowrap px-4">
       {STATS.map((s, i) => (
         <span key={`${s}-${i}`} className="flex items-center gap-4">
-          <span className="text-sm font-bold text-primary">{s}</span>
-          <span className="text-primary" aria-hidden>
+          <span className="text-sm font-semibold text-cream">{s}</span>
+          <span className="text-cream/70" aria-hidden>
             &#9670;
           </span>
         </span>
