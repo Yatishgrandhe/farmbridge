@@ -160,7 +160,7 @@ export default function ImpactPage() {
           </h2>
           <article className="mt-8 border-l-4 border-accent bg-accent-soft p-8 shadow-sm">
             <p className="font-heading text-lg italic leading-relaxed text-primary/90">
-              I am <span className="font-semibold text-accent">[STUDENT NAME]</span>
+              I am <span className="font-semibold text-accent">Yatish Grandhe</span>
               , and I chose this topic because student loans sit at the
               intersection of everything we study in AP Gov: federalism,
               separation of powers, interest groups, and political participation.
